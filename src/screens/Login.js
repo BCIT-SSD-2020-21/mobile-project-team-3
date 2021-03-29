@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <View style={styles.container}>
@@ -13,11 +19,7 @@ export default function Login() {
       <Text style={styles.subHeader}>Sign in to continue</Text>
       <View style={styles.inputView}>
         <View style={styles.userIconContainer}>
-          <FontAwesome 
-            name="user" 
-            color="#FFC542"
-            size={20} 
-          />
+          <FontAwesome name="user" color="#FFC542" size={20} />
         </View>
         <TextInput
           style={styles.textInput}
@@ -28,11 +30,7 @@ export default function Login() {
       </View>
       <View style={styles.inputView}>
         <View style={styles.lockIconContainer}>
-          <FontAwesome 
-            name="unlock" 
-            color="#FF575F"
-            size={20}
-          />
+          <FontAwesome name="unlock" color="#FF575F" size={20} />
         </View>
         <TextInput
           style={styles.textInput}
@@ -45,11 +43,11 @@ export default function Login() {
       <View style={styles.btnContainer}>
         <TouchableOpacity style={styles.loginBtn}>
           <Text style={styles.loginBtnText}>Sign in</Text>
-          <FontAwesome 
-            name="sign-in" 
+          <FontAwesome
+            name="arrow-right"
             color="white"
             size={20}
-            style={{marginLeft: 20}}
+            style={{ marginLeft: 20 }}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.registerBtn}>
@@ -57,7 +55,7 @@ export default function Login() {
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,18 +64,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   container: {
-    width: '100%'
+    width: '100%',
   },
   loginBtnText: {
     fontWeight: 'bold',
-    color: 'white'
+    color: 'white',
   },
   registerBtnText: {
     fontWeight: 'bold',
-    color: '#3DD598'
+    color: '#3DD598',
   },
   loginBtn: {
     borderRadius: 10,
@@ -87,7 +85,7 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 60,
     marginBottom: 60,
-    backgroundColor: '#40DF9F'
+    backgroundColor: '#40DF9F',
   },
   registerBtn: {
     borderRadius: 10,
@@ -96,10 +94,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '90%',
     height: 60,
-    backgroundColor: '#286053'
+    backgroundColor: '#286053',
   },
   textInput: {
     color: '#96A7AF',
+    width: '90%'
   },
   userIconContainer: {
     justifyContent: 'center',
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: 'rgba(255, 197, 66, 0.3)',
     borderRadius: 8,
-    marginRight: 15
+    marginRight: 15,
   },
   lockIconContainer: {
     justifyContent: 'center',
@@ -117,13 +116,12 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: 'rgba(255, 87, 95, 0.3)',
     borderRadius: 8,
-    marginRight: 15
-
+    marginRight: 15,
   },
   inputView: {
     marginBottom: 30,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   header: {
     color: 'white',
@@ -133,7 +131,7 @@ const styles = StyleSheet.create({
   subHeader: {
     color: '#96A7AF',
     fontSize: 24,
-    marginBottom: 50
+    marginBottom: 50,
   },
   box: {
     width: 50,
@@ -141,4 +139,4 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#40DF9F',
   },
-})
+});
