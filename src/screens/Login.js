@@ -15,14 +15,14 @@ export default function Login() {
         <View style={styles.userIconContainer}>
           <FontAwesome 
             name="user" 
-            color="orange"
+            color="#FFC542"
             size={20} 
           />
         </View>
         <TextInput
           style={styles.textInput}
           placeholder="Email"
-          placeholderTextColor="grey"
+          placeholderTextColor="#96A7AF"
           onChangeText={(email) => setEmail(email)}
         />
       </View>
@@ -30,14 +30,14 @@ export default function Login() {
         <View style={styles.lockIconContainer}>
           <FontAwesome 
             name="unlock" 
-            color="red"
+            color="#FF575F"
             size={20}
           />
         </View>
         <TextInput
           style={styles.textInput}
           placeholder="Password"
-          placeholderTextColor="grey"
+          placeholderTextColor="#96A7AF"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />
@@ -72,10 +72,12 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   loginBtnText: {
+    fontWeight: 'bold',
     color: 'white'
   },
   registerBtnText: {
-    color: 'lightgreen'
+    fontWeight: 'bold',
+    color: '#3DD598'
   },
   loginBtn: {
     borderRadius: 10,
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 60,
     marginBottom: 60,
-    backgroundColor: 'lightgreen'
+    backgroundColor: '#40DF9F'
   },
   registerBtn: {
     borderRadius: 10,
@@ -94,17 +96,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '90%',
     height: 60,
-    backgroundColor: 'rgba(144,238,144, 0.3)'
+    backgroundColor: '#286053'
   },
   textInput: {
-    color: 'white',
+    color: '#96A7AF',
   },
   userIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 30,
     height: 40,
-    backgroundColor: 'rgba(255, 165, 0, 0.5)',
+    backgroundColor: 'rgba(255, 197, 66, 0.3)',
     borderRadius: 8,
     marginRight: 15
   },
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 30,
     height: 40,
-    backgroundColor: 'rgba(255, 0, 0, 0.5)',
+    backgroundColor: 'rgba(255, 87, 95, 0.3)',
     borderRadius: 8,
     marginRight: 15
 
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
   subHeader: {
-    color: 'grey',
+    color: '#96A7AF',
     fontSize: 24,
     marginBottom: 50
   },
@@ -137,6 +139,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 10,
-    backgroundColor: 'lightgreen',
+    backgroundColor: '#40DF9F',
   },
 })
