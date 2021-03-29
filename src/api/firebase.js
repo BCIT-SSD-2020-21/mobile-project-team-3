@@ -1,6 +1,6 @@
 import { FIREBASE_API } from 'dotenv';
 
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: FIREBASE_API,
   authDomain: 'robdemgood.firebaseapp.com',
   projectId: 'robdemgood',
