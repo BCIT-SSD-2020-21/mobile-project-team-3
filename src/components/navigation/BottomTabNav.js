@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../../screens/HomeScreen';
-import { FontAwesome } from '@expo/vector-icons';
+
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import WatchScreen from '../../screens/WatchScreen';
 import SearchScreen from '../../screens/SearchScreen';
+import HomeNavigator from './HomeNavigator';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -19,8 +20,10 @@ const BottomTabNav = () => {
       />
       <BottomTab.Screen
         name='Home'
-        component={HomeScreen}
-        options={{ tabBarIcon: () => <FontAwesome name='home' size={30} /> }}
+        component={HomeNavigator}
+        options={{
+          tabBarIcon: () => <FontAwesome5 name='comment-dollar' size={30} />,
+        }}
       />
       <BottomTab.Screen
         name='Search'

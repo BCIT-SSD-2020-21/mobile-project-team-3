@@ -7,6 +7,8 @@ import firebaseConfig from './src/api/firebase';
 import firebase from 'firebase/app';
 import BottomTabNav from './src/components/navigation/BottomTabNav';
 import DrawerNav from './src/components/navigation/DrawerNav';
+import Login from './src/screens/Login';
+import Register from './src/screens/Register';
 
 const Stack = createStackNavigator();
 
@@ -29,14 +31,19 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
+    // <View style={styles.container}>
+    //   <Login></Login>
+    //   {/* <Register></Register> */}
+    // </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    padding: 40,
+    backgroundColor: '#22343C',
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
 });
