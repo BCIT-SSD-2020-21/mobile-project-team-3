@@ -61,6 +61,10 @@ const HomeScreen = ({ route, navigation }) => {
           <Text style={base.headingSm}>Market Value</Text>
         </View>
       </View>
+      {/* ========== INVESTMENT HISTORY ========= */}
+      <View style={styles.summaryContainer}>
+        <Text style={base.headingSm}>Investment History</Text>
+      </View>
     </SafeAreaView>
   );
 };
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#30444E',
     borderRadius: 30,
     height: '25%',
+    marginBottom: 15,
   },
   summaryGraph: {
     backgroundColor: '#FF575F',
@@ -97,14 +102,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     height: '30%',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
+    marginBottom: 15,
   },
   PL: {
     backgroundColor: '#3DD598',
     height: '100%',
     width: '45%',
     padding: 20,
-    margin: 10,
+
     borderRadius: 15,
   },
   marketValue: {
@@ -112,7 +118,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '45%',
     padding: 20,
-    margin: 10,
+
     borderRadius: 15,
   },
 });
