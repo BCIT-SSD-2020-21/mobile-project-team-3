@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Platform } from 'react-native';
 import Login from '../../screens/Login';
 import HomeScreen from '../../screens/HomeScreen';
+import Register from '../../screens/Register';
 
 const HomeStack = createStackNavigator();
 
@@ -23,6 +24,19 @@ const HomeNavigator = () => {
               }
             : {
                 headerTitle: 'User Login',
+              }
+        }
+      />
+      <HomeStack.Screen
+        name="RegisterScreen"
+        component={Register}
+        options={
+          Platform.OS === 'android'
+            ? {
+                headerRight: () => <MenuIcon />,
+              }
+            : {
+                headerTItle: 'Register User',
               }
         }
       />
