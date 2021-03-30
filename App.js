@@ -7,9 +7,6 @@ import firebaseConfig from './src/api/firebase';
 import firebase from 'firebase/app';
 import BottomTabNav from './src/components/navigation/BottomTabNav';
 import DrawerNav from './src/components/navigation/DrawerNav';
-import Login from './src/screens/Login';
-import Register from './src/screens/Register';
-import SearchScreen from './src/screens/SearchScreen';
 
 const Stack = createStackNavigator();
 
@@ -31,6 +28,7 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
+    // <SearchScreen />
   );
 }
 
