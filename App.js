@@ -7,6 +7,9 @@ import firebaseConfig from './src/api/firebase';
 import firebase from 'firebase/app';
 import BottomTabNav from './src/components/navigation/BottomTabNav';
 import DrawerNav from './src/components/navigation/DrawerNav';
+import Login from './src/screens/Login';
+import Register from './src/screens/Register';
+import SearchScreen from './src/screens/SearchScreen';
 
 const Stack = createStackNavigator();
 
@@ -31,3 +34,13 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 40,
+    backgroundColor: '#22343C',
+    alignItems: 'flex-start',
+    // justifyContent: 'center',
+  },
+});
