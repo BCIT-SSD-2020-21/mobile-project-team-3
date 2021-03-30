@@ -4,6 +4,7 @@ import SearchBar from '../components/SearchBar';
 import { Avatar } from "react-native-elements";
 
 const SearchScreen = () => {
+    const [input, setInput] = useState('')
     
     // const searchAPI = async () => {
 
@@ -26,7 +27,10 @@ const SearchScreen = () => {
     
     return (
     <SafeAreaView style={styles.container}>
-        
+        <SearchBar
+        input={input} 
+        onInputChange={(newInput) => setInput(newInput)}
+        onInputSubmit={() => searchAPI()} />
         <FlatList
         keyExtractor={stock => stock.symbol}
         data={stokes}
