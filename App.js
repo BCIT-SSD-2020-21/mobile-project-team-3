@@ -5,19 +5,27 @@ import firebase from 'firebase/app';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import SearchScreen from './src/screens/SearchScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
 
 export default function App() {
-  console.log(firebase);
+  // console.log(firebase);
   return (
-    <View style={styles.container}>
-      {/* <Login></Login> */}
-      {/* <Register></Register> */}
-      <SearchScreen></SearchScreen>
-    </View>
+    // <View style={styles.container}>
+      // {/* <Login></Login> */}
+      // {/* <Register></Register> */}
+      <NavigationContainer>
+        <Stack.Navigator>
+            <Stack.Screen name="Rob" component={SearchScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    // </View>
   );
 }
 
@@ -26,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 40,
     backgroundColor: '#22343C',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
   },
 });
