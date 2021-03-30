@@ -12,7 +12,7 @@ const HomeNavigator = () => {
   return (
     <HomeStack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName='RegisterScreen'
+      initialRouteName='LoginScreen'
     >
       <HomeStack.Screen
         name='LoginScreen'

@@ -17,6 +17,11 @@ export default function Register({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const onRegisterPressed = () => {
+    if (!password || !email) {
+      console.log('Please enter an email/password!');
+      return;
+    }
+
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -67,6 +72,7 @@ export default function Register({ navigation }) {
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
           autoCapitalize='none'
+          enablesReturnKeyAutomatically={true}
         />
       </View>
       {/* <View style={styles.inputView}>

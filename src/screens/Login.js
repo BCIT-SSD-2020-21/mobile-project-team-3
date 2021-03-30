@@ -15,6 +15,11 @@ export default function Login({ navigation }) {
   const [user, setUser] = useState(null);
 
   const onLoginPressed = () => {
+    if (!password || !email) {
+      console.log('Please enter an email/password!');
+      return;
+    }
+
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
@@ -65,6 +70,7 @@ export default function Login({ navigation }) {
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
           autoCapitalize='none'
+          enablesReturnKeyAutomatically={true}
         />
       </View>
       <View style={styles.btnContainer}>
