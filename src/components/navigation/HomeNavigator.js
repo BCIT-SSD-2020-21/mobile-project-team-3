@@ -11,7 +11,7 @@ const HomeStack = createStackNavigator();
 const HomeNavigator = () => {
   return (
     <HomeStack.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: true }}
       initialRouteName='LoginScreen'
     >
       <HomeStack.Screen
