@@ -13,8 +13,8 @@ export default function App() {
   console.log(firebase);
   return (
     <View style={styles.container}>
-      {/* <Login></Login> */}
-      <Register></Register>
+      <Login></Login>
+      {/* <Register></Register> */}
     </View>
   );
 }

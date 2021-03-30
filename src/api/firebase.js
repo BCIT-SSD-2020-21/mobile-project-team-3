@@ -1,4 +1,4 @@
-import { FIREBASE_API } from 'dotenv';
+import { FIREBASE_API } from '@env';
 
 const firebaseConfig = {
   apiKey: FIREBASE_API,
