@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
 import firebaseConfig from './src/api/firebase';
 import firebase from 'firebase/app';
-import { Platform } from 'react-native';
+import BottomTabNav from './src/components/navigation/BottomTabNav';
+import DrawerNav from './src/components/navigation/DrawerNav';
 
 const Stack = createStackNavigator();
 

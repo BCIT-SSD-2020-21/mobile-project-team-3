@@ -2,8 +2,6 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../../screens/HomeScreen';
 import { FontAwesome } from '@expo/vector-icons';
-import GlobalNavigator from './GlobalNavigator';
-import UserNavigator from './UserNavigator';
 import WatchScreen from '../../screens/WatchScreen';
 import SearchScreen from '../../screens/SearchScreen';
 
