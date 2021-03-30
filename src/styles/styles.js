@@ -23,4 +23,11 @@ module.exports = StyleSheet.create({
     alignSelf: 'center',
     marginTop: '5%',
   },
+  headingMd: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 25,
+    alignSelf: 'center',
+    margin: '5%',
+  },
 });

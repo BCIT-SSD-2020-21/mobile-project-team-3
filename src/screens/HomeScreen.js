@@ -33,6 +33,7 @@ const HomeScreen = ({ route, navigation }) => {
         setModalVisible={setModalVisible}
         modalVisible={modalVisible}
         handleLogOut={handleLogOut}
+        user={user}
       />
       <View style={styles.userIconContainer}>
         <TouchableOpacity

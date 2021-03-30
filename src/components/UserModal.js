@@ -1,8 +1,9 @@
 import React from 'react';
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import base from '../styles/styles';
 
-const UserModal = ({ setModalVisible, modalVisible, handleLogOut }) => {
+const UserModal = ({ setModalVisible, modalVisible, handleLogOut, user }) => {
   return (
     <Modal
       animationType='slide'
@@ -15,13 +16,14 @@ const UserModal = ({ setModalVisible, modalVisible, handleLogOut }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>User Info</Text>
+          <Text style={base.headingMd}>User Info</Text>
+          <Text style={styles.modalText}>Email: {user.email}</Text>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={handleLogOut}
           >
             <Text style={styles.textStyle}>
-              <MaterialIcons name='logout' size={24} color='black' />
+              <MaterialIcons name='logout' size={16} color='white' />
               Logout
             </Text>
           </Pressable>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#96A7AF',
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',
@@ -60,15 +62,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   button: {
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 10,
     elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
+    margin: 5,
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#3DD598',
   },
   textStyle: {
     color: 'white',
