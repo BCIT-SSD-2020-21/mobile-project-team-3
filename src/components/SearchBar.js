@@ -14,6 +14,7 @@ const SearchBar = ({ input, onInputChange, onInputSubmit }) => {
             placeholder="Search"
             placeholderTextColor="#96A7AF"
             onChangeText={newInput => onInputChange(newInput)}
+            onSubmitEditing={() => onInputSubmit()}
             />
             </View>
             <TouchableOpacity 

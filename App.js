@@ -25,13 +25,14 @@ if (firebase.apps.length === 0) {
 export default function App() {
   // console.log(firebase);
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name='Root' component={PlatformSpecificNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    // <SafeAreaProvider>
+    //   <NavigationContainer>
+    //     <Stack.Navigator screenOptions={{ headerShown: false }}>
+    //       <Stack.Screen name='Root' component={PlatformSpecificNavigator} />
+    //     </Stack.Navigator>
+    //   </NavigationContainer>
+    // </SafeAreaProvider>
+    <SearchScreen />
   );
 }
 
