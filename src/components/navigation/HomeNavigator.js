@@ -28,7 +28,7 @@ const HomeNavigator = () => {
         }
       />
       <HomeStack.Screen
-        name="RegisterScreen"
+        name='RegisterScreen'
         component={Register}
         options={
           Platform.OS === 'android'

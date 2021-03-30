@@ -7,10 +7,41 @@ import {
   View,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import firebase from 'firebase';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
+
+  const onLoginPressed = () => {
+    if (!password || !email) {
+      console.log('Please enter an email/password!');
+      return;
+    }
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Signed in
+        const userInfo = userCredential.user;
+        setUser(userInfo);
+        console.log('userInfo from Firebase>>', userInfo);
+        setEmail('');
+        setPassword('');
+        // navigate
+        console.log('user>>', user);
+        userInfo
+          ? navigation.navigate('HomeScreen', userInfo)
+          : console.log('error logging in');
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log('Error>>', errorMessage);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -26,6 +57,8 @@ export default function Login({ navigation }) {
           placeholder='Email'
           placeholderTextColor='#96A7AF'
           onChangeText={(email) => setEmail(email)}
+          value={email}
+          autoCapitalize='none'
         />
       </View>
       <View style={styles.inputView}>
@@ -38,10 +71,13 @@ export default function Login({ navigation }) {
           placeholderTextColor='#96A7AF'
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
+          value={password}
+          autoCapitalize='none'
+          enablesReturnKeyAutomatically={true}
         />
       </View>
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity style={styles.loginBtn} onPress={onLoginPressed}>
           <Text style={styles.loginBtnText}>Sign in</Text>
           <FontAwesome
             name='arrow-right'
@@ -50,7 +86,10 @@ export default function Login({ navigation }) {
             style={{ marginLeft: 20 }}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')} style={styles.registerBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('RegisterScreen')}
+          style={styles.registerBtn}
+        >
           <Text style={styles.registerBtnText}>Create an account</Text>
         </TouchableOpacity>
       </View>
