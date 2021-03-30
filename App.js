@@ -32,10 +32,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
-    // <View style={styles.container}>
-    //   <Login></Login>
-    //   {/* <Register></Register> */}
-    // </View>
   );
 }
 

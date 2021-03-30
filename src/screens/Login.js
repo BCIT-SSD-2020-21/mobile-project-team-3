@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function Login() {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -50,7 +50,7 @@ export default function Login() {
             style={{ marginLeft: 20 }}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.registerBtn}>
+        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')} style={styles.registerBtn}>
           <Text style={styles.registerBtnText}>Create an account</Text>
         </TouchableOpacity>
       </View>
