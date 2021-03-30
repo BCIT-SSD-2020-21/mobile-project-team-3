@@ -16,7 +16,6 @@ const HomeScreen = ({ route, navigation }) => {
       .auth()
       .signOut()
       .then(() => {
-        // Sign-out successful.
         console.log('Logout successful');
         navigation.navigate('LoginScreen');
       })
@@ -46,6 +45,22 @@ const HomeScreen = ({ route, navigation }) => {
       <View>
         <Text style={base.headingLg}>Your Porfolio</Text>
       </View>
+      {/* ========== SUMMARY ========= */}
+      <View style={styles.summaryContainer}>
+        <View style={styles.summaryGraph}></View>
+        <View>
+          <Text style={base.headingSm}>Summary</Text>
+        </View>
+      </View>
+      {/* ========== P&L / MARKET ========= */}
+      <View style={styles.pmContainer}>
+        <View style={styles.PL}>
+          <Text style={base.headingSm}>P&L Day</Text>
+        </View>
+        <View style={styles.marketValue}>
+          <Text style={base.headingSm}>Market Value</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -63,7 +78,43 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-end',
   },
-  userIcon: {},
+  summaryContainer: {
+    width: '100%',
+    padding: 40,
+    flexDirection: 'row',
+    backgroundColor: '#30444E',
+    borderRadius: 30,
+    height: '25%',
+  },
+  summaryGraph: {
+    backgroundColor: '#FF575F',
+    height: '100%',
+    width: '35%',
+    borderRadius: 50,
+  },
+  pmContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    height: '30%',
+    justifyContent: 'center',
+  },
+  PL: {
+    backgroundColor: '#3DD598',
+    height: '100%',
+    width: '45%',
+    padding: 20,
+    margin: 10,
+    borderRadius: 15,
+  },
+  marketValue: {
+    backgroundColor: '#FFC542',
+    height: '100%',
+    width: '45%',
+    padding: 20,
+    margin: 10,
+    borderRadius: 15,
+  },
 });
 
 export default HomeScreen;

@@ -22,6 +22,7 @@ module.exports = StyleSheet.create({
     fontSize: 35,
     alignSelf: 'center',
     marginTop: '5%',
+    marginBottom: '5%',
   },
   headingMd: {
     color: 'white',
@@ -29,5 +30,27 @@ module.exports = StyleSheet.create({
     fontSize: 25,
     alignSelf: 'center',
     margin: '5%',
+  },
+  headingSm: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 18,
+    alignSelf: 'center',
+    margin: '5%',
+  },
+  flexHoriz: {
+    flex: 1,
+    //padding: 40,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  flexVertical: {
+    flex: 1,
+    //padding: 40,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
