@@ -70,7 +70,7 @@ const SearchScreen = () => {
             width: '100%',
           },
           listContainer:{
-            // height: 60,
+            height: 60,
             marginVertical: 10,
               borderBottomWidth: 2,
               borderBottomColor: "#B8C2C0",
@@ -84,6 +84,7 @@ const SearchScreen = () => {
               marginLeft: '5%'
           },
           symbolText:{
+            fontSize: 20,
             fontWeight: 'bold',
             color: '#ffff',
           },

@@ -6,9 +6,9 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import SearchScreen from './src/screens/SearchScreen';
 
-// if (firebase.apps.length === 0) {
-//   firebase.initializeApp(firebaseConfig);
-// }
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default function App() {
   console.log(firebase);
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 40,
     backgroundColor: '#22343C',
-    // alignItems: 'flex-start',
+    alignItems: 'flex-start',
     // justifyContent: 'center',
   },
 });
