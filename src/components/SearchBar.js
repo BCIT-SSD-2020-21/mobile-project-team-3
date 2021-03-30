@@ -45,6 +45,7 @@ const SearchBar = ({ input, onInputChange, onInputSubmit }) => {
                     flexDirection: 'row',
                 },
                 searchInput: {
+                    color: '#96A7AF',
                     flex: 1
                 },
                 searchIcon: {
