@@ -23,7 +23,6 @@ if (firebase.apps.length === 0) {
 }
 
 export default function App() {
-  console.log(firebase);
   return (
     <SafeAreaProvider>
       <NavigationContainer>

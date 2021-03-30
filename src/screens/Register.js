@@ -14,7 +14,6 @@ export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   const onRegisterPressed = () => {
     if (!password || !email) {
