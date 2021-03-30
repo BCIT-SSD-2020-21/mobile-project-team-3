@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function Login() {
+export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -19,23 +19,23 @@ export default function Login() {
       <Text style={styles.subHeader}>Sign in to continue</Text>
       <View style={styles.inputView}>
         <View style={styles.userIconContainer}>
-          <FontAwesome name="user" color="#FFC542" size={20} />
+          <FontAwesome name='user' color='#FFC542' size={20} />
         </View>
         <TextInput
           style={styles.textInput}
-          placeholder="Email"
-          placeholderTextColor="#96A7AF"
+          placeholder='Email'
+          placeholderTextColor='#96A7AF'
           onChangeText={(email) => setEmail(email)}
         />
       </View>
       <View style={styles.inputView}>
         <View style={styles.lockIconContainer}>
-          <FontAwesome name="unlock" color="#FF575F" size={20} />
+          <FontAwesome name='unlock' color='#FF575F' size={20} />
         </View>
         <TextInput
           style={styles.textInput}
-          placeholder="Password"
-          placeholderTextColor="#96A7AF"
+          placeholder='Password'
+          placeholderTextColor='#96A7AF'
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />
@@ -44,13 +44,13 @@ export default function Login() {
         <TouchableOpacity style={styles.loginBtn}>
           <Text style={styles.loginBtnText}>Sign in</Text>
           <FontAwesome
-            name="arrow-right"
-            color="white"
+            name='arrow-right'
+            color='white'
             size={20}
             style={{ marginLeft: 20 }}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.registerBtn}>
+        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')} style={styles.registerBtn}>
           <Text style={styles.registerBtnText}>Create an account</Text>
         </TouchableOpacity>
       </View>
@@ -65,9 +65,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
   },
   container: {
     width: '100%',
+    flex: 1,
+    padding: 40,
+    backgroundColor: '#22343C',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
   loginBtnText: {
     fontWeight: 'bold',
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     color: '#96A7AF',
-    width: '90%'
+    width: '90%',
   },
   userIconContainer: {
     justifyContent: 'center',
