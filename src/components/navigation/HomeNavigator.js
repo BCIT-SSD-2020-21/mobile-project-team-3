@@ -15,19 +15,6 @@ const HomeNavigator = () => {
       initialRouteName='RegisterScreen'
     >
       <HomeStack.Screen
-        name='RegisterScreen'
-        component={Register}
-        options={
-          Platform.OS === 'android'
-            ? {
-                headerRight: () => <MenuIcon />,
-              }
-            : {
-                headerTitle: 'User Register',
-              }
-        }
-      />
-      <HomeStack.Screen
         name='LoginScreen'
         component={Login}
         options={
@@ -37,6 +24,19 @@ const HomeNavigator = () => {
               }
             : {
                 headerTitle: 'User Login',
+              }
+        }
+      />
+      <HomeStack.Screen
+        name='RegisterScreen'
+        component={Register}
+        options={
+          Platform.OS === 'android'
+            ? {
+                headerRight: () => <MenuIcon />,
+              }
+            : {
+                headerTItle: 'Register User',
               }
         }
       />

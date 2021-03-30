@@ -7,9 +7,10 @@ import { StyleSheet } from 'react-native';
 // Yellow #FFC542
 // Grey #96A7AF
 
-export default StyleSheet.create({
+module.exports = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 40,
     flexDirection: 'column',
     backgroundColor: '#22343C',
     alignItems: 'center',

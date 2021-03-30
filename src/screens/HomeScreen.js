@@ -8,7 +8,7 @@ const HomeScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={base.container}>
-      <Text>This is the home screen</Text>
+      <Text style={{ color: 'white' }}>Welcome, {user.email}! </Text>
     </SafeAreaView>
   );
 };

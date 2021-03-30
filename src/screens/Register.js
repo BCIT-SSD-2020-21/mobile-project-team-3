@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
+const baseStyles = require('../styles/styles');
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
@@ -21,11 +22,15 @@ export default function Register({ navigation }) {
       .createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         // Signed in
-        setUser(userCredential.user);
+        console.log(userCredential.user);
+        const userInfo = userCredential.user;
+        setUser(userInfo);
         setPassword('');
         console.log('user>>', user);
         // Navigate
-        navigation.navigate('HomeScreen', user);
+        user
+          ? navigation.navigate('HomeScreen', user)
+          : console.log('error logging in');
       })
       .catch((error) => {
         var errorCode = error.code;
@@ -35,7 +40,7 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={baseStyles.container}>
       <View style={styles.box}></View>
       <Text style={styles.header}>Sign Up</Text>
       <Text style={styles.subHeader}>to start working</Text>
@@ -48,6 +53,7 @@ export default function Register({ navigation }) {
           placeholder='Email'
           placeholderTextColor='#96A7AF'
           onChangeText={(email) => setEmail(email)}
+          autoCapitalize='none'
         />
       </View>
       <View style={styles.inputView}>
@@ -60,9 +66,10 @@ export default function Register({ navigation }) {
           placeholderTextColor='#96A7AF'
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
+          autoCapitalize='none'
         />
       </View>
-      <View style={styles.inputView}>
+      {/* <View style={styles.inputView}>
         <View style={styles.lockIconContainer}>
           <FontAwesome name='lock' color='#FF575F' size={20} />
         </View>
@@ -72,10 +79,14 @@ export default function Register({ navigation }) {
           placeholderTextColor='#96A7AF'
           secureTextEntry={true}
           onChangeText={(password) => setConfirmPassword(password)}
+          autoCapitalize='none'
         />
-      </View>
+      </View> */}
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.backBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('LoginScreen')}
+          style={styles.backBtn}
+        >
           <FontAwesome name='arrow-left' color='#3DD598' size={20} />
         </TouchableOpacity>
         <TouchableOpacity
