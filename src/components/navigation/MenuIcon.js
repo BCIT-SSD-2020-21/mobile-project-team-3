@@ -14,7 +14,7 @@ export default function MenuIcon() {
   return (
     <TouchableOpacity onPress={openDrawer}>
       <EvilIcons
-        name='navIcon'
+        name='navicon'
         size={30}
         color='black'
         style={{ marginLeft: 25 }}
