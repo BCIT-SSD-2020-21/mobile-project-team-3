@@ -10,25 +10,43 @@ const BottomTab = createBottomTabNavigator();
 
 const BottomTabNav = () => {
   return (
-    <BottomTab.Navigator initialRouteName='Home'>
+    <BottomTab.Navigator
+      initialRouteName='Home'
+      tabBarOptions={{
+        keyboardHidesTabBar: true,
+        showLabel: false,
+        goBack: 'history',
+        style: {
+          backgroundColor: '#30444E',
+          height: '10%',
+          //borderRadius: '30%',
+        },
+      }}
+    >
       <BottomTab.Screen
         name='Watch'
         component={WatchScreen}
         options={{
-          tabBarIcon: () => <FontAwesome name='bell' size={30} />,
+          tabBarIcon: () => <FontAwesome name='bell' size={30} color='white' />,
         }}
       />
       <BottomTab.Screen
         name='Home'
         component={HomeNavigator}
         options={{
-          tabBarIcon: () => <FontAwesome5 name='comment-dollar' size={30} />,
+          tabBarIcon: () => (
+            <FontAwesome5 name='comment-dollar' size={30} color='white' />
+          ),
         }}
       />
       <BottomTab.Screen
         name='Search'
         component={SearchScreen}
-        options={{ tabBarIcon: () => <FontAwesome name='search' size={30} /> }}
+        options={{
+          tabBarIcon: () => (
+            <FontAwesome name='search' size={30} color='white' />
+          ),
+        }}
       />
     </BottomTab.Navigator>
   );
