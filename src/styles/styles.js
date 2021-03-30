@@ -16,4 +16,11 @@ module.exports = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  headingLg: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 35,
+    alignSelf: 'center',
+    marginTop: '5%',
+  },
 });

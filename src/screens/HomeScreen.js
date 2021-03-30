@@ -28,22 +28,41 @@ const HomeScreen = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={base.container}>
+    <SafeAreaView style={styles.container}>
       <UserModal
         setModalVisible={setModalVisible}
         modalVisible={modalVisible}
         handleLogOut={handleLogOut}
       />
-      <View>
-        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+      <View style={styles.userIconContainer}>
+        <TouchableOpacity
+          onPress={() => setModalVisible(!modalVisible)}
+          style={styles.userIcon}
+        >
           <FontAwesome name='user' color='white' size={20} />
         </TouchableOpacity>
       </View>
-      <Text style={{ color: 'white' }}>Welcome, {user.email}! </Text>
+      <View>
+        <Text style={base.headingLg}>Your Porfolio</Text>
+      </View>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    flex: 1,
+    padding: 40,
+    backgroundColor: '#22343C',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  userIconContainer: {
+    width: '100%',
+    alignItems: 'flex-end',
+  },
+  userIcon: {},
+});
 
 export default HomeScreen;
