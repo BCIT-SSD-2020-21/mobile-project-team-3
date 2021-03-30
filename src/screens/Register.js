@@ -29,6 +29,7 @@ export default function Register({ navigation }) {
         console.log(userCredential.user);
         const userInfo = userCredential.user;
         setUser(userInfo);
+        setEmail('');
         setPassword('');
         console.log('user>>', user);
         // Navigate
@@ -55,6 +56,7 @@ export default function Register({ navigation }) {
         <TextInput
           style={styles.textInput}
           placeholder='Email'
+          value={email}
           placeholderTextColor='#96A7AF'
           onChangeText={(email) => setEmail(email)}
           autoCapitalize='none'
@@ -67,6 +69,7 @@ export default function Register({ navigation }) {
         <TextInput
           style={styles.textInput}
           placeholder='Password'
+          value={password}
           placeholderTextColor='#96A7AF'
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}

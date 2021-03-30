@@ -28,6 +28,7 @@ export default function Login({ navigation }) {
         const userInfo = userCredential.user;
         setUser(userInfo);
         console.log('userInfo from Firebase>>', userInfo);
+        setEmail('');
         setPassword('');
         // navigate
         console.log('user>>', user);
@@ -56,6 +57,7 @@ export default function Login({ navigation }) {
           placeholder='Email'
           placeholderTextColor='#96A7AF'
           onChangeText={(email) => setEmail(email)}
+          value={email}
           autoCapitalize='none'
         />
       </View>
@@ -69,6 +71,7 @@ export default function Login({ navigation }) {
           placeholderTextColor='#96A7AF'
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
+          value={password}
           autoCapitalize='none'
           enablesReturnKeyAutomatically={true}
         />
