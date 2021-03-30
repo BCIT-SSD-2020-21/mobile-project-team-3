@@ -7,14 +7,15 @@ import {
   View,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+const baseStyles = require('../styles/styles')
 
-export default function Register() {
+export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
-    <View style={styles.container}>
+    <View style={baseStyles.container}>
       <View style={styles.box}></View>
       <Text style={styles.header}>Sign Up</Text>
       <Text style={styles.subHeader}>to start working</Text>
@@ -54,7 +55,7 @@ export default function Register() {
         />
       </View>
       <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.backBtn}>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.backBtn}>
           <FontAwesome
             name="arrow-left"
             color="#3DD598"
