@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const mongoDatabase = require('./database');
 const makeUsersRouter = require('./routes/usersRouter');
+const cors = require('cors');
 
 app.use(express.json());
+app.use(cors());
 
 mongoDatabase().then((database) => {
   const usersRouter = makeUsersRouter({

@@ -13,5 +13,18 @@ module.exports = async function () {
   const db = client.db(dbName);
   const users = db.collection('users');
 
-  return {};
+  async function insertUser(userInfo) {
+    const { email } = userInfo;
+
+    const result = await users.insertOne({
+      email,
+      timestamp: Date.now(),
+    });
+
+    return result.ops[0];
+  }
+
+  return {
+    insertUser
+  };
 };
