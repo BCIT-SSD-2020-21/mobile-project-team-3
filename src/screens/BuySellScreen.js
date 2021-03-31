@@ -4,9 +4,9 @@ import { StyleSheet, Text, View, SafeAreaView, Dimensions, TouchableOpacity, Mod
 import { LineChart } from 'react-native-chart-kit';
 
 
-const BuySellScreen = () => {
-    const symbol="TSLA";
-    const price = 1233;
+
+const BuySellScreen = ({route}) => {
+  const { symbol, price } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [type, setType] = useState("");
     const [count, setCount] =  useState(1);

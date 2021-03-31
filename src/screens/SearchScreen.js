@@ -9,7 +9,7 @@ import { FINNHUB_API } from '@env';
 import base from '../styles/styles';
 import QuoteListItem from '../components/QuoteListItem';
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation }) => {
   const [input, setInput] = useState('');
   const [quote, setQuote] = useState({});
 
@@ -46,7 +46,7 @@ const SearchScreen = () => {
         onInputChange={(newInput) => setInput(newInput)}
         onInputSubmit={() => searchAPI()}
       />
-      <QuoteListItem input={input} quote={quote}></QuoteListItem>
+      <QuoteListItem input={input} quote={quote} navigation={navigation}></QuoteListItem>
     </SafeAreaView>
   );
 };

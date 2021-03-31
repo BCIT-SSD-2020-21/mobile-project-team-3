@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements';
 
-export default function QuoteListItem({ quote, input }) {
+export default function QuoteListItem({ quote, input, navigation }) {
   return (
     <View style={styles.listContainer}>
       {Object.keys(quote).length > 0 && (
@@ -22,7 +22,7 @@ export default function QuoteListItem({ quote, input }) {
           </View>
           <TouchableOpacity
             style={styles.viewBtn}
-            onPress={() => onViewClicked()}
+            onPress={() => navigation.navigate('BuySellScreen', {symbol: input, price: quote.c})}
           >
             <Text style={styles.viewBtnText}>View</Text>
           </TouchableOpacity>

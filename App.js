@@ -22,14 +22,14 @@ if (firebase.apps.length === 0) {
 
 export default function App() {
   return (
-    // <SafeAreaProvider>
-    //   <NavigationContainer>
-    //     <Stack.Navigator screenOptions={{ headerShown: false }}>
-    //       <Stack.Screen name='Root' component={PlatformSpecificNavigator} />
-    //     </Stack.Navigator>
-    //   </NavigationContainer>
-    // </SafeAreaProvider>
-    <BuySellScreen />
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name='Root' component={PlatformSpecificNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+    // <BuySellScreen />
   );
 }
 
