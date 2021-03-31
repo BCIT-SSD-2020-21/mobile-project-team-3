@@ -1,9 +1,18 @@
 import axios from 'axios';
+const url = 'http://YOUR IP ADDRESS GOES HERE:3000';
 
 export async function signUp(data) {
   try {
-    const response = await axios.get('/api/users', data);
+    await axios.post(`${url}/api/users`, data);
   } catch (err) {
-    console.log('Error from network.js:', err)
+    console.log(err)
+  }
+}
+
+export async function login(data) {
+  try {
+
+  } catch (err) {
+
   }
 }
