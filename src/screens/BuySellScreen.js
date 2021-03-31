@@ -22,10 +22,10 @@ const BuySellScreen = ({ route }) => {
 
   const onBuyOrSellButtonClicked = () => {
     if (type === "Buy") {
-      console.log("Buy clicked")
+     setMyCash((myCash - total.toFixed(2)).toFixed(2))
     }
     else if (type === "Sell") {
-      console.log("Sell clicked")
+      setMyCash((myCash - (-total.toFixed(2))).toFixed(2))
     }
   }
 
@@ -55,7 +55,7 @@ const BuySellScreen = ({ route }) => {
       return(
         <View style={styles.TextView}>
         <Text style={styles.modalText}>Cash </Text>
-        <Text style={styles.modalText}>${  (myCash - total.toFixed(2)).toFixed(2) }</Text>
+        <Text style={styles.modalText}>${  (myCash - (-total.toFixed(2))).toFixed(2) }</Text>
       </View>
           )
     }
