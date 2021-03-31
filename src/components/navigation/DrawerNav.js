@@ -2,7 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MenuIcon from './MenuIcon';
 import WatchScreen from '../../screens/WatchScreen';
-import SearchScreen from '../../screens/SearchScreen';
+import SearchNavigator from './SearchNavigator'
 import HomeNavigator from './HomeNavigator';
 
 const Drawer = createDrawerNavigator();
@@ -22,7 +22,7 @@ export default function DrawerNav() {
       />
       <Drawer.Screen
         name='Search'
-        component={SearchScreen}
+        component={SearchNavigator}
         options={{ headerTitle: 'Search', headerRight: () => <MenuIcon /> }}
       />
     </Drawer.Navigator>
