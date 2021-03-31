@@ -23,9 +23,11 @@ const BuySellScreen = ({ route }) => {
   const onBuyOrSellButtonClicked = () => {
     if (type === "Buy") {
      setMyCash((myCash - total.toFixed(2)).toFixed(2))
+     setCount(0); setTotal(0)
     }
     else if (type === "Sell") {
       setMyCash((myCash - (-total.toFixed(2))).toFixed(2))
+      setCount(0); setTotal(0)
     }
   }
 
@@ -47,7 +49,7 @@ const BuySellScreen = ({ route }) => {
       return(
     <View style={styles.TextView}>
     <Text style={styles.modalText}>Cash </Text>
-    <Text style={styles.modalText}>${  (myCash - total.toFixed(2)).toFixed(2) }</Text>
+    <Text style={styles.modalText}>${  (myCash - total.toFixed(2) ).toFixed(2) }</Text>
   </View>
       )
     }
@@ -55,7 +57,7 @@ const BuySellScreen = ({ route }) => {
       return(
         <View style={styles.TextView}>
         <Text style={styles.modalText}>Cash </Text>
-        <Text style={styles.modalText}>${  (myCash - (-total.toFixed(2))).toFixed(2) }</Text>
+        <Text style={styles.modalText}>${  (myCash - (-total.toFixed(2)) ).toFixed(2) }</Text>
       </View>
           )
     }
@@ -140,7 +142,7 @@ const BuySellScreen = ({ route }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.closeBtn, styles.btn]}
-                onPress={() => { setModalVisible(!modalVisible); setCount(1); setTotal(price) }}
+                onPress={() => { setModalVisible(!modalVisible); setCount(0); setTotal(0) }}
               >
                 <FontAwesome name="close" size={40} color="white" />
               </TouchableOpacity>
