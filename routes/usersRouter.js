@@ -3,10 +3,9 @@ const express = require('express');
 module.exports = function ({ database }) {
   const router = express.Router();
 
-  // CREATE
   //========= REGISTER USER ========== //
   router.post('/', async (req, res) => {
-    const uid = req.body;
+    const { uid } = req.body;
 
     try {
       const user = await database.insertUser(uid);
@@ -17,15 +16,13 @@ module.exports = function ({ database }) {
     }
   });
 
-  // READ
   //========= LOGIN USER ========== //
   // /api/users
   router.get('/', async (req, res) => {
-    const { uid } = req.params;
-    console.log();
+    const { uid } = req.body;
 
     try {
-      const user = await database.getUser(userDetails.uid);
+      const user = await database.getUser(uid);
       res.send({ user });
     } catch {
       console.log(err);
@@ -33,15 +30,15 @@ module.exports = function ({ database }) {
     }
   });
 
-  // UPDATE
   //========= MARKET BUY ========== //
-  // /api/users/buy
+  // /api/users/:uid/buy
 
-  router.put('/buy', async (req, res) => {
+  router.put('/:uid/buy', async (req, res) => {
+    const { uid } = req.params;
     const data = req.body;
     try {
-      // const user = await database.getUser();
-      // res.send({ user });
+      const transaction = await database.makeMarketBuy({ uid, data });
+      res.send({ transaction });
     } catch {
       console.log(err);
       res.status(401).send({ Error: err.message });
@@ -49,9 +46,19 @@ module.exports = function ({ database }) {
   });
 
   //========= MARKET SELL ========== //
-  // /api/users/sell
+  // /api/users/:uid/sell
 
-  router.put('/sell', async (req, res) => {});
+  router.put('/:uid/sell', async (req, res) => {
+    const { uid } = req.params;
+    const data = req.body;
+    try {
+      const transaction = await database.makeMarketSell({ uid, data });
+      res.send({ transaction });
+    } catch {
+      console.log(err);
+      res.status(401).send({ Error: err.message });
+    }
+  });
 
   // DESTROY
 

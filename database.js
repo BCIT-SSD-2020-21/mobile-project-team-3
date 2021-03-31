@@ -44,8 +44,52 @@ module.exports = async function () {
     return foundUser;
   }
 
+  //========= MARKET BUY ========== //
+  async function makeMarketBuy({ uid, data }) {
+    const { symbol, quotePrice, numShares } = data;
+    //find user in db
+    const user = await Users.findOne({ uid: uid });
+
+    //check to see if enough funds
+    const price = quotePrice * numShares;
+    if (price > user.cash) {
+      throw Error('Insufficient Funds');
+    }
+
+    //add record to user's marketBuys array
+    const transaction = {
+      symbol,
+      quotePrice,
+      numShares,
+      datePurchased: Date.now(),
+    };
+    user.marketBuys.push(transaction);
+
+    //update user's portfolio (if symbol is not in portfolio,
+    //add it; else update quantity of symbol in portfolio )
+    const existingStock = user.portfolio.findOne((p) => {
+      p.symbol === symbol;
+    });
+
+    if (!existingStock) {
+      user.portfolio.push({ symbol, numShares });
+    } else {
+      existingStock.numShares += numShares;
+    }
+
+    //Update user in database
+    const updatedUser = await Users.findOneAndReplace({ uid: uid }, user);
+
+    return updatedUser;
+  }
+
+  //========= MARKET SELL ========== //
+  async function makeMarketSell() {}
+
   return {
     insertUser,
     getUser,
+    makeMarketBuy,
+    makeMarketSell,
   };
 };

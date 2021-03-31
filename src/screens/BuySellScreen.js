@@ -11,12 +11,18 @@ import {
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
+// import axios from 'axios';
+// import { FINNHUB_API } from '@env';
+
 const BuySellScreen = ({ route }) => {
   const { symbol, price } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
+  const [myCash, setMyCash] = useState(
+    50000
+  ); /* '50000' has to be modified to each user's cash from database */
   const line = {
     datasets: [
       {
@@ -27,9 +33,13 @@ const BuySellScreen = ({ route }) => {
 
   const onBuyOrSellButtonClicked = () => {
     if (type === 'Buy') {
-      console.log('Buy clicked');
+      setMyCash((myCash - total.toFixed(2)).toFixed(2));
+      setCount(0);
+      setTotal(0);
     } else if (type === 'Sell') {
-      console.log('Sell clicked');
+      setMyCash((myCash - -total.toFixed(2)).toFixed(2));
+      setCount(0);
+      setTotal(0);
     }
   };
 
@@ -44,6 +54,29 @@ const BuySellScreen = ({ route }) => {
     const newTotal = total - price;
     setCount(newCount);
     setTotal(newTotal);
+  };
+
+  const DisplayUserCash = () => {
+    if (type == 'Buy') {
+      return (
+        <View style={styles.TextView}>
+          <Text style={styles.modalText}>Cash </Text>
+          <Text style={styles.modalText}>
+            ${(myCash - total.toFixed(2)).toFixed(2)}
+          </Text>
+        </View>
+      );
+    }
+    if (type == 'Sell') {
+      return (
+        <View style={styles.TextView}>
+          <Text style={styles.modalText}>Cash </Text>
+          <Text style={styles.modalText}>
+            ${(myCash - -total.toFixed(2)).toFixed(2)}
+          </Text>
+        </View>
+      );
+    }
   };
 
   return (
@@ -71,6 +104,7 @@ const BuySellScreen = ({ route }) => {
           }}
         />
       </View>
+
       <Modal
         animationType='slide'
         transparent={false}
@@ -103,6 +137,14 @@ const BuySellScreen = ({ route }) => {
                 <FontAwesome name='minus-circle' size={30} color='white' />
               </TouchableOpacity>
             </View>
+
+            {/* <TouchableOpacity
+          style={[styles.sellBtn, styles.btn]}
+          onPress={() => {DisplayUserCash}}>
+          <Text name="arrow-up" size={40} color="white">Checking Expected Cash</Text>
+        </TouchableOpacity> */}
+            {DisplayUserCash()}
+
             <View style={styles.sellBuyBtnContainer}>
               <TouchableOpacity
                 style={[styles.buyBtn, styles.btn]}
@@ -114,8 +156,8 @@ const BuySellScreen = ({ route }) => {
                 style={[styles.closeBtn, styles.btn]}
                 onPress={() => {
                   setModalVisible(!modalVisible);
-                  setCount(1);
-                  setTotal(price);
+                  setCount(0);
+                  setTotal(0);
                 }}
               >
                 <FontAwesome name='close' size={40} color='white' />
@@ -148,6 +190,16 @@ const BuySellScreen = ({ route }) => {
           <FontAwesome name='arrow-up' size={40} color='white' />
         </TouchableOpacity>
       </View>
+
+      <View style={styles.btnContainer}>
+        <Text style={styles.Cashtext}>My Cash</Text>
+        <Text style={styles.Cashtext}>${myCash}</Text>
+        {/* <TouchableOpacity
+          style={[styles.sellBtn, styles.btn]}
+          onPress={() => { setModalVisible(true); setType("Sell") }}>
+          <FontAwesome name="arrow-up" size={40} color="white" />
+        </TouchableOpacity> */}
+      </View>
     </SafeAreaView>
   );
 };
@@ -163,6 +215,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 35,
+  },
+  Cashtext: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 25,
+    marginTop: 10,
   },
   priceHeader: {
     color: '#3DD598',
