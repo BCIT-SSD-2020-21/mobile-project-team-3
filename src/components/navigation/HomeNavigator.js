@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 import Login from '../../screens/Login';
 import HomeScreen from '../../screens/HomeScreen';
 import Register from '../../screens/Register';
+import SearchNavigator from './SearchNavigator'
 
 const HomeStack = createStackNavigator();
 
@@ -43,6 +44,19 @@ const HomeNavigator = () => {
       <HomeStack.Screen
         name='HomeScreen'
         component={HomeScreen}
+        options={
+          Platform.OS === 'android'
+            ? {
+                headerRight: () => <MenuIcon />,
+              }
+            : {
+                headerTitle: 'User Dashboard',
+              }
+        }
+      />
+       <HomeStack.Screen
+        name='Search'
+        component={SearchNavigator}
         options={
           Platform.OS === 'android'
             ? {

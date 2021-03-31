@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import WatchScreen from '../../screens/WatchScreen';
-import SearchScreen from '../../screens/SearchScreen';
 import HomeNavigator from './HomeNavigator';
+import SearchNavigator from './SearchNavigator'
 
 const BottomTab = createBottomTabNavigator();
 
@@ -41,7 +41,7 @@ const BottomTabNav = () => {
       />
       <BottomTab.Screen
         name='Search'
-        component={SearchScreen}
+        component={SearchNavigator}
         options={{
           tabBarIcon: () => (
             <FontAwesome name='search' size={30} color='white' />
