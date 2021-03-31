@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
-import { login } from '../../network';
+import { getUser } from '../../network';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
       const response = await firebase.auth().signInWithEmailAndPassword(email, password)
       const userInfo = response.user.providerData[0];
       setUser(userInfo);
-      await login(userInfo)
+      await getUser(userInfo.uid)
       console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');

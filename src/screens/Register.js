@@ -26,7 +26,7 @@ export default function Register({ navigation }) {
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
       const userInfo = response.user.providerData[0];
       setUser(userInfo);
-      await signUp(userInfo)
+      await signUp(userInfo.uid)
       console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');
