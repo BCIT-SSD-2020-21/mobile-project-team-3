@@ -13,11 +13,11 @@ module.exports = async function () {
   const db = client.db(dbName);
   const users = db.collection('users');
 
-  async function insertUser(userInfo) {
-    const { email } = userInfo;
+  async function insertUser(userDetails) {
+    const { uid } = userDetails;
 
     const result = await users.insertOne({
-      email,
+      uid,
       timestamp: Date.now(),
     });
 
