@@ -128,7 +128,7 @@ const BuySellScreen = ({ route }) => {
           onPress={() => {DisplayUserCash}}>
           <Text name="arrow-up" size={40} color="white">Checking Expected Cash</Text>
         </TouchableOpacity> */}
-            {/* {DisplayUserCash()} */}
+            {DisplayUserCash()}
           
 
             <View style={styles.sellBuyBtnContainer}>
