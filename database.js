@@ -24,7 +24,12 @@ module.exports = async function () {
     return result.ops[0];
   }
 
+  async function getUser(uid) {
+    const result = await users.findOne();
+  }
+
   return {
-    insertUser
+    insertUser,
+    getUser,
   };
 };
