@@ -3,15 +3,21 @@ import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, Text, View, SafeAreaView, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
+// import axios from 'axios';
+// import { FINNHUB_API } from '@env';
 
 
 const BuySellScreen = ({ route }) => {
+
+
+
+
   const { symbol, price } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState("");
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price)
-  const [myCash, setMyCash] = useState(50000) /* It has to be modified the value getting from database */
+  const [myCash, setMyCash] = useState(50000) /* '50000' has to be modified to each user's cash from database */
   const line = {
     datasets: [
       {
@@ -19,6 +25,8 @@ const BuySellScreen = ({ route }) => {
       },
     ],
   };
+
+
 
   const onBuyOrSellButtonClicked = () => {
     if (type === "Buy") {
