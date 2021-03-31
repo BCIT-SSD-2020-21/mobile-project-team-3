@@ -58,7 +58,7 @@ export default function Register({ navigation }) {
           placeholder='Email'
           value={email}
           placeholderTextColor='#96A7AF'
-          onChangeText={(email) => setEmail(email)}
+          onChangeText={(email) => setEmail(email.toLowerCase())}
           autoCapitalize='none'
         />
       </View>
