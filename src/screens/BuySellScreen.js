@@ -15,8 +15,8 @@ const BuySellScreen = ({ route }) => {
   const { symbol, price } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState("");
-  const [count, setCount] = useState(1);
-  const [total, setTotal] = useState(price)
+  const [count, setCount] = useState(0);
+  const [total, setTotal] = useState(0)
   const [myCash, setMyCash] = useState(50000) /* '50000' has to be modified to each user's cash from database */
   const line = {
     datasets: [
