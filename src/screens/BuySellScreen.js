@@ -10,6 +10,7 @@ const BuySellScreen = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [type, setType] = useState("");
     const [count, setCount] =  useState(1);
+    const [total, setTotal] = useState(price)
     const line = {
         datasets: [
             {
@@ -29,18 +30,22 @@ const BuySellScreen = () => {
 
     const addButtonClicked = () => {
         const newCount= count+1
+        const newTotal = total+price
         setCount(newCount)
+        setTotal(newTotal)
     }
     const minusButtonClicked = () => {
         const newCount= count-1
+        const newTotal = total-price
         setCount(newCount)
+        setTotal(newTotal)
     }
     
     return (
     <SafeAreaView style={styles.container} >
         <View style={styles.headerContainer}>
             <Text style={styles.text}>{symbol}</Text>
-            <Text style={styles.priceHeader}>{price} USD</Text>
+            <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
             </View>
             <View>
                 <LineChart
@@ -76,7 +81,7 @@ const BuySellScreen = () => {
           <View style={styles.modalView} backdropOpacity= {0.5}>
               <View style={styles.TextView}>
             <Text style={styles.modalText}>{type}</Text>
-            <Text style={styles.modalText}>{price} USD</Text>
+            <Text style={styles.modalText}>{total.toFixed(2)} USD</Text>
             </View>
             <View style={styles.TextView}>
             <Text style={styles.modalText}>Qty</Text>
@@ -103,7 +108,7 @@ const BuySellScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity 
               style={[styles.closeBtn, styles.btn]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {setModalVisible(!modalVisible); setCount(1); setTotal(price)}}
             >
                 <FontAwesome name="close" size={40} color="white" />
               </TouchableOpacity>
@@ -141,11 +146,11 @@ const BuySellScreen = () => {
                                 text: {
                                     color: 'white',
                                     fontWeight: 'bold',
-                                    fontSize: 40
+                                    fontSize: 35
                                 },
                                 priceHeader: {
                                     color: '#3DD598',
-                                    fontSize: 40
+                                    fontSize: 35
                                 },
                                 headerContainer:{
                                     flexDirection: 'row',
@@ -165,7 +170,7 @@ const BuySellScreen = () => {
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     width: '20%',
-                                    height: 60,
+                                    height: 55,
                                     marginLeft: '10%',
                                 },
                                 buyBtn: {
