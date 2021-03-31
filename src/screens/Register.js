@@ -23,16 +23,18 @@ export default function Register({ navigation }) {
     }
 
     try {
-      const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
+      const response = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
       setUser(userInfo);
-      await signUp(userInfo)
+      await signUp(userInfo.uid); //to database
       console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');
       console.log('user>>', user);
       // navigate
-      userInfo 
+      userInfo
         ? navigation.navigate('HomeScreen', userInfo)
         : console.log('error logging in');
     } catch (err) {

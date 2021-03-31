@@ -11,21 +11,37 @@ module.exports = async function () {
   await client.connect();
 
   const db = client.db(dbName);
-  const users = db.collection('users');
+  const Users = db.collection('users');
 
-  async function insertUser(userDetails) {
-    const { uid } = userDetails;
+  //========= REGISTER USER ========== //
 
-    const result = await users.insertOne({
-      uid,
-      timestamp: Date.now(),
+  async function insertUser(uid) {
+    const user = await Users.findOne({ uid: uid });
+    if (user) {
+      throw Error('User already exists. Please try again.');
+    }
+
+    const newUser = await Users.insertOne({
+      uid: uid,
+      dateJoined: Date.now(),
+      cash: 50000,
+      marketBuys: [],
+      marketSells: [],
+      portfolio: [],
     });
 
-    return result.ops[0];
+    return newUser.ops[0];
   }
 
+  //========= LOGIN USER ========== //
   async function getUser(uid) {
-    const result = await users.findOne();
+    const foundUser = await Users.findOne({ uid: uid });
+
+    if (!foundUser) {
+      throw Error('No user found!');
+    }
+
+    return foundUser;
   }
 
   return {

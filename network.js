@@ -1,18 +1,15 @@
 import axios from 'axios';
-const url = 'http://YOUR IP ADDRESS GOES HERE:3000';
+const url = 'http://69.172.146.7';
 
-export async function signUp(data) {
+export async function signUp(uid) {
   try {
-    await axios.post(`${url}/api/users`, data);
+    await axios.post(`${url}/api/users`, uid);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 }
 
-export async function login(data) {
+export async function getUser(data) {
   try {
-
-  } catch (err) {
-
-  }
+  } catch (err) {}
 }

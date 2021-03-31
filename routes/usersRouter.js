@@ -4,11 +4,12 @@ module.exports = function ({ database }) {
   const router = express.Router();
 
   // CREATE
+  //========= REGISTER USER ========== //
   router.post('/', async (req, res) => {
-    const userDetails = req.body;
+    const uid = req.body;
 
     try {
-      const user = await database.insertUser(userDetails);
+      const user = await database.insertUser(uid);
       res.send({ user });
     } catch (err) {
       console.log(err);
@@ -17,8 +18,11 @@ module.exports = function ({ database }) {
   });
 
   // READ
+  //========= LOGIN USER ========== //
+  // /api/users
   router.get('/', async (req, res) => {
-    const userDetails = req.body;
+    const { uid } = req.params;
+    console.log();
 
     try {
       const user = await database.getUser(userDetails.uid);
@@ -30,7 +34,9 @@ module.exports = function ({ database }) {
   });
 
   // UPDATE
+  //========= MARKET BUY ========== //
   // /api/users/buy
+
   router.put('/buy', async (req, res) => {
     const data = req.body;
     try {
@@ -42,7 +48,9 @@ module.exports = function ({ database }) {
     }
   });
 
+  //========= MARKET SELL ========== //
   // /api/users/sell
+
   router.put('/sell', async (req, res) => {});
 
   // DESTROY
