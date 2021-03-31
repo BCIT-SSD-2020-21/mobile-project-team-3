@@ -13,32 +13,31 @@ export async function signUp(uid) {
 
 export async function getUser(uid) {
   try {
-    await axios.get(`${url}/api/${userId}`);
+    const result = await axios.get(`${url}/api/${uid}`);
+    return result
   } catch (err) {
     console.log(err)
   }
 }
 
-export async function marketBuy({symbol, quotePrice, numShares, datePurchased, uid}) {
+export async function marketBuy(symbol, quotePrice, numShares, uid) {
   try {
     await axios.post(`${url}/api/${uid}/buy`, {
       symbol: symbol, 
         quotePrice: quotePrice, 
-        numShares: numShares, 
-        datePurchased: datePurchased
+        numShares: numShares
     });
   } catch (err) {
     console.log(err)
   }
 }
 
-export async function marketSell({symbol, quotePrice, numShares, dateSold, uid}) {
+export async function marketSell(symbol, quotePrice, numShares, uid) {
   try {
     await axios.post(`${url}/api/${uid}/sell`, {
       symbol: symbol, 
         quotePrice: quotePrice, 
         numShares: numShares, 
-        dateSold: dateSold
     });
   } catch (err) {
     console.log(err)
