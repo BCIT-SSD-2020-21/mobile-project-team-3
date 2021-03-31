@@ -25,6 +25,14 @@ export default function Register({ navigation }) {
     try {
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
       const userInfo = response.user.providerData[0];
+
+      // Sets user uid in async storage.
+      try {
+        await AsyncStorage.setItem(userInfo.uid, userInfo.uid)
+      } catch (err) {
+        console.log('Error Setting Data:', err)
+      }
+
       setUser(userInfo);
       await signUp(userInfo)
       console.log('userInfo from Firebase>>', userInfo);

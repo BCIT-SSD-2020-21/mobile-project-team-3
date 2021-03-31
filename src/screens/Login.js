@@ -9,6 +9,7 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
 import { login } from '../../network';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
@@ -24,6 +25,14 @@ export default function Login({ navigation }) {
     try {
       const response = await firebase.auth().signInWithEmailAndPassword(email, password)
       const userInfo = response.user.providerData[0];
+
+      // Sets user uid in async storage.
+      try {
+        await AsyncStorage.setItem(userInfo.uid, userInfo.uid)
+      } catch (err) {
+        console.log('Error Setting Data:', err)
+      }
+
       setUser(userInfo);
       await login(userInfo)
       console.log('userInfo from Firebase>>', userInfo);
