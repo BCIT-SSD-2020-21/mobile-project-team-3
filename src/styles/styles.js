@@ -7,7 +7,7 @@ import { StyleSheet } from 'react-native';
 // Yellow #FFC542
 // Grey #96A7AF
 
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
     padding: 40,

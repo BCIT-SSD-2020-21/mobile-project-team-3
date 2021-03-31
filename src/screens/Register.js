@@ -8,44 +8,64 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
-const baseStyles = require('../styles/styles');
+import base from '../styles/styles';
+import { signUp } from '../../network';
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
 
-  const onRegisterPressed = () => {
+  const onRegisterPressed = async () => {
     if (!password || !email) {
       console.log('Please enter an email/password!');
       return;
     }
 
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        // Signed in
-        console.log(userCredential.user);
-        const userInfo = userCredential.user;
-        setUser(userInfo);
-        setEmail('');
-        setPassword('');
-        console.log('user>>', user);
-        // Navigate
-        user
-          ? navigation.navigate('HomeScreen', user)
-          : console.log('error logging in');
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log('Error>>', errorMessage);
-      });
+    try {
+      const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
+      const userInfo = response.user.providerData[0];
+      setUser(userInfo);
+      await signUp(userInfo)
+      console.log('userInfo from Firebase>>', userInfo);
+      setEmail('');
+      setPassword('');
+      console.log('user>>', user);
+      // navigate
+      userInfo 
+        ? navigation.navigate('HomeScreen', userInfo)
+        : console.log('error logging in');
+    } catch (err) {
+      // const errorCode = err.code;
+      const errorMessage = err.message;
+      console.log('Error>>', errorMessage);
+    }
+
+    // firebase
+    //   .auth()
+    //   .createUserWithEmailAndPassword(email, password)
+    //   .then((userCredential) => {
+    //     // Signed in
+    //     console.log(userCredential.user);
+    //     const userInfo = userCredential.user;
+    //     setUser(userInfo);
+    //     setEmail('');
+    //     setPassword('');
+    //     console.log('user>>', user);
+    //     // Navigate
+    //     user
+    //       ? navigation.navigate('HomeScreen', user)
+    //       : console.log('error logging in');
+    //   })
+    //   .catch((error) => {
+    //     var errorCode = error.code;
+    //     var errorMessage = error.message;
+    //     console.log('Error>>', errorMessage);
+    //   });
   };
 
   return (
-    <View style={baseStyles.container}>
+    <View style={base.container}>
       <View style={styles.box}></View>
       <Text style={styles.header}>Sign Up</Text>
       <Text style={styles.subHeader}>to start working</Text>

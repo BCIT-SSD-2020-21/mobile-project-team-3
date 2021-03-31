@@ -5,13 +5,21 @@ module.exports = function ({ database }) {
 
   // CREATE
   router.post('/', async (req, res) => {
-    console.log('REQUEST BODY:', req.body)
-  })
+    const userDetails = req.body;
+
+    try {
+      const user = await database.insertUser(userDetails);
+      res.send({ user });
+    } catch (err) {
+      console.log(err);
+      res.status(401).send({ error: err.message });
+    }
+  });
   // READ
 
   // UPDATE
 
   // DESTROY
-  
+
   return router;
-}
+};
