@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, Text, View, SafeAreaView, Dimensions, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Dimensions, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-// import axios from 'axios';
-// import { FINNHUB_API } from '@env';
+import axios from 'axios';
+import { FINNHUB_API } from '@env';
 
 
 const BuySellScreen = ({ route }) => {
@@ -13,19 +13,38 @@ const BuySellScreen = ({ route }) => {
 
 
   const { symbol, price } = route.params;
+  const [graph, setGraph] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState("");
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price)
   const [myCash, setMyCash] = useState(50000) /* '50000' has to be modified to each user's cash from database */
+  
+  
+  const graphAPI = async () => {
+    // GET QUOTE
+    try {
+      const response = await axios.get(
+        `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
+      );
+      console.log('API RESPONSE:', response.data);
+      setGraph(response.data);
+      console.log("키득"+graph.c[1])
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
+  
   const line = {
     datasets: [
       {
-        data: [2, 4, 6, 7, 9, 4],
+       
+        // data: [2, 4, 6, 7, 9, 4],
+        data: graph.c.slice(0,100)
       },
     ],
   };
-
 
 
   const onBuyOrSellButtonClicked = () => {
@@ -72,11 +91,26 @@ const BuySellScreen = ({ route }) => {
   }
 
   return (
+  
     <SafeAreaView style={styles.container} >
+       <ScrollView style={styles.scrollView}>
       <View style={styles.headerContainer}>
         <Text style={styles.text}>{symbol}</Text>
         <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
       </View>
+
+      <View>
+      <TouchableOpacity
+            style={styles.viewBtn}
+            onPress={() => graphAPI()}
+          >
+            <Text 
+            style={styles.viewBtnText}
+            
+            >View Graph</Text>
+          </TouchableOpacity>
+      </View>
+
       <View>
         <LineChart
           data={line}
@@ -185,7 +219,7 @@ const BuySellScreen = ({ route }) => {
           <FontAwesome name="arrow-up" size={40} color="white" />
         </TouchableOpacity> */}
       </View>
-
+      </ScrollView>
     </SafeAreaView>
   );
 };
