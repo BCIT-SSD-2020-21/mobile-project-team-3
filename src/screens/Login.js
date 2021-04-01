@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
 
   const onLoginPressed = async () => {
     if (!password || !email) {
@@ -23,24 +23,26 @@ export default function Login({ navigation }) {
     }
 
     try {
-      const response = await firebase.auth().signInWithEmailAndPassword(email, password)
+      const response = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
 
       // Sets user uid in async storage.
       try {
-        await AsyncStorage.setItem(userInfo.uid, userInfo.uid)
+        await AsyncStorage.setItem(userInfo.uid, userInfo.uid);
       } catch (err) {
-        console.log('Error Setting Data:', err)
+        console.log('Error Setting Data:', err);
       }
 
       setUser(userInfo);
-      await login(userInfo)
+      await login(userInfo);
       console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');
       console.log('user>>', user);
       // navigate
-      userInfo 
+      userInfo
         ? navigation.navigate('HomeScreen', userInfo)
         : console.log('error logging in');
     } catch (err) {
@@ -48,28 +50,23 @@ export default function Login({ navigation }) {
       const errorMessage = err.message;
       console.log('Error>>', errorMessage);
     }
-
-    // navigate
-      // .then((userCredential) => {
-      //   // Signed in
-      //   const userInfo = userCredential.user;
-      //   setUser(userInfo);
-      //   console.log('userInfo from Firebase>>', userInfo);
-      //   setEmail('');
-      //   setPassword('');
-      //   // navigate
-      //   console.log('user>>', user);
-      //   userInfo
-      //     ? navigation.navigate('HomeScreen', userInfo)
-      //     : console.log('error logging in');
-      // })
-      // .catch((error) => {
-      //   var errorCode = error.code;
-      //   var errorMessage = error.message;
-      //   console.log('Error>>', errorMessage);
-      // });
-      
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const keys = await AsyncStorage.getAllKeys();
+        if (keys.length > 0) {
+          let currentUser = await AsyncStorage.getItem(keys[0]);
+          currentUser = JSON.parse(currentUser);
+          setUser(currentUser.providerData[0])
+          navigation.navigate('HomeScreen', currentUser.providerData[0])
+        }
+      } catch (err) {
+        console.log('Error Getting Data', err);
+      }
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -78,29 +75,29 @@ export default function Login({ navigation }) {
       <Text style={styles.subHeader}>Sign in to continue</Text>
       <View style={styles.inputView}>
         <View style={styles.userIconContainer}>
-          <FontAwesome name='user' color='#FFC542' size={20} />
+          <FontAwesome name="user" color="#FFC542" size={20} />
         </View>
         <TextInput
           style={styles.textInput}
-          placeholder='Email'
-          placeholderTextColor='#96A7AF'
+          placeholder="Email"
+          placeholderTextColor="#96A7AF"
           onChangeText={(email) => setEmail(email)}
           value={email}
-          autoCapitalize='none'
+          autoCapitalize="none"
         />
       </View>
       <View style={styles.inputView}>
         <View style={styles.lockIconContainer}>
-          <FontAwesome name='unlock' color='#FF575F' size={20} />
+          <FontAwesome name="unlock" color="#FF575F" size={20} />
         </View>
         <TextInput
           style={styles.textInput}
-          placeholder='Password'
-          placeholderTextColor='#96A7AF'
+          placeholder="Password"
+          placeholderTextColor="#96A7AF"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
           value={password}
-          autoCapitalize='none'
+          autoCapitalize="none"
           enablesReturnKeyAutomatically={true}
         />
       </View>
@@ -108,8 +105,8 @@ export default function Login({ navigation }) {
         <TouchableOpacity style={styles.loginBtn} onPress={onLoginPressed}>
           <Text style={styles.loginBtnText}>Sign in</Text>
           <FontAwesome
-            name='arrow-right'
-            color='white'
+            name="arrow-right"
+            color="white"
             size={20}
             style={{ marginLeft: 20 }}
           />
@@ -157,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '90%',
     height: 60,
-    marginBottom: 60,
+    marginBottom: 40,
     backgroundColor: '#40DF9F',
   },
   registerBtn: {

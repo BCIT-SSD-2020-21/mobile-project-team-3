@@ -5,44 +5,40 @@ import { Platform } from 'react-native';
 import Login from '../../screens/Login';
 import HomeScreen from '../../screens/HomeScreen';
 import Register from '../../screens/Register';
-import SearchNavigator from './SearchNavigator'
 
 const HomeStack = createStackNavigator();
+
+// options={{
+//   title: '',
+//   headerStyle: {
+//     backgroundColor: '#22343C',
+//     shadowOpacity: 0,
+//     elevation: 0,
+//   },
+// }}
 
 const HomeNavigator = () => {
   return (
     <HomeStack.Navigator
-      screenOptions={{ headerShown: true }}
-      initialRouteName='LoginScreen'
+      initialRouteName="LoginScreen"
+      screenOptions={{
+        headerShown: true,
+        title: '',
+        headerStyle: {
+          backgroundColor: '#22343C',
+          shadowOpacity: 0,
+          elevation: 0,
+        },
+        headerLeft: null,
+      }}
     >
       <HomeStack.Screen
-        name='LoginScreen'
+        name="LoginScreen"
         component={Login}
-        options={
-          Platform.OS === 'android'
-            ? {
-                headerRight: () => <MenuIcon />,
-              }
-            : {
-                headerTitle: 'User Login',
-              }
-        }
+        options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name='RegisterScreen'
-        component={Register}
-        options={
-          Platform.OS === 'android'
-            ? {
-                headerRight: () => <MenuIcon />,
-              }
-            : {
-                headerTItle: 'Register User',
-              }
-        }
-      />
-      <HomeStack.Screen
-        name='HomeScreen'
+        name="HomeScreen"
         component={HomeScreen}
         options={
           Platform.OS === 'android'
@@ -54,18 +50,10 @@ const HomeNavigator = () => {
               }
         }
       />
-       <HomeStack.Screen
-        name='Search'
-        component={SearchNavigator}
-        options={
-          Platform.OS === 'android'
-            ? {
-                headerRight: () => <MenuIcon />,
-              }
-            : {
-                headerTitle: 'User Dashboard',
-              }
-        }
+      <HomeStack.Screen
+        name="RegisterScreen"
+        component={Register}
+        options={{ headerShown: false }}
       />
     </HomeStack.Navigator>
   );
