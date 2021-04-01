@@ -27,19 +27,20 @@ const BuySellScreen = ({ route }) => {
       );
       console.log('API RESPONSE:', response.data);
       setGraph(response.data);
-      console.log("키득"+graph.c[1])
+      console.log("키득캬듯"+graph.c[1])
     } catch (err) {
       console.log(err);
     }
   }
   
-  
+  graphAPI()
+
   const line = {
+
     datasets: [
       {
-       
-        data: [2, 4, 6, 7, 9, 4],
-        // data: graph.c.slice(0,100)
+        // data: [2, 4, 6, 7, 9, 4],
+        data: graph.o.slice(0,50)
       },
     ],
   };
@@ -100,7 +101,7 @@ const BuySellScreen = ({ route }) => {
         <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
       </View>
 
-      <View>
+      {/* <View>
       <TouchableOpacity
             style={styles.viewBtn}
             onPress={() => graphAPI()}
@@ -110,7 +111,7 @@ const BuySellScreen = ({ route }) => {
             
             >View Graph</Text>
           </TouchableOpacity>
-      </View>
+      </View> */}
 
       <View>
         <LineChart

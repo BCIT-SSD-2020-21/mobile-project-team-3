@@ -1,5 +1,7 @@
 import axios from 'axios';
-const url = 'http://YOUR IP ADDRESS GOES HERE:3000';
+
+const url = 'http://192.168.0.188:3000';
+// const url = 'http://YOUR IP ADDRESS GOES HERE:3000';
 
 export async function signUp(uid) {
   try {
