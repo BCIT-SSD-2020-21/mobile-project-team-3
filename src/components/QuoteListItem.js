@@ -1,9 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements';
+import axios from 'axios';
+import { FINNHUB_API } from '@env';
+
 
 export default function QuoteListItem({ quote, input, navigation }) {
-  return (
+  
+  // const { input } = route.params;
+  
+   return (
     <View style={styles.listContainer}>
       {Object.keys(quote).length > 0 && (
         <>
@@ -22,9 +28,12 @@ export default function QuoteListItem({ quote, input, navigation }) {
           </View>
           <TouchableOpacity
             style={styles.viewBtn}
-            onPress={() => navigation.navigate('BuySellScreen', {symbol: input, price: quote.c})}
+            onPress={() => navigation.navigate('BuySellScreen', {input: input, price: quote.c})}
           >
-            <Text style={styles.viewBtnText}>View</Text>
+            <Text 
+            style={styles.viewBtnText}
+            
+            >View</Text>
           </TouchableOpacity>
         </>
       )}
