@@ -27,7 +27,6 @@ const BuySellScreen = ({ route }) => {
       );
       console.log('API RESPONSE:', response.data);
       setGraph(response.data);
-      console.log("키득캬듯"+graph.c[1])
     } catch (err) {
       console.log(err);
     }
