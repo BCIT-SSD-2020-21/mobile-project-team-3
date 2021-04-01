@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
 import base from '../styles/styles';
 import { signUp } from '../../network';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
