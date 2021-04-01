@@ -34,7 +34,7 @@ export default function Register({ navigation }) {
       }
 
       setUser(userInfo);
-      await signUp(userInfo)
+      await signUp(userInfo.uid)
       console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
-import { login } from '../../network';
+import { getUser } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default function Login({ navigation }) {
@@ -36,7 +36,7 @@ export default function Login({ navigation }) {
       }
 
       setUser(userInfo);
-      await login(userInfo);
+      await getUser(userInfo.uid)
       console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');
