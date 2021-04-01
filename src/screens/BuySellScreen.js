@@ -38,8 +38,8 @@ const BuySellScreen = ({ route }) => {
     datasets: [
       {
        
-        // data: [2, 4, 6, 7, 9, 4],
-        data: graph.c.slice(0,100)
+        data: [2, 4, 6, 7, 9, 4],
+        // data: graph.c.slice(0,100)
       },
     ],
   };
@@ -49,13 +49,13 @@ const BuySellScreen = ({ route }) => {
       await marketBuy(symbol, price, count, uid)
      setMyCash((myCash - total.toFixed(2)).toFixed(2));
      setModalVisible(!modalVisible); 
-     setCount(0); setTotal(0)
+     setCount(1); setTotal(price)
     }
     else if (type === "Sell") {
       await marketSell(symbol, price, count, uid)
       setMyCash((myCash - (-total.toFixed(2))).toFixed(2))
       setModalVisible(!modalVisible); 
-      setCount(0); setTotal(0)
+      setCount(1); setTotal(price)
     }
   }
 
@@ -185,7 +185,7 @@ const BuySellScreen = ({ route }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.closeBtn, styles.btn]}
-                onPress={() => { setModalVisible(!modalVisible); setCount(0); setTotal(0) }}
+                onPress={() => { setModalVisible(!modalVisible); setCount(1); setTotal(price) }}
               >
                 <FontAwesome name="close" size={40} color="white" />
               </TouchableOpacity>
