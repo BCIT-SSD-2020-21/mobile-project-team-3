@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import { StyleSheet, Text, View, SafeAreaView, Dimensions, TouchableOpacity, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Dimensions, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios';
 import { FINNHUB_API } from '@env';
@@ -78,6 +78,7 @@ const BuySellScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container} >
+      <ScrollView style={styles.scrollView}>
       <View style={styles.headerContainer}>
         <Text style={styles.text}>{input}</Text>
         <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
@@ -154,7 +155,6 @@ const BuySellScreen = ({ route }) => {
         </TouchableOpacity> */}
             {DisplayUserCash()}
           
-
             <View style={styles.sellBuyBtnContainer}>
               <TouchableOpacity
                 style={[styles.buyBtn, styles.btn]}
@@ -199,7 +199,7 @@ const BuySellScreen = ({ route }) => {
           <FontAwesome name="arrow-up" size={40} color="white" />
         </TouchableOpacity> */}
       </View>
-
+      </ScrollView>
     </SafeAreaView>
   );
 };
