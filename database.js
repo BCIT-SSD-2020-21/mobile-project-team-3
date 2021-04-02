@@ -48,40 +48,63 @@ module.exports = async function () {
   //========= MARKET BUY ========== //
   async function makeMarketBuy({ uid, data }) {
     const { symbol, quotePrice, numShares } = data;
-    //find user in db
-    const user = await Users.findOne({ uid: uid });
 
-    //check to see if enough funds
-    const price = quotePrice * numShares;
-    if (price > user.cash) {
-      throw Error('Insufficient Funds');
+    try {
+      //find user in db
+      const user = await Users.findOne({ uid: uid });
+
+      //check to see if enough funds
+      const price = quotePrice * numShares;
+      if (price > user.cash) {
+        throw Error('Insufficient Funds');
+      } else {
+        user.cash -= price;
+      }
+
+      //add record to user's marketBuys array
+      const transaction = {
+        symbol,
+        quotePrice,
+        numShares,
+        datePurchased: Date.now(),
+      };
+      user.marketBuys.push(transaction);
+
+      //update user's portfolio (if symbol is not in portfolio,
+      //add it; else update quantity of symbol in portfolio )
+      let existingStock = null;
+
+      if (user.portfolio.length > 0) {
+        existingStock = user.portfolio.find((p) => {
+          return p.symbol === symbol;
+        });
+
+        if (!existingStock) {
+          user.portfolio.push({ symbol, numShares });
+          console.log('adding new portfolio item!');
+        } else {
+          user.portfolio.forEach((p) => {
+            if (p.symbol === symbol) {
+              p.numShares += numShares;
+              console.log('updating previous portfolio item!');
+              return;
+            } else return;
+          });
+        }
+      } else {
+        console.log('no items in portfolio, adding one now!');
+        user.portfolio.push({ symbol, numShares });
+      }
+
+      //Update user in database
+      const updatedUser = await Users.findOneAndReplace({ uid: uid }, user, {
+        returnOriginal: false,
+      });
+      console.log('UPDATED USER IN DB >>>', updatedUser.value);
+      return updatedUser.value;
+    } catch (e) {
+      console.log('Error>>', e);
     }
-
-    //add record to user's marketBuys array
-    const transaction = {
-      symbol,
-      quotePrice,
-      numShares,
-      datePurchased: Date.now(),
-    };
-    user.marketBuys.push(transaction);
-
-    //update user's portfolio (if symbol is not in portfolio,
-    //add it; else update quantity of symbol in portfolio )
-    const existingStock = user.portfolio.findOne((p) => {
-      p.symbol === symbol;
-    });
-
-    if (!existingStock) {
-      user.portfolio.push({ symbol, numShares });
-    } else {
-      existingStock.numShares += numShares; //this will not work
-    }
-
-    //Update user in database
-    const updatedUser = await Users.findOneAndReplace({ uid: uid }, user);
-
-    return updatedUser;
   }
 
   //========= MARKET SELL ========== //
@@ -129,7 +152,7 @@ module.exports = async function () {
     //Update user in database
     const updatedUser = await Users.findOneAndReplace({ uid: uid }, user);
 
-    return updatedUser;
+    return transaction;
   }
 
   return {

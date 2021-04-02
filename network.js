@@ -4,7 +4,6 @@ const url = 'http://localhost:3000';
 
 export async function signUp(uid) {
   try {
-    console.log('reached network.js!');
     const res = await axios.post(`${url}/api/users`, {
       uid: uid,
     });
@@ -24,13 +23,14 @@ export async function getUser(uid) {
   }
 }
 
-export async function marketBuy(symbol, quotePrice, numShares, uid) {
+export async function makeMarketBuy({ symbol, price, count, uid }) {
   try {
-    await axios.post(`${url}/api/${uid}/buy`, {
+    const res = await axios.post(`${url}/api/users/${uid}/buy`, {
       symbol: symbol,
-      quotePrice: quotePrice,
-      numShares: numShares,
+      quotePrice: price,
+      numShares: count,
     });
+    return res.data.updatedUser;
   } catch (err) {
     console.log(err);
   }

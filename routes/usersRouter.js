@@ -33,12 +33,13 @@ module.exports = function ({ database }) {
   //========= MARKET BUY ========== //
   // /api/users/:uid/buy
 
-  router.put('/:uid/buy', async (req, res) => {
+  router.post('/:uid/buy', async (req, res) => {
     const { uid } = req.params;
     const data = req.body;
+    console.log('data in router>>>', data);
     try {
-      const transaction = await database.makeMarketBuy({ uid, data });
-      res.send({ transaction });
+      const updatedUser = await database.makeMarketBuy({ uid, data });
+      res.send({ updatedUser });
     } catch {
       console.log(err);
       res.status(401).send({ Error: err.message });
@@ -52,8 +53,8 @@ module.exports = function ({ database }) {
     const { uid } = req.params;
     const data = req.body;
     try {
-      const transaction = await database.makeMarketSell({ uid, data });
-      res.send({ transaction });
+      const updatedUser = await database.makeMarketSell({ uid, data });
+      res.send({ updatedUser });
     } catch {
       console.log(err);
       res.status(401).send({ Error: err.message });
