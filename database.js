@@ -74,7 +74,7 @@ module.exports = async function () {
     if (!existingStock) {
       user.portfolio.push({ symbol, numShares });
     } else {
-      existingStock.numShares += numShares;
+      existingStock.numShares += numShares; //this will not work
     }
 
     //Update user in database
@@ -84,7 +84,52 @@ module.exports = async function () {
   }
 
   //========= MARKET SELL ========== //
-  async function makeMarketSell() {}
+  async function makeMarketSell() {
+    const { symbol, quotePrice, numShares } = data;
+    //find user in db
+    const user = await Users.findOne({ uid: uid });
+
+    //check to see user owns enough stocks
+    const existingShares = user.portfolio.findOne((s) => {
+      s.symbol === symbol;
+    });
+
+    if (!existingShares) {
+      throw Error('You do not own this stock');
+    }
+
+    if (existingShares.numShares < numShares) {
+      throw Error('Insufficient shares for this transaction');
+    }
+
+    //add record to user's marketSells array
+    const transaction = {
+      symbol,
+      quotePrice,
+      numShares,
+      datePurchased: Date.now(),
+    };
+    user.marketSells.push(transaction);
+
+    //update user's portfolio (if numShares for a symbol === 0, remove from portfolio )
+
+    if (existingShares.numShares === numShares) {
+      //remove from portfolio
+    } else {
+      existingShares;
+    }
+
+    if (!existingStock) {
+      user.portfolio.push({ symbol, numShares });
+    } else {
+      existingStock.numShares -= numShares;
+    }
+
+    //Update user in database
+    const updatedUser = await Users.findOneAndReplace({ uid: uid }, user);
+
+    return updatedUser;
+  }
 
   return {
     insertUser,
