@@ -38,32 +38,9 @@ export default function Register({ navigation }) {
         ? navigation.navigate('HomeScreen', userInfo)
         : console.log('error logging in');
     } catch (err) {
-      // const errorCode = err.code;
       const errorMessage = err.message;
       console.log('Error>>', errorMessage);
     }
-
-    // firebase
-    //   .auth()
-    //   .createUserWithEmailAndPassword(email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     console.log(userCredential.user);
-    //     const userInfo = userCredential.user;
-    //     setUser(userInfo);
-    //     setEmail('');
-    //     setPassword('');
-    //     console.log('user>>', user);
-    //     // Navigate
-    //     user
-    //       ? navigation.navigate('HomeScreen', user)
-    //       : console.log('error logging in');
-    //   })
-    //   .catch((error) => {
-    //     var errorCode = error.code;
-    //     var errorMessage = error.message;
-    //     console.log('Error>>', errorMessage);
-    //   });
   };
 
   return (

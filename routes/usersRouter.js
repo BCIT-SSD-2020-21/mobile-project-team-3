@@ -19,9 +19,8 @@ module.exports = function ({ database }) {
 
   //========= LOGIN USER ========== //
   // /api/users
-  router.get('/', async (req, res) => {
-    const { uid } = req.body;
-
+  router.get('/:uid', async (req, res) => {
+    const { uid } = req.params;
     try {
       const user = await database.getUser(uid);
       res.send({ user });

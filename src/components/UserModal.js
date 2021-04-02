@@ -17,7 +17,7 @@ const UserModal = ({ setModalVisible, modalVisible, handleLogOut, user }) => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={base.headingMd}>User Info</Text>
-          <Text style={styles.modalText}>Email: {user.email}</Text>
+          <Text style={styles.modalText}>Email: {user.uid}</Text>
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={handleLogOut}

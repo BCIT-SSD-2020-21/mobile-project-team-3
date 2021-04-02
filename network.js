@@ -17,8 +17,8 @@ export async function signUp(uid) {
 
 export async function getUser(uid) {
   try {
-    const result = await axios.get(`${url}/api/${uid}`);
-    return result;
+    const res = await axios.get(`${url}/api/users/${uid}`);
+    return res.data.user;
   } catch (err) {
     console.log(err);
   }
