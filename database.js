@@ -29,6 +29,7 @@ module.exports = async function () {
       marketSells: [],
       portfolio: [],
     });
+    console.log('new user in db.js', newUser.ops[0]);
 
     return newUser.ops[0];
   }

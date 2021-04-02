@@ -6,6 +6,7 @@ module.exports = function ({ database }) {
   //========= REGISTER USER ========== //
   router.post('/', async (req, res) => {
     const { uid } = req.body;
+    console.log('reached router with uid>>', uid);
 
     try {
       const user = await database.insertUser(uid);

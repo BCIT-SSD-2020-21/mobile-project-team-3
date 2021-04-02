@@ -26,13 +26,13 @@ export default function Register({ navigation }) {
       const response = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
-      const userInfo = response.user.providerData[0];
+      const newUserId = response.user.providerData[0].uid;
+      console.log('newUserId>>', newUserId);
+      const userInfo = await signUp(newUserId); //add user to db
       setUser(userInfo);
-      await signUp(userInfo.uid);
-      console.log('userInfo from Firebase>>', userInfo);
+      console.log('userInfo from DB>>', userInfo);
       setEmail('');
       setPassword('');
-      console.log('user>>', user);
       // navigate
       userInfo
         ? navigation.navigate('HomeScreen', userInfo)

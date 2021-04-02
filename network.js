@@ -1,11 +1,15 @@
 import axios from 'axios';
-const url = 'http://69.172.146.7';
+//const url = 'http://69.172.146.7'; //SK's IP
+const url = 'http://localhost:3000';
 
 export async function signUp(uid) {
   try {
-    await axios.post(`${url}/api/users`, {
+    console.log('reached network.js!');
+    const res = await axios.post(`${url}/api/users`, {
       uid: uid,
     });
+    console.log('new user received back on frontend!', res.data.user);
+    return res.data.user;
   } catch (err) {
     console.log(err);
   }
