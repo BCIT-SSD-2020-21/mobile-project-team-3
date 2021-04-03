@@ -52,6 +52,7 @@ module.exports = function ({ database }) {
   router.put('/:uid/sell', async (req, res) => {
     const { uid } = req.params;
     const data = req.body;
+    console.log('data in router>>>', data);
     try {
       const updatedUser = await database.makeMarketSell({ uid, data });
       res.send({ updatedUser });

@@ -10,7 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { makeMarketBuy, marketSell } from '../../network';
+import { makeMarketBuy, makeMarketSell } from '../../network';
 
 // import axios from 'axios';
 // import { FINNHUB_API } from '@env';
@@ -36,13 +36,14 @@ const BuySellScreen = ({ route }) => {
   const onBuyOrSellButtonClicked = async () => {
     if (type === 'Buy') {
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
-      console.log('UPDATED USER IN BUY/SELL SCREEN >>>', updatedUser);
+      console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
       setMyCash((myCash - total.toFixed(2)).toFixed(2));
       setModalVisible(!modalVisible);
       setCount(0);
       setTotal(0);
     } else if (type === 'Sell') {
-      await marketSell(symbol, price, count, uid);
+      const updatedUser = await makeMarketSell({ symbol, price, count, uid });
+      console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
       setMyCash((myCash - -total.toFixed(2)).toFixed(2));
       setModalVisible(!modalVisible);
       setCount(0);

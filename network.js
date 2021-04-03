@@ -36,13 +36,14 @@ export async function makeMarketBuy({ symbol, price, count, uid }) {
   }
 }
 
-export async function marketSell(symbol, quotePrice, numShares, uid) {
+export async function makeMarketSell({ symbol, price, count, uid }) {
   try {
-    await axios.post(`${url}/api/${uid}/sell`, {
+    const res = await axios.put(`${url}/api/users/${uid}/sell`, {
       symbol: symbol,
-      quotePrice: quotePrice,
-      numShares: numShares,
+      quotePrice: price,
+      numShares: count,
     });
+    return res.data.updatedUser;
   } catch (err) {
     console.log(err);
   }
