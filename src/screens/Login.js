@@ -22,44 +22,23 @@ export default function Login({ navigation }) {
     }
 
     try {
-      const response = await firebase.auth().signInWithEmailAndPassword(email, password)
-      const userInfo = response.user.providerData[0];
+      const response = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
+      const uid = response.user.providerData[0].uid;
+      const userInfo = await getUser(uid); //get user from db
+      console.log('User logged in>>', userInfo);
       setUser(userInfo);
-      await getUser(userInfo.uid)
-      console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');
-      console.log('user>>', user);
       // navigate
-      userInfo 
+      userInfo
         ? navigation.navigate('HomeScreen', userInfo)
         : console.log('error logging in');
     } catch (err) {
-      // const errorCode = err.code;
       const errorMessage = err.message;
       console.log('Error>>', errorMessage);
     }
-
-    // navigate
-      // .then((userCredential) => {
-      //   // Signed in
-      //   const userInfo = userCredential.user;
-      //   setUser(userInfo);
-      //   console.log('userInfo from Firebase>>', userInfo);
-      //   setEmail('');
-      //   setPassword('');
-      //   // navigate
-      //   console.log('user>>', user);
-      //   userInfo
-      //     ? navigation.navigate('HomeScreen', userInfo)
-      //     : console.log('error logging in');
-      // })
-      // .catch((error) => {
-      //   var errorCode = error.code;
-      //   var errorMessage = error.message;
-      //   console.log('Error>>', errorMessage);
-      // });
-      
   };
 
   return (
