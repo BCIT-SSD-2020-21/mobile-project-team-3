@@ -7,6 +7,7 @@ import axios from 'axios';
 import { FINNHUB_API } from '@env';
 import base from '../styles/styles';
 import QuoteListItem from '../components/QuoteListItem';
+import { getQuote } from '../../network';
 
 const SearchScreen = ({ navigation }) => {
   const [input, setInput] = useState('');
@@ -14,15 +15,8 @@ const SearchScreen = ({ navigation }) => {
 
   const searchAPI = async () => {
     // GET QUOTE
-    try {
-      const response = await axios.get(
-        `https://finnhub.io/api/v1/quote?symbol=${input}&token=${FINNHUB_API}`
-      );
-      console.log('API RESPONSE:', response.data);
-      setQuote(response.data);
-    } catch (err) {
-      console.log(err);
-    }
+    const response = await getQuote(input, FINNHUB_API)
+    setQuote(response);
 
     // SYMBOL LOOKUP
     // try {

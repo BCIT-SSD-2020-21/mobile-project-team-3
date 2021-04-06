@@ -14,7 +14,16 @@ import { getUser } from '../../network';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
+
+  async function setAsyncItem(key, value) {
+    try {
+      await AsyncStorage.clear();
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+      console.log('AsyncStorage#setItem Error:', err.message)
+    }
+  }
 
   const onLoginPressed = async () => {
     if (!password || !email) {
@@ -30,12 +39,8 @@ export default function Login({ navigation }) {
       const userFromDb = await getUser(userInfo.uid);
 
       // Sets user uid in async storage.
-      try {
-        await AsyncStorage.setItem(userInfo.uid, userInfo.uid);
-      } catch (err) {
-        console.log('Error Setting Data:', err);
-      }
-      setUser(userInfo);
+      await setAsyncItem('userId', userInfo.uid)
+
       setEmail('');
       setPassword('');
       // navigate
@@ -52,11 +57,12 @@ export default function Login({ navigation }) {
     (async () => {
       try {
         const keys = await AsyncStorage.getAllKeys();
+        console.log('Keys in Login.js:', keys)
         if (keys.length > 0) {
-          let currentUser = await AsyncStorage.getItem(keys[0]);
-          currentUser = JSON.parse(currentUser);
-          setUser(currentUser.providerData[0])
-          navigation.navigate('HomeScreen', currentUser.providerData[0])
+          const uid = await AsyncStorage.getItem(keys[0]);
+          const currentUser = await getUser(JSON.parse(uid))
+          console.log('Current user before navigating to home:', currentUser)
+          navigation.navigate('HomeScreen', currentUser)
         }
       } catch (err) {
         console.log('Error Getting Data', err);

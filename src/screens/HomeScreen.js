@@ -9,7 +9,7 @@ import firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const HomeScreen = ({ route, navigation }) => {
-  const user = route.params;
+  const [user, setUser] = useState(route.params)
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogOut = async () => {
