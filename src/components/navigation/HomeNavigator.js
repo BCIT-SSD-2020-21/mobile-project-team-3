@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 import Login from '../../screens/Login';
 import HomeScreen from '../../screens/HomeScreen';
 import Register from '../../screens/Register';
+import PortfolioListScreen from '../../screens/PortfolioListScreen';
 
 const HomeStack = createStackNavigator();
 
@@ -20,7 +21,7 @@ const HomeStack = createStackNavigator();
 const HomeNavigator = () => {
   return (
     <HomeStack.Navigator
-      initialRouteName="LoginScreen"
+      initialRouteName='LoginScreen'
       screenOptions={{
         headerShown: true,
         title: '',
@@ -33,12 +34,12 @@ const HomeNavigator = () => {
       }}
     >
       <HomeStack.Screen
-        name="LoginScreen"
+        name='LoginScreen'
         component={Login}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen
-        name="HomeScreen"
+        name='HomeScreen'
         component={HomeScreen}
         options={
           Platform.OS === 'android'
@@ -51,7 +52,20 @@ const HomeNavigator = () => {
         }
       />
       <HomeStack.Screen
-        name="RegisterScreen"
+        name='PortfolioListScreen'
+        component={PortfolioListScreen}
+        options={
+          Platform.OS === 'android'
+            ? {
+                headerRight: () => <MenuIcon />,
+              }
+            : {
+                headerTitle: 'User Dashboard',
+              }
+        }
+      />
+      <HomeStack.Screen
+        name='RegisterScreen'
         component={Register}
         options={{ headerShown: false }}
       />
