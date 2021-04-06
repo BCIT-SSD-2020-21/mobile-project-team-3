@@ -10,7 +10,7 @@ import { getSymbolPrice } from '../api/finnhubNetwork';
 import { getUser } from '../../network';
 
 const HomeScreen = ({ route, navigation }) => {
-  const user = route.params;
+  const [user, setUser] = useState(route.params)
   const [modalVisible, setModalVisible] = useState(false);
   const [userPL, setUserPL] = useState([]);
 
