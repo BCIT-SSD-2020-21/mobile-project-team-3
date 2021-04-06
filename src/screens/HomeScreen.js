@@ -61,7 +61,6 @@ const HomeScreen = ({ route, navigation }) => {
     (async () => {
       const userPortfolio = await getUserProfitLoss();
       setUserPL(userPortfolio);
-      console.log('USER PORTFOLIO>>>', userPortfolio);
     })();
   }, []);
 
@@ -107,7 +106,7 @@ const HomeScreen = ({ route, navigation }) => {
           <View style={styles.portfolioContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('PortfolioListScreen');
+                navigation.navigate('PortfolioListScreen', userPL);
               }}
             >
               <Text style={base.headingSm}>See Portfolio Items</Text>
