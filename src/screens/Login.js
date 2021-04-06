@@ -58,11 +58,9 @@ export default function Login({ navigation }) {
     (async () => {
       try {
         const keys = await AsyncStorage.getAllKeys();
-        console.log('Keys in Login.js:', keys)
         if (keys.length > 0) {
           const uid = await AsyncStorage.getItem(keys[0]);
           const currentUser = await getUser(JSON.parse(uid))
-          console.log('Current user before navigating to home:', currentUser)
           navigation.navigate('HomeScreen', currentUser)
         }
       } catch (err) {

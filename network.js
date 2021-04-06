@@ -1,6 +1,6 @@
 import axios from 'axios';
-//const url = 'http://192.168.0.18:3000';
-const url = 'http://localhost:3000';
+const url = 'http://192.168.0.18:3000';
+// const url = 'http://localhost:3000';
 
 export async function signUp(uid) {
   try {
