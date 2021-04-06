@@ -37,7 +37,8 @@ export default function Login({ navigation }) {
         .signInWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
       const userFromDb = await getUser(userInfo.uid);
-
+      console.log('user from firebase', userInfo);
+      console.log('user from db', userFromDb);
       // Sets user uid in async storage.
       await setAsyncItem('userId', userInfo.uid)
 
@@ -77,29 +78,29 @@ export default function Login({ navigation }) {
       <Text style={styles.subHeader}>Sign in to continue</Text>
       <View style={styles.inputView}>
         <View style={styles.userIconContainer}>
-          <FontAwesome name="user" color="#FFC542" size={20} />
+          <FontAwesome name='user' color='#FFC542' size={20} />
         </View>
         <TextInput
           style={styles.textInput}
-          placeholder="Email"
-          placeholderTextColor="#96A7AF"
+          placeholder='Email'
+          placeholderTextColor='#96A7AF'
           onChangeText={(email) => setEmail(email)}
           value={email}
-          autoCapitalize="none"
+          autoCapitalize='none'
         />
       </View>
       <View style={styles.inputView}>
         <View style={styles.lockIconContainer}>
-          <FontAwesome name="unlock" color="#FF575F" size={20} />
+          <FontAwesome name='unlock' color='#FF575F' size={20} />
         </View>
         <TextInput
           style={styles.textInput}
-          placeholder="Password"
-          placeholderTextColor="#96A7AF"
+          placeholder='Password'
+          placeholderTextColor='#96A7AF'
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
           value={password}
-          autoCapitalize="none"
+          autoCapitalize='none'
           enablesReturnKeyAutomatically={true}
         />
       </View>
@@ -107,8 +108,8 @@ export default function Login({ navigation }) {
         <TouchableOpacity style={styles.loginBtn} onPress={onLoginPressed}>
           <Text style={styles.loginBtnText}>Sign in</Text>
           <FontAwesome
-            name="arrow-right"
-            color="white"
+            name='arrow-right'
+            color='white'
             size={20}
             style={{ marginLeft: 20 }}
           />
