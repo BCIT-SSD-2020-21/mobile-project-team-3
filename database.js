@@ -37,7 +37,7 @@ module.exports = async function () {
   //========= LOGIN USER ========== //
   async function getUser(uid) {
     const foundUser = await Users.findOne({ uid: uid });
-    console.log('Found User:', foundUser)
+    console.log('Found User:', foundUser);
 
     if (!foundUser) {
       throw Error('No user found!');
@@ -47,6 +47,8 @@ module.exports = async function () {
   }
 
   //========= MARKET BUY ========== //
+  async function getAveragePrice(user, symbol) {}
+
   async function makeMarketBuy({ uid, data }) {
     const { symbol, quotePrice, numShares } = data;
 
@@ -81,13 +83,25 @@ module.exports = async function () {
         });
 
         if (!existingStock) {
-          user.portfolio.push({ symbol, numShares });
+          user.portfolio.push({ symbol, numShares, avgPrice: quotePrice });
           console.log('adding new portfolio item!');
         } else {
+          console.log('updating previous portfolio item!');
           user.portfolio.forEach((p) => {
             if (p.symbol === symbol) {
               p.numShares += numShares;
-              console.log('updating previous portfolio item!');
+              //update average price
+              const prevBuys = user.marketBuys.filter(
+                (buy) => buy.symbol === symbol
+              );
+              console.log('prevBuys>>', prevBuys);
+              let totalSpent = 0;
+              prevBuys.forEach((buy) => {
+                totalSpent += buy.numShares * buy.quotePrice;
+              });
+              console.log('totalSpent>>', totalSpent);
+              p.avgPrice = totalSpent / p.numShares;
+              console.log('updated average price', p.avgPrice);
               return;
             } else return;
           });
