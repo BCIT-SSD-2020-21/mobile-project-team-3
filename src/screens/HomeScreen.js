@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import base from '../styles/styles';
@@ -6,24 +6,29 @@ import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 import UserModal from '../components/UserModal';
 import firebase from 'firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HomeScreen = ({ route, navigation }) => {
   const user = route.params;
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleLogOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        console.log('Logout successful');
-        navigation.navigate('LoginScreen');
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log('Error>>', errorMessage);
-      });
+  const handleLogOut = async () => {
+    try {
+      await firebase.auth().signOut();
+      try {
+        await AsyncStorage.clear();
+        alert('Storage successfully cleared!');
+      } catch (e) {
+        console.log(e)
+        alert('Failed to clear the async storage.');
+      }
+      console.log('Logout successful');
+      navigation.navigate('LoginScreen');
+    } catch (err) {
+      // var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log('Error>>', errorMessage);
+    }
   };
 
   return (
@@ -39,7 +44,7 @@ const HomeScreen = ({ route, navigation }) => {
           onPress={() => setModalVisible(!modalVisible)}
           style={styles.userIcon}
         >
-          <FontAwesome name='user' color='white' size={20} />
+          <FontAwesome name="user" color="white" size={20} />
         </TouchableOpacity>
       </View>
       <View>

@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
 import base from '../styles/styles';
 import { signUp } from '../../network';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
@@ -25,43 +26,27 @@ export default function Register({ navigation }) {
     try {
       const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
       const userInfo = response.user.providerData[0];
+
+      // Sets user uid in async storage.
+      try {
+        await AsyncStorage.setItem(userInfo.uid, userInfo.uid)
+      } catch (err) {
+        console.log('Error Setting Data:', err)
+      }
+
+      await signUp(userInfo.uid); //add user to db
       setUser(userInfo);
-      await signUp(userInfo.uid)
-      console.log('userInfo from Firebase>>', userInfo);
+      console.log('userInfo from DB>>', userInfo);
       setEmail('');
       setPassword('');
-      console.log('user>>', user);
       // navigate
-      userInfo 
+      userInfo
         ? navigation.navigate('HomeScreen', userInfo)
         : console.log('error logging in');
     } catch (err) {
-      // const errorCode = err.code;
       const errorMessage = err.message;
       console.log('Error>>', errorMessage);
     }
-
-    // firebase
-    //   .auth()
-    //   .createUserWithEmailAndPassword(email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     console.log(userCredential.user);
-    //     const userInfo = userCredential.user;
-    //     setUser(userInfo);
-    //     setEmail('');
-    //     setPassword('');
-    //     console.log('user>>', user);
-    //     // Navigate
-    //     user
-    //       ? navigation.navigate('HomeScreen', user)
-    //       : console.log('error logging in');
-    //   })
-    //   .catch((error) => {
-    //     var errorCode = error.code;
-    //     var errorMessage = error.message;
-    //     console.log('Error>>', errorMessage);
-    //   });
   };
 
   return (
@@ -78,7 +63,7 @@ export default function Register({ navigation }) {
           placeholder='Email'
           value={email}
           placeholderTextColor='#96A7AF'
-          onChangeText={(email) => setEmail(email)}
+          onChangeText={(email) => setEmail(email.toLowerCase())}
           autoCapitalize='none'
         />
       </View>

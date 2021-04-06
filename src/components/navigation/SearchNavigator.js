@@ -10,7 +10,7 @@ const SearchStack = createStackNavigator();
 const SearchNavigator = () => {
   return (
     <SearchStack.Navigator
-      screenOptions={{ headerShown: true }}
+      // screenOptions={{ headerShown: true }}
       initialRouteName='SearchScreen'
     >
       <SearchStack.Screen
