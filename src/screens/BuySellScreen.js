@@ -14,9 +14,6 @@ import { makeMarketBuy, makeMarketSell } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
 
-// import axios from 'axios';
-// import { FINNHUB_API } from '@env';
-
 const BuySellScreen = ({ route }) => {
   // const uid = 'mail9@mail.com';
   const [user, setUser] = useState('');
