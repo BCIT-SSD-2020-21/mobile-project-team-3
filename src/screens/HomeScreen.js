@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import base from '../styles/styles';
@@ -9,16 +9,14 @@ import firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const HomeScreen = ({ route, navigation }) => {
-  console.log('Route Params:', route.params);
   const user = route.params;
-  console.log('User From Params:', user);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLogOut = async () => {
     try {
       await firebase.auth().signOut();
       try {
-        await AsyncStorage.removeItem(user.uid);
+        await AsyncStorage.clear();
         alert('Storage successfully cleared!');
       } catch (e) {
         console.log(e)

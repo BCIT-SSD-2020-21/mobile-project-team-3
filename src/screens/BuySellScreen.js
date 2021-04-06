@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import {
   StyleSheet,
@@ -11,12 +11,15 @@ import {
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { makeMarketBuy, makeMarketSell } from '../../network';
+import AsyncStorage from '@react-native-community/async-storage';
+import { getUser } from '../../network';
 
 // import axios from 'axios';
 // import { FINNHUB_API } from '@env';
 
 const BuySellScreen = ({ route }) => {
-  const uid = 'mail9@mail.com';
+  // const uid = 'mail9@mail.com';
+  const [user, setUser] = useState({})
   const { symbol, price } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
@@ -34,7 +37,8 @@ const BuySellScreen = ({ route }) => {
   };
 
   const onBuyOrSellButtonClicked = async () => {
-    if (type === 'Buy') {
+    const uid = user.uid;
+    if (type === 'Buy') {      
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
       setMyCash((myCash - total.toFixed(2)).toFixed(2));
@@ -63,6 +67,22 @@ const BuySellScreen = ({ route }) => {
     setCount(newCount);
     setTotal(newTotal);
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const keys = await AsyncStorage.getAllKeys();
+        if (keys.length > 0) {
+          let currentUser = await AsyncStorage.getItem(keys[0]);
+          currentUser = JSON.parse(currentUser);
+          currentUser = await getUser(currentUser.providerData[0].uid)
+          setUser(currentUser)
+        }
+      } catch (err) {
+        console.log('Error Getting Data', err);
+      }
+    })();
+  }, []);
 
   const DisplayUserCash = () => {
     if (type == 'Buy') {

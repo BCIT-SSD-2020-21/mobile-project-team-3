@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
-import { getUser } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getUser } from '../../network';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
@@ -27,6 +27,7 @@ export default function Login({ navigation }) {
         .auth()
         .signInWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
+      const userFromDb = await getUser(userInfo.uid);
 
       // Sets user uid in async storage.
       try {
@@ -34,13 +35,12 @@ export default function Login({ navigation }) {
       } catch (err) {
         console.log('Error Setting Data:', err);
       }
-
       setUser(userInfo);
       setEmail('');
       setPassword('');
       // navigate
-      userInfo
-        ? navigation.navigate('HomeScreen', userInfo)
+      userFromDb
+        ? navigation.navigate('HomeScreen', userFromDb)
         : console.log('error logging in');
     } catch (err) {
       const errorMessage = err.message;
