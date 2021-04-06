@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import base from '../styles/styles';
 import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 import UserModal from '../components/UserModal';
 import firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getSymbolPrice } from '../api/finnhubNetwork';
+import { getUser } from '../../network';
 
 const HomeScreen = ({ route, navigation }) => {
   const user = route.params;
@@ -33,23 +34,35 @@ const HomeScreen = ({ route, navigation }) => {
   };
 
   const getUserProfitLoss = async () => {
-    user.portfolio.forEach((item) => {
+    let userPortfolio = [];
+    user.portfolio.forEach(async (item) => {
       //search API for item
+      const quote = await getSymbolPrice(item.symbol);
+      console.log(`Quote for ${item.symbol} >>> ${quote.c}`);
       //calculate P/L using average price
+      const profitOrLoss = quote.c - item.avgPrice;
+
       //create object and push to userPL array
-      // [{
-      //   symbol,
-      //   numShares,
-      //   avgPrice,
-      //   currentPrice,
-      //   PL: +/-
-      // }]
-      //save array to state
+      const portfolioItem = {
+        symbol: item.symbol,
+        numShares: item.numShares,
+        avgPrice: item.avgPrice,
+        currentPrice: quote.c,
+        PL: profitOrLoss,
+      };
+
+      userPortfolio.push(portfolioItem);
     });
+    return userPortfolio;
   };
 
   useEffect(() => {
     console.log('user received on homescreen>>>>', user);
+    (async () => {
+      const userPortfolio = await getUserProfitLoss();
+      setUserPL(userPortfolio);
+      console.log('USER PORTFOLIO>>>', userPortfolio);
+    })();
   }, []);
 
   return (
