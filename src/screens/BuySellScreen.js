@@ -39,19 +39,19 @@ const BuySellScreen = ({ route }) => {
   const onBuyOrSellButtonClicked = async () => {
     const uid = user.uid;
     if (type === 'Buy') {      
-      const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
+      const updatedUser = await makeMarketBuy({ symbol, price, count, uid });    //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
       setMyCash((myCash - total.toFixed(2)).toFixed(2));
       setModalVisible(!modalVisible);
-      setCount(0);
-      setTotal(0);
+      setCount(1);
+      setTotal(price);
     } else if (type === 'Sell') {
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
       setMyCash((myCash - -total.toFixed(2)).toFixed(2));
       setModalVisible(!modalVisible);
-      setCount(0);
-      setTotal(0);
+      setCount(1);
+      setTotal(price);
     }
   };
 
@@ -184,8 +184,8 @@ const BuySellScreen = ({ route }) => {
                 style={[styles.closeBtn, styles.btn]}
                 onPress={() => {
                   setModalVisible(!modalVisible);
-                  setCount(0);
-                  setTotal(0);
+                  setCount(1);
+                  setTotal(price);
                 }}
               >
                 <FontAwesome name='close' size={40} color='white' />
