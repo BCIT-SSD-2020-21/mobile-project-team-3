@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   SafeAreaView,
-  StyleSheet
 } from 'react-native';
 import SearchBar from '../components/SearchBar';
 import axios from 'axios';

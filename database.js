@@ -37,6 +37,7 @@ module.exports = async function () {
   //========= LOGIN USER ========== //
   async function getUser(uid) {
     const foundUser = await Users.findOne({ uid: uid });
+    console.log('Found User:', foundUser)
 
     if (!foundUser) {
       throw Error('No user found!');

@@ -24,7 +24,7 @@ module.exports = function ({ database }) {
     try {
       const user = await database.getUser(uid);
       res.send({ user });
-    } catch {
+    } catch (err) {
       console.log(err);
       res.status(401).send({ Error: err.message });
     }

@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
 import base from '../styles/styles';
 import { signUp } from '../../network';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
@@ -23,12 +24,17 @@ export default function Register({ navigation }) {
     }
 
     try {
-      const response = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-      const newUserId = response.user.providerData[0].uid;
-      console.log('newUserId>>', newUserId);
-      const userInfo = await signUp(newUserId); //add user to db
+      const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
+      const userInfo = response.user.providerData[0];
+
+      // Sets user uid in async storage.
+      try {
+        await AsyncStorage.setItem(userInfo.uid, userInfo.uid)
+      } catch (err) {
+        console.log('Error Setting Data:', err)
+      }
+
+      await signUp(userInfo.uid); //add user to db
       setUser(userInfo);
       console.log('userInfo from DB>>', userInfo);
       setEmail('');
