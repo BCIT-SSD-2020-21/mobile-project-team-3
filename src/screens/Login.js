@@ -36,17 +36,13 @@ export default function Login({ navigation }) {
       }
 
       setUser(userInfo);
-      await getUser(userInfo.uid)
-      console.log('userInfo from Firebase>>', userInfo);
       setEmail('');
       setPassword('');
-      console.log('user>>', user);
       // navigate
       userInfo
         ? navigation.navigate('HomeScreen', userInfo)
         : console.log('error logging in');
     } catch (err) {
-      // const errorCode = err.code;
       const errorMessage = err.message;
       console.log('Error>>', errorMessage);
     }
