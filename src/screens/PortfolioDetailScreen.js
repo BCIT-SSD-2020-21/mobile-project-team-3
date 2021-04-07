@@ -24,10 +24,11 @@ const PortfolioDetailScreen = ({ route }) => {
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState('');
   const [myCash, setMyCash] = useState('')
+  const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
   const line = {
     datasets: [
       {
-        data: [2, 4, 6, 7, 9, 4],
+        data: graphData,
         color: (opacity = 1) => `rgba(255, 86, 94, ${opacity})`,
       },
     ],
@@ -341,7 +342,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: '80%',
-    height: '50%',
+    height: '60%',
     backgroundColor: '#30444E',
     borderRadius: 20,
     padding: '10%',
