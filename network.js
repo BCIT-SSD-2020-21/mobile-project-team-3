@@ -1,6 +1,7 @@
 import axios from 'axios';
-//const url = 'http://69.172.146.7'; //SK's IP
-const url = 'http://172.24.32.1:3000';
+import { NETWORK_URL } from '@env';
+
+const url = NETWORK_URL;
 
 export async function signUp(uid) {
   try {
@@ -17,7 +18,7 @@ export async function signUp(uid) {
 export async function getUser(uid) {
   try {
     const res = await axios.get(`${url}/api/users/${uid}`);
-    console.log('Get User Response:', res.data.user)
+    console.log('Get User Response:', res.data.user);
     return res.data.user;
   } catch (err) {
     console.log(err);

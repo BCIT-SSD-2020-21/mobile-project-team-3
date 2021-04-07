@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Text, StyleSheet, FlatList, SafeAreaView, View, TouchableOpacity } from 'react-native';
 import {Avatar} from 'react-native-elements';
 
+
 const PortfolioListScreen = ({ route, navigation }) => {
-  const userPL = route.params;
-  // const {PL, avgPrice, currentPrice, numShares, symbol} = route.params;
-  
+  const userPortfolio = route.params;
+
   useEffect(() => {
-    console.log('userPL on portfolioList screen>>>>', userPL);
+    console.log('userPortfolio on portfolioList screen>>>>', userPortfolio);
   }, []);
 
   return (
