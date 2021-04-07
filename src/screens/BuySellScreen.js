@@ -91,7 +91,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - total.toFixed(2)).toFixed(2)}
+            ${(user.cash - total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
       );
@@ -101,7 +101,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - -total.toFixed(2)).toFixed(2)}
+            ${(user.cash - -total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
       );
