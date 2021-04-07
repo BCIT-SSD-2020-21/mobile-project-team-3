@@ -13,11 +13,12 @@ const PortfolioListScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Portfolio List</Text>
+      <View style={styles.flatListContainer}>
       <FlatList
-        data={userPL}
+        data={userPortfolio}
         keyExtractor= {item => item.symbol}
         renderItem={({item}) =>{
-          return <View flexDirection='row'>
+          return <View style={styles.flatItem} flexDirection='row'>
             <Avatar
               rounded
               size="medium"
@@ -39,7 +40,9 @@ const PortfolioListScreen = ({ route, navigation }) => {
           </TouchableOpacity>
             </View>
         }}
+        
       />
+      </View>
     </SafeAreaView>
   );
 };
@@ -52,6 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#22343C',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+    padding: 20,
   },
   header: {
     color: 'white',
@@ -63,6 +67,28 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     paddingTop: 10,
+    marginLeft: 10,
+  },
+  viewBtn: {
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '20%',
+    height: 30,
+    backgroundColor: '#40DF9F',
+    marginLeft: 10,
+    marginTop:10,
+  },
+  viewBtnText: {
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  flatListContainer: {
+    padding: 10,
+  },
+  flatItem:{
+    marginBottom: 10,
   }
 });
 
