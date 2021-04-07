@@ -1,8 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements';
+import { addToWatchlist } from '../../network'
 
-export default function QuoteListItem({ quote, input, navigation }) {
+export default function QuoteListItem({ quote, input, navigation, user }) {
+  async function addQuote(uid, symbol, price) {
+    const response = await addToWatchlist({ uid, symbol, price });
+    console.log('Response From QLI:', response)
+  }
+
   return (
     <View style={styles.listContainer}>
       {Object.keys(quote).length > 0 && (
@@ -17,9 +23,15 @@ export default function QuoteListItem({ quote, input, navigation }) {
               activeOpacity={0.7}
             />
             <View style={styles.textContainer}>
-              <Text style={styles.symbolText}>Current Price: {quote.c}</Text>
+              <Text style={styles.symbolText}>${quote.c}</Text>
             </View>
           </View>
+          <TouchableOpacity
+            style={styles.watchBtn}
+            onPress={() => addQuote(user.uid, input, quote.c)}
+          >
+            <Text style={styles.viewBtnText}>Watch</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.viewBtn}
             onPress={() => navigation.navigate('BuySellScreen', {symbol: input, price: quote.c})}
@@ -33,6 +45,10 @@ export default function QuoteListItem({ quote, input, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  quoteActions: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
   listContainer: {
     height: 60,
     marginVertical: 10,
@@ -62,7 +78,16 @@ const styles = StyleSheet.create({
     width: '20%',
     height: 30,
     backgroundColor: '#40DF9F',
-    marginLeft: '10%',
+    marginLeft: 10
+  },
+  watchBtn: {
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '20%',
+    height: 30,
+    backgroundColor: '#40DF9F',
   },
   viewBtnText: {
     fontWeight: 'bold',

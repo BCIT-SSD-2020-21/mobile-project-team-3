@@ -1,6 +1,6 @@
 import axios from 'axios';
-const url = 'http://192.168.0.18:3000';
-// const url = 'http://localhost:3000';
+import { IP_ADDRESS } from '@env';
+const url = `http://${IP_ADDRESS}:3000`;
 
 export async function signUp(uid) {
   try {
@@ -17,7 +17,6 @@ export async function signUp(uid) {
 export async function getUser(uid) {
   try {
     const res = await axios.get(`${url}/api/users/${uid}`);
-    console.log('Get User Response:', res.data.user)
     return res.data.user;
   } catch (err) {
     console.log(err);
@@ -50,12 +49,25 @@ export async function makeMarketSell({ symbol, price, count, uid }) {
   }
 }
 
-export async function getQuote(input, api) {
+export async function addToWatchlist({ uid, symbol, price }) {
   try {
-    const response = await axios.get(
-      `https://finnhub.io/api/v1/quote?symbol=${input}&token=${api}`
-    );
-    // console.log('API RESPONSE:', response.data);
+    const response = await axios.put(`${url}/api/users/watchlist/${uid}/add`, {
+        uid,
+        symbol,
+        price
+      });
+    return response.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+export async function removeFromWatchlist({ uid, symbol, price }) {
+  try {
+    const response = await axios.put(`${url}/api/users/watchlist/${uid}/remove`, {
+        uid,
+        symbol,
+        price
+      });
     return response.data;
   } catch (err) {
     console.log(err);

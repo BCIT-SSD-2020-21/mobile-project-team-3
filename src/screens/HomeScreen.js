@@ -8,11 +8,13 @@ import firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getSymbolPrice } from '../api/finnhubNetwork';
 import { getUser } from '../../network';
+import { useIsFocused } from '@react-navigation/native'
 
 const HomeScreen = ({ route, navigation }) => {
   const [user, setUser] = useState(route.params)
   const [modalVisible, setModalVisible] = useState(false);
   const [userPL, setUserPL] = useState([]);
+  const isFocused = useIsFocused();
 
   const handleLogOut = async () => {
     try {
@@ -57,12 +59,11 @@ const HomeScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    console.log('user received on homescreen>>>>', user);
     (async () => {
       const userPortfolio = await getUserProfitLoss();
       setUserPL(userPortfolio);
     })();
-  }, []);
+  }, [isFocused]);
 
   return (
     <>
