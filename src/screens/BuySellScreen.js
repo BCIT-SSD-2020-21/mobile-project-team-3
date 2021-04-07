@@ -15,13 +15,14 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
 
 const BuySellScreen = ({ route }) => {
-  // const uid = 'mail9@mail.com';
+ 
   const [user, setUser] = useState('');
   const { symbol, price } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
+  // const [myCash, setMyCash] = useState(user.cash);
   const line = {
     datasets: [
       {
@@ -32,20 +33,26 @@ const BuySellScreen = ({ route }) => {
 
   const onBuyOrSellButtonClicked = async () => {
     const uid = user.uid;
+  
     if (type === 'Buy') {
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-      setMyCash((user.cash - total.toFixed(2)).toFixed(2));
+      user.cash = (user.cash - total.toFixed(2)).toFixed(2)
       setModalVisible(!modalVisible);
-      setCount(0);
-      setTotal(0);
+      setCount(1);
+      setTotal(price);
+     
     } else if (type === 'Sell') {
+     
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-      setMyCash((user.cash - -total.toFixed(2)).toFixed(2));
+      user.cash = (user.cash - -total.toFixed(2)).toFixed(2)
       setModalVisible(!modalVisible);
-      setCount(0);
-      setTotal(0);
+      setCount(1);
+      setTotal(price);
+     
+
+      
     }
   };
 
@@ -159,11 +166,6 @@ const BuySellScreen = ({ route }) => {
               </TouchableOpacity>
             </View>
 
-            {/* <TouchableOpacity
-          style={[styles.sellBtn, styles.btn]}
-          onPress={() => {DisplayUserCash}}>
-          <Text name="arrow-up" size={40} color="white">Checking Expected Cash</Text>
-        </TouchableOpacity> */}
             {DisplayUserCash()}
 
             <View style={styles.sellBuyBtnContainer}>
@@ -177,8 +179,8 @@ const BuySellScreen = ({ route }) => {
                 style={[styles.closeBtn, styles.btn]}
                 onPress={() => {
                   setModalVisible(!modalVisible);
-                  setCount(0);
-                  setTotal(0);
+                  setCount(1);
+                  setTotal(price);
                 }}
               >
                 <FontAwesome name='close' size={40} color='white' />
@@ -214,12 +216,8 @@ const BuySellScreen = ({ route }) => {
 
       <View style={styles.btnContainer}>
         <Text style={styles.Cashtext}>My Cash</Text>
-        <Text style={styles.Cashtext}>${user.cash}</Text>
-        {/* <TouchableOpacity
-          style={[styles.sellBtn, styles.btn]}
-          onPress={() => { setModalVisible(true); setType("Sell") }}>
-          <FontAwesome name="arrow-up" size={40} color="white" />
-        </TouchableOpacity> */}
+        <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
+       
       </View>
     </SafeAreaView>
   );
