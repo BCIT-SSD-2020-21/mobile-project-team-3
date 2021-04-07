@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import {TouchableOpacity } from 'react-native';
 
-const PortfolioListScreen = ({ route }) => {
+const PortfolioListScreen = ({ route, navigation }) => {
   const userPL = route.params;
 
   useEffect(() => {
@@ -10,7 +11,12 @@ const PortfolioListScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Portfolio List Screen</Text>
+       <TouchableOpacity
+            style={styles.viewBtn}
+            onPress={() => navigation.navigate('PortfolioDetailScreen', {symbol: "TSLA", numShares: 3, avgPrice: 111, PL: "+22" })}
+          >
+            <Text style={styles.viewBtnText}>View</Text>
+          </TouchableOpacity>
     </View>
   );
 };
