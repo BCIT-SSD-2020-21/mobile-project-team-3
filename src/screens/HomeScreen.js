@@ -15,12 +15,38 @@ import {
   formatMoney,
   getPortfolioStats,
 } from '../controllers/homeScreenController';
+import { PieChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
 
 const HomeScreen = ({ route, navigation }) => {
   const [user, setUser] = useState(route.params);
   const [modalVisible, setModalVisible] = useState(false);
   const [userPortfolio, setUserPortfolio] = useState([]);
   const [portfolioStats, setPortfolioStats] = useState(0);
+
+  const data = [
+    {
+      name: 'Seoul',
+      population: 35,
+      color: 'rgba(131, 167, 234, 1)',
+      legendFontColor: '#7F7F7F',
+      legendFontSize: 15,
+    },
+    {
+      name: 'Toronto',
+      population: 40,
+      color: '#F00',
+      legendFontColor: '#7F7F7F',
+      legendFontSize: 15,
+    },
+    {
+      name: 'Beijing',
+      population: 10,
+      color: 'blue',
+      legendFontColor: '#7F7F7F',
+      legendFontSize: 15,
+    },
+  ];
 
   useEffect(() => {
     console.log('user received on homescreen>>>>', user);
@@ -32,6 +58,11 @@ const HomeScreen = ({ route, navigation }) => {
     })();
   }, []);
 
+  // useEffect(() => {
+  //   const stats = getPortfolioStats(userPortfolio);
+  //   setPortfolioStats(stats);
+  // }, [userPortfolio]);
+
   return (
     <>
       <UserModal
@@ -39,6 +70,7 @@ const HomeScreen = ({ route, navigation }) => {
         modalVisible={modalVisible}
         handleLogOut={handleLogOut}
         user={user}
+        navigation={navigation}
       />
       <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
@@ -55,10 +87,25 @@ const HomeScreen = ({ route, navigation }) => {
           </View>
           {/* ========== SUMMARY ========= */}
           <View style={styles.summaryContainer}>
-            <View style={styles.summaryGraph}></View>
+            {/* <View style={styles.summaryGraph}></View> */}
             <View>
               <Text style={base.headingSm}>Summary</Text>
             </View>
+            <PieChart
+              data={data}
+              width={Dimensions.get('window').width * 0.8}
+              height={150}
+              chartConfig={{
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              }}
+              accessor={'population'}
+              backgroundColor={'transparent'}
+              paddingLeft={'15'}
+              center={[0, 0]}
+              absolute
+            />
           </View>
           {/* ========== P&L  ========= */}
           <View style={styles.pmContainer}>
@@ -143,11 +190,10 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     width: '100%',
-    padding: 40,
-    flexDirection: 'row',
+    padding: 5,
     backgroundColor: '#30444E',
     borderRadius: 30,
-    height: '25%',
+    height: '30%',
     marginBottom: 15,
   },
   summaryGraph: {

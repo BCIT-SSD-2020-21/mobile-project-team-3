@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getSymbolPrice } from '../api/finnhubNetwork';
 
-export const handleLogOut = async () => {
+export const handleLogOut = async (navigation) => {
   try {
     await firebase.auth().signOut();
     try {
@@ -14,7 +14,7 @@ export const handleLogOut = async () => {
     }
     console.log('Logout successful');
     navigation.navigate('LoginScreen');
-  } catch (err) {
+  } catch (error) {
     // var errorCode = error.code;
     var errorMessage = error.message;
     console.log('Error>>', errorMessage);
