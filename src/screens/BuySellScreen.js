@@ -133,6 +133,17 @@ const BuySellScreen = ({ route }) => {
   const ActivateButton = () => {
     if (count > 0){
 
+    // if (type === 'Sell' && !user.portfolio.includes(user.portfolio.find(i => i.symbol == symbol)) ){
+    //      console.log(" In sell")
+    //      console.log(!user.portfolio.includes(user.portfolio.find(i => i.symbol == symbol)))
+    //      console.log(user.portfolio.find(i => i.symbol == symbol))
+    //      return (console.log("test"))
+    //    }
+
+    //  else{
+
+
+
        return (
         <TouchableOpacity
         style={[styles.buyBtn, styles.btn]}
@@ -141,6 +152,10 @@ const BuySellScreen = ({ route }) => {
         <Text style={styles.textStyle}>{type}</Text>
       </TouchableOpacity>
        )
+
+
+      //  }
+
 
     }
 
