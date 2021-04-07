@@ -49,14 +49,13 @@ const HomeScreen = ({ route, navigation }) => {
   ];
 
   useEffect(() => {
-    console.log('user received on homescreen>>>>', user);
     (async () => {
       const portfolioPL = await getUserPortfolio(user);
       setUserPortfolio(portfolioPL);
       const stats = getPortfolioStats(userPortfolio);
       setPortfolioStats(stats);
     })();
-  }, []);
+  }, [isFocused]);
 
   // useEffect(() => {
   //   const stats = getPortfolioStats(userPortfolio);

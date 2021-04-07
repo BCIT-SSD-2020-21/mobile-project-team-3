@@ -6,6 +6,7 @@ import Login from '../../screens/Login';
 import HomeScreen from '../../screens/HomeScreen';
 import Register from '../../screens/Register';
 import PortfolioListScreen from '../../screens/PortfolioListScreen';
+import PortfolioDetailScreen from '../../screens/PortfolioDetailScreen'
 
 const HomeStack = createStackNavigator();
 
@@ -30,7 +31,7 @@ const HomeNavigator = () => {
           shadowOpacity: 0,
           elevation: 0,
         },
-        headerLeft: null,
+        //headerLeft: null,
       }}
     >
       <HomeStack.Screen
@@ -54,6 +55,19 @@ const HomeNavigator = () => {
       <HomeStack.Screen
         name='PortfolioListScreen'
         component={PortfolioListScreen}
+        options={
+          Platform.OS === 'android'
+            ? {
+                headerRight: () => <MenuIcon />,
+              }
+            : {
+                headerTitle: 'User Dashboard',
+              }
+        }
+      />
+      <HomeStack.Screen
+        name='PortfolioDetailScreen'
+        component={PortfolioDetailScreen}
         options={
           Platform.OS === 'android'
             ? {
