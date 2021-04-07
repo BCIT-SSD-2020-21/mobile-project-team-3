@@ -45,6 +45,7 @@ const BuySellScreen = ({ route }) => {
       setTotal(price);
      
     } else if (type === 'Sell') {
+     
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
       // setMyCash((myCash - -total.toFixed(2)).toFixed(2));
@@ -53,6 +54,8 @@ const BuySellScreen = ({ route }) => {
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
+     
+
       
     }
   };
@@ -224,7 +227,7 @@ const BuySellScreen = ({ route }) => {
 
       <View style={styles.btnContainer}>
         <Text style={styles.Cashtext}>My Cash</Text>
-        <Text style={styles.Cashtext}>${user.cash}</Text>
+        <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
         {/* <Text style={styles.Cashtext}>${myCash}</Text> */}
         {/* <TouchableOpacity
           style={[styles.sellBtn, styles.btn]}

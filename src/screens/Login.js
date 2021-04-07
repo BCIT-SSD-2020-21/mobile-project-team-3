@@ -57,7 +57,7 @@ export default function Login({ navigation }) {
   useEffect(() => {
     (async () => {
       try {
-       
+        // await AsyncStorage.clear()
         const keys = await AsyncStorage.getAllKeys();
         if (keys.length > 0) {
           const uid = await AsyncStorage.getItem(keys[0]);
