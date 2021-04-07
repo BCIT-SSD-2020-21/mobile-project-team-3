@@ -25,6 +25,7 @@ module.exports = async function () {
       uid: uid,
       dateJoined: Date.now(),
       cash: 50000,
+      watchlist: [],
       marketBuys: [],
       marketSells: [],
       portfolio: [],
@@ -44,6 +45,31 @@ module.exports = async function () {
     }
 
     return foundUser;
+  }
+
+  //========= WATCHLIST ========== //
+  async function addToWatchlist({uid, symbol, price}) {
+    const foundUser = await Users.findOne({ uid });
+    const userWatchlist = foundUser.watchlist;
+
+    if (!userWatchlist.some(stock => stock.symbol === symbol)) {
+      try {
+        Users.updateOne({ uid }, { $push: { watchlist: { symbol, price } } });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      console.log('Stock is already being watched!')
+    }
+
+  }
+
+  async function removeFromWatchlist({ uid, symbol, price }) {
+    try {
+      Users.updateOne({ uid }, { $pull: { watchlist: { symbol, price } }})
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   //========= MARKET BUY ========== //
@@ -192,5 +218,7 @@ module.exports = async function () {
     getUser,
     makeMarketBuy,
     makeMarketSell,
+    addToWatchlist,
+    removeFromWatchlist
   };
 };
