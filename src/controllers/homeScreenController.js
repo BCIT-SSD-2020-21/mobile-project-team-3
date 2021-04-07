@@ -44,8 +44,8 @@ export const getUserPortfolio = async (user) => {
 };
 
 export const formatMoney = (amt) => {
-  const rounded = amt.toFixed(2);
-  const formatted = rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const rounded = amt?.toFixed(2);
+  const formatted = rounded?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return formatted;
 };
 

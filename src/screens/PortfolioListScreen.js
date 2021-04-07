@@ -30,7 +30,7 @@ const PortfolioListScreen = ({ route, navigation }) => {
 
             <TouchableOpacity
             style={styles.viewBtn}
-            // onPress={() => navigation.navigate('PortfolioDetailScreen', {PL: item.PL, avgPrice: avgPrice, currentPrice: currentPrice, numShares: numShares, symbol: symbol  })} 
+            onPress={() => navigation.navigate('PortfolioDetailScreen', {avgPrice: item.avgPrice, numShares: item.numShares, symbol: item.symbol  })} 
             >
             <Text 
             style={styles.viewBtnText}
