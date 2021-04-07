@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import base from '../styles/styles';
-import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 import UserModal from '../components/UserModal';
-import firebase from 'firebase';
-import AsyncStorage from '@react-native-community/async-storage';
-import { getSymbolPrice } from '../api/finnhubNetwork';
-import { Foundation } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import {
+  Foundation,
+  FontAwesome5,
+  Feather,
+  FontAwesome,
+} from '@expo/vector-icons';
+import {
+  handleLogOut,
+  getUserPortfolio,
+  formatMoney,
+  getPortfolioStats,
+} from '../controllers/homeScreenController';
 
 const HomeScreen = ({ route, navigation }) => {
   const [user, setUser] = useState(route.params);
@@ -17,81 +22,10 @@ const HomeScreen = ({ route, navigation }) => {
   const [userPortfolio, setUserPortfolio] = useState([]);
   const [portfolioStats, setPortfolioStats] = useState(0);
 
-  const handleLogOut = async () => {
-    try {
-      await firebase.auth().signOut();
-      try {
-        await AsyncStorage.clear();
-        alert('Storage successfully cleared!');
-      } catch (e) {
-        console.log(e);
-        alert('Failed to clear the async storage.');
-      }
-      console.log('Logout successful');
-      navigation.navigate('LoginScreen');
-    } catch (err) {
-      // var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log('Error>>', errorMessage);
-    }
-  };
-
-  const getUserPortfolio = async () => {
-    let portfolioPL = [];
-    user.portfolio.forEach(async (item) => {
-      //search API for item
-      const quote = await getSymbolPrice(item.symbol);
-      //calculate P/L using average price
-      const profitOrLoss = quote.c - item.avgPrice;
-
-      //create object and push to userPL array
-      const portfolioItem = {
-        symbol: item.symbol,
-        numShares: item.numShares,
-        avgPrice: item.avgPrice,
-        currentPrice: quote.c,
-        PL: profitOrLoss,
-      };
-
-      portfolioPL.push(portfolioItem);
-    });
-    return portfolioPL;
-  };
-
-  const formatMoney = (amt) => {
-    const rounded = amt.toFixed(2);
-    return rounded.toLocaleString();
-  };
-
-  const getPortfolioStats = (portfolio) => {
-    let sumOfAllAvgPrice = 0;
-    let sumOfAllCurrentPrice = 0;
-
-    portfolio.forEach((item) => {
-      sumOfAllCurrentPrice += item.currentPrice * item.numShares;
-      sumOfAllAvgPrice += item.avgPrice * item.numShares;
-    });
-
-    console.log('sum of avg prices', sumOfAllAvgPrice);
-    console.log('sum of current prices', sumOfAllCurrentPrice);
-
-    const portfolioStats = {
-      marketValue: formatMoney(sumOfAllCurrentPrice),
-      totalPLpercent: (
-        (1 - sumOfAllAvgPrice / sumOfAllCurrentPrice) *
-        100
-      ).toFixed(2),
-      totalPLdollars: formatMoney(sumOfAllCurrentPrice - sumOfAllAvgPrice),
-    };
-
-    console.log('portfolioStats Obj>>>>>', portfolioStats);
-    return portfolioStats;
-  };
-
   useEffect(() => {
     console.log('user received on homescreen>>>>', user);
     (async () => {
-      const portfolioPL = await getUserPortfolio();
+      const portfolioPL = await getUserPortfolio(user);
       setUserPortfolio(portfolioPL);
       const stats = getPortfolioStats(userPortfolio);
       setPortfolioStats(stats);
@@ -160,12 +94,10 @@ const HomeScreen = ({ route, navigation }) => {
               </Text>
               <Text style={styles.headingSm}>Market Value</Text>
               <Text style={styles.whiteText}>
-                $ {portfolioStats.marketValue} CAD
+                ${portfolioStats.marketValue} CAD
               </Text>
               <Text style={styles.headingSm}>Cash</Text>
-              <Text style={styles.whiteText}>
-                ${user?.cash?.toLocaleString()}
-              </Text>
+              <Text style={styles.whiteText}>${formatMoney(user.cash)}</Text>
             </View>
           </View>
           {/* ========== See Portfolio ========= */}
@@ -277,6 +209,7 @@ const styles = StyleSheet.create({
     color: 'white',
     alignSelf: 'center',
     marginBottom: 15,
+    fontSize: 16,
   },
 });
 
