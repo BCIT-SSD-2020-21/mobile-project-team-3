@@ -27,6 +27,7 @@ const PortfolioDetailScreen = ({ route }) => {
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState('');
   const[PL, setPL] = useState('')
+  const [minusBtn, setMinusBtn] = useState(false)
  // const [myCash, setMyCash] = useState('')
   const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
 
@@ -65,16 +66,22 @@ const PortfolioDetailScreen = ({ route }) => {
 
 
   const addButtonClicked = () => {
+    setMinusBtn(false)
     const newCount = count + 1;
     const newTotal = total + price;
     setCount(newCount);
     setTotal(newTotal);
   };
   const minusButtonClicked = () => {
+    if (count>=2){
     const newCount = count - 1;
     const newTotal = total - price;
     setCount(newCount);
     setTotal(newTotal);
+    }
+    else{
+      setMinusBtn(true)
+    }
   };
 
 
@@ -204,6 +211,7 @@ const PortfolioDetailScreen = ({ route }) => {
               <Text style={styles.modalText}>{count}</Text>
               <TouchableOpacity
                 style={styles.qtyBtn}
+                disabled={minusBtn}
                 onPress={minusButtonClicked}
               >
                 <FontAwesome name='minus-circle' size={30} color='white' />
