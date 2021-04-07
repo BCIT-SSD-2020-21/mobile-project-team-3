@@ -25,27 +25,27 @@ const BuySellScreen = ({ route }) => {
   const [total, setTotal] = useState(price);
   // const [myCash, setMyCash] = useState(user.cash);
   
-  const graphAPI = async () => {
-    // GET QUOTE
-    try {
-      const response = await axios.get(
-        `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
-      );
-      console.log('API RESPONSE:', response.data);
-      setGraph(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // const graphAPI = async () => {
+   
+  //   try {
+  //     const response = await axios.get(
+  //       `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
+  //     );
+  //     console.log('API RESPONSE:', response.data);
+  //     setGraph(response.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
   
-  graphAPI()
+  // graphAPI()
 
   const line = {
 
     datasets: [
       {
-        // data: [2, 4, 6, 7, 9, 4],
-        data: graph.o.slice(0,50)
+        data: [2, 4, 6, 7, 9, 4],
+        // data: graph.o.slice(0,50)
       },
     ],
   };
@@ -126,6 +126,20 @@ const BuySellScreen = ({ route }) => {
     }
   };
 
+  const ActivateButton = () => {
+    if (count > 0){
+       return (
+        <TouchableOpacity
+        style={[styles.buyBtn, styles.btn]}
+        onPress={onBuyOrSellButtonClicked}
+      >
+        <Text style={styles.textStyle}>{type}</Text>
+      </TouchableOpacity>
+       )
+    }
+    
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -200,13 +214,12 @@ const BuySellScreen = ({ route }) => {
 
             {DisplayUserCash()}
 
+
             <View style={styles.sellBuyBtnContainer}>
-              <TouchableOpacity
-                style={[styles.buyBtn, styles.btn]}
-                onPress={onBuyOrSellButtonClicked}
-              >
-                <Text style={styles.textStyle}>{type}</Text>
-              </TouchableOpacity>
+
+            {ActivateButton()}
+              
+
               <TouchableOpacity
                 style={[styles.closeBtn, styles.btn]}
                 onPress={() => {
@@ -218,6 +231,8 @@ const BuySellScreen = ({ route }) => {
                 <FontAwesome name='close' size={40} color='white' />
               </TouchableOpacity>
             </View>
+
+
           </View>
         </View>
       </Modal>
