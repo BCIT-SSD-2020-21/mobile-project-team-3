@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {TouchableOpacity } from 'react-native';
 
-const PortfolioListScreen = ({ route, navigation }) => {
-  const userPL = route.params;
+const PortfolioListScreen = ({ route }) => {
+  const userPortfolio = route.params;
 
   useEffect(() => {
-    console.log('userPL on portfolioList screen>>>>', userPL);
+    console.log('userPortfolio on portfolioList screen>>>>', userPortfolio);
   }, []);
 
   return (

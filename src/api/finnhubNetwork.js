@@ -6,7 +6,7 @@ export async function getSymbolPrice(input) {
     const response = await axios.get(
       `https://finnhub.io/api/v1/quote?symbol=${input}&token=${FINNHUB_API}`
     );
-    console.log('API RESPONSE:', response.data);
+    //console.log('API RESPONSE:', response.data);
     return response.data;
   } catch (err) {
     console.log(err);
