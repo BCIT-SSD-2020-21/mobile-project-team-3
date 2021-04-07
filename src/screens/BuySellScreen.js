@@ -103,19 +103,8 @@ const BuySellScreen = ({ route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.text}>{input}</Text>
+        <Text style={styles.text}>{symbol}</Text>
         <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
-      </View>
-      <View>
-      <TouchableOpacity
-            style={styles.viewBtn}
-            onPress={() => searchGraphAPI()}
-          >
-            <Text 
-            style={styles.viewBtnText}
-            
-            >View Graph</Text>
-          </TouchableOpacity>
       </View>
       <View>
         <LineChart
@@ -176,6 +165,7 @@ const BuySellScreen = ({ route }) => {
           <Text name="arrow-up" size={40} color="white">Checking Expected Cash</Text>
         </TouchableOpacity> */}
             {DisplayUserCash()}
+
             <View style={styles.sellBuyBtnContainer}>
               <TouchableOpacity
                 style={[styles.buyBtn, styles.btn]}
@@ -246,20 +236,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 35,
-  },
-  viewBtn: {
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '30%',
-    height: 30,
-    backgroundColor: '#40DF9F',
-    marginLeft: '0%',
-  },
-  viewBtnText: {
-    fontWeight: 'bold',
-    color: 'white',
   },
   Cashtext: {
     color: 'white',
