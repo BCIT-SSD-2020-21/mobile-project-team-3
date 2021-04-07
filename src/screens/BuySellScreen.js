@@ -23,6 +23,7 @@ const BuySellScreen = ({ route }) => {
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
+  
   // const [myCash, setMyCash] = useState(user.cash);
   
   // const graphAPI = async () => {
@@ -130,6 +131,7 @@ const BuySellScreen = ({ route }) => {
 
   const ActivateButton = () => {
     if (count > 0){
+
        return (
         <TouchableOpacity
         style={[styles.buyBtn, styles.btn]}
@@ -138,7 +140,9 @@ const BuySellScreen = ({ route }) => {
         <Text style={styles.textStyle}>{type}</Text>
       </TouchableOpacity>
        )
+
     }
+
     
   }
 
