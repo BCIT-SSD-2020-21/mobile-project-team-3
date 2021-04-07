@@ -22,6 +22,7 @@ const BuySellScreen = ({ route }) => {
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
+  // const [myCash, setMyCash] = useState(user.cash);
   const line = {
     datasets: [
       {
@@ -32,20 +33,27 @@ const BuySellScreen = ({ route }) => {
 
   const onBuyOrSellButtonClicked = async () => {
     const uid = user.uid;
+  
     if (type === 'Buy') {
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-      setMyCash((user.cash - total.toFixed(2)).toFixed(2));
+      // setMyCash((myCash - total.toFixed(2)).toFixed(2));
+      // setMyCash((user.cash - total.toFixed(2)).toFixed(2));
+      user.cash = (user.cash - total.toFixed(2)).toFixed(2)
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
+     
     } else if (type === 'Sell') {
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-      setMyCash((user.cash - -total.toFixed(2)).toFixed(2));
+      // setMyCash((myCash - -total.toFixed(2)).toFixed(2));
+      // setMyCash((user.cash - -total.toFixed(2)).toFixed(2));
+      user.cash = (user.cash - -total.toFixed(2)).toFixed(2)
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
+      
     }
   };
 
@@ -83,6 +91,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
+            {/* ${(myCash - total.toFixed(2)).toFixed(2)} */}
             ${(user.cash - total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
@@ -93,6 +102,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
+            {/* ${(myCash - -total.toFixed(2)).toFixed(2)} */}
             ${(user.cash - -total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
@@ -215,6 +225,7 @@ const BuySellScreen = ({ route }) => {
       <View style={styles.btnContainer}>
         <Text style={styles.Cashtext}>My Cash</Text>
         <Text style={styles.Cashtext}>${user.cash}</Text>
+        {/* <Text style={styles.Cashtext}>${myCash}</Text> */}
         {/* <TouchableOpacity
           style={[styles.sellBtn, styles.btn]}
           onPress={() => { setModalVisible(true); setType("Sell") }}>
