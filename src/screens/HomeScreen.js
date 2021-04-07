@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { getSymbolPrice } from '../api/finnhubNetwork';
 import { Foundation } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 const HomeScreen = ({ route, navigation }) => {
   const [user, setUser] = useState(route.params);
@@ -67,9 +68,8 @@ const HomeScreen = ({ route, navigation }) => {
     let sumOfAllCurrentPrice = 0;
 
     portfolio.forEach((item) => {
-      console.log(`adding PL from ${item.PL}`);
-      sumOfAllCurrentPrice += item.currentPrice;
-      sumOfAllAvgPrice += item.avgPrice;
+      sumOfAllCurrentPrice += item.currentPrice * item.numShares;
+      sumOfAllAvgPrice += item.avgPrice * item.numShares;
     });
 
     console.log('sum of avg prices', sumOfAllAvgPrice);
@@ -78,7 +78,7 @@ const HomeScreen = ({ route, navigation }) => {
     const portfolioStats = {
       marketValue: formatMoney(sumOfAllCurrentPrice),
       totalPLpercent: (
-        (1 - sumOfAllCurrentPrice / sumOfAllAvgPrice) *
+        (1 - sumOfAllAvgPrice / sumOfAllCurrentPrice) *
         100
       ).toFixed(2),
       totalPLdollars: formatMoney(sumOfAllCurrentPrice - sumOfAllAvgPrice),
@@ -96,7 +96,6 @@ const HomeScreen = ({ route, navigation }) => {
       const stats = getPortfolioStats(userPortfolio);
       setPortfolioStats(stats);
     })();
-    //console.log('user portfolio>>>>>>>>>>>', userPL);
   }, []);
 
   return (
@@ -134,19 +133,39 @@ const HomeScreen = ({ route, navigation }) => {
                 <Foundation name='graph-trend' size={24} color='white' /> Profit
                 &amp; Loss
               </Text>
-              <Text style={base.headingSm}>P &amp; L Day</Text>
-              <Text>${portfolioStats.totalPLdollars} CAD</Text>
-              <Text>{portfolioStats.totalPLpercent}%</Text>
+              <Text style={styles.headingSm}>P &amp; L Day</Text>
+              <Text style={styles.whiteText}>
+                ${portfolioStats.totalPLdollars} CAD
+              </Text>
+              <View style={styles.percentContainer}>
+                <Text style={styles.percentText}>
+                  {portfolioStats.totalPLpercent > 1 ? (
+                    <Feather name='arrow-up-circle' size={24} color='white' />
+                  ) : (
+                    <Feather
+                      name='arrow-down-circle'
+                      size={24}
+                      color='#FF575F'
+                    />
+                  )}{' '}
+                  {portfolioStats.totalPLpercent}%
+                </Text>
+              </View>
             </View>
             {/* ========== MARKET ========= */}
             <View style={styles.marketValue}>
               <Text style={{ color: 'white', marginBottom: '10%' }}>
                 <FontAwesome5 name='money-check-alt' size={16} color='white' />{' '}
-                Market Value
+                Total Equity
               </Text>
               <Text style={styles.headingSm}>Market Value</Text>
+              <Text style={styles.whiteText}>
+                $ {portfolioStats.marketValue} CAD
+              </Text>
               <Text style={styles.headingSm}>Cash</Text>
-              <Text>${user?.cash?.toLocaleString()}</Text>
+              <Text style={styles.whiteText}>
+                ${user?.cash?.toLocaleString()}
+              </Text>
             </View>
           </View>
           {/* ========== See Portfolio ========= */}
@@ -220,6 +239,17 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
   },
+  percentContainer: {
+    height: '35%',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  percentText: {
+    color: 'white',
+    alignSelf: 'center',
+    fontWeight: '900',
+    fontSize: 18,
+  },
   marketValue: {
     backgroundColor: '#FFC542',
     height: '100%',
@@ -241,6 +271,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#96A7AF',
     borderRadius: 30,
     height: '20%',
+    marginBottom: 15,
+  },
+  whiteText: {
+    color: 'white',
+    alignSelf: 'center',
     marginBottom: 15,
   },
 });
