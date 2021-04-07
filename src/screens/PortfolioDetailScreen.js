@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   Dimensions,
+  SafeAreaView,
   TouchableOpacity,
   Modal,
 } from 'react-native';
@@ -14,17 +15,22 @@ import { makeMarketBuy, makeMarketSell } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
 import { getSymbolPrice } from '../api/finnhubNetwork';
+import { useIsFocused } from "@react-navigation/native";
 
 const PortfolioDetailScreen = ({ route }) => {
+  const isFocused = useIsFocused();
   const [price, setPrice]= useState('');
   const [user, setUser] = useState('');
-  const { symbol, numShares, avgPrice, PL } = route.params;
+  const { symbol, numShares, avgPrice } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState('');
-  const [myCash, setMyCash] = useState('')
+  const[PL, setPL] = useState('')
+ // const [myCash, setMyCash] = useState('')
   const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
+
+ 
   const line = {
     datasets: [
       {
@@ -34,24 +40,29 @@ const PortfolioDetailScreen = ({ route }) => {
     ],
   };
 
-  const onBuyOrSellButtonClicked = async () => {
-    const uid = user.uid;
-    if (type === 'Buy') {
-      const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
-      console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-      setMyCash((user.cash - total).toFixed(2));
-      setModalVisible(!modalVisible);
-      setCount(0);
-      setTotal(0);
-    } else if (type === 'Sell') {
-      const updatedUser = await makeMarketSell({ symbol, price, count, uid });
-      console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-      setMyCash((user.cash - -total).toFixed(2));
-      setModalVisible(!modalVisible);
-      setCount(0);
-      setTotal(0);
-    }
-  };
+
+      const onBuyOrSellButtonClicked = async () => {
+        const uid = user.uid;
+      
+        if (type === 'Buy') {
+          const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
+          console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
+          user.cash = (user.cash - total).toFixed(2)
+          setModalVisible(!modalVisible);
+          setCount(1);
+          setTotal(price);
+
+} else if (type === 'Sell') {
+     
+  const updatedUser = await makeMarketSell({ symbol, price, count, uid });
+  console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
+  user.cash = (user.cash - -total).toFixed(2)
+  setModalVisible(!modalVisible);
+  setCount(1);
+  setTotal(price);
+}
+};
+
 
   const addButtonClicked = () => {
     const newCount = count + 1;
@@ -66,6 +77,7 @@ const PortfolioDetailScreen = ({ route }) => {
     setTotal(newTotal);
   };
 
+
   useEffect(() => {
     (async () => {
       try {
@@ -74,7 +86,6 @@ const PortfolioDetailScreen = ({ route }) => {
           const uid = await AsyncStorage.getItem(keys[0]);
           const currentUser = await getUser(JSON.parse(uid))
           setUser(currentUser)
-          setMyCash((currentUser.cash).toFixed(2))
         }
       } catch (err) {
         console.log('Error Getting Data', err);
@@ -84,8 +95,10 @@ const PortfolioDetailScreen = ({ route }) => {
         const result = await getSymbolPrice(symbol);
         setPrice((result.c).toFixed(2));
         setTotal((result.c).toFixed(2));
+        const newpl = ((result.c/avgPrice)*100)-100
+        setPL(newpl.toFixed(2))
       })();
-  }, []);
+  }, [isFocused]);
 
   const DisplayUserCash = () => {
     if (type == 'Buy') {
@@ -93,7 +106,7 @@ const PortfolioDetailScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - total).toFixed(2)}
+          ${(user.cash - total).toFixed(2)}
           </Text>
         </View>
       );
@@ -103,7 +116,7 @@ const PortfolioDetailScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - -total).toFixed(2)}
+          ${(user.cash - -total).toFixed(2)}
           </Text>
         </View>
       );
@@ -111,15 +124,17 @@ const PortfolioDetailScreen = ({ route }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView>
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.text}>{symbol}</Text>
         <View>
         <Text style={styles.priceHeader}> ${price} </Text>
-        <Text style={styles.plHeader}> ({PL})</Text>
+        <Text style={styles.plHeader}> ({PL}%)</Text>
         </View>
       </View>
       <View>
+
         <LineChart
           data={line}
           width={Dimensions.get('window').width - 80}
@@ -151,13 +166,13 @@ const PortfolioDetailScreen = ({ route }) => {
         </View>
         <View style={styles.portfolioTextContainer}>
         <Text style={styles.portfolioItem}>Total Value: </Text>
-        <Text style={styles.portfoliotext}>{numShares*price}</Text>
+        <Text style={styles.portfoliotext}>{(numShares*price).toFixed(2)}</Text>
         </View>
       </View>
-
       <View style={styles.cashContainer}>
         <Text style={styles.Cashtext}>My Cash</Text>
-        <Text style={styles.Cashtext}>${myCash}</Text>
+        <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
+       
       </View>
 
       <Modal
@@ -170,6 +185,7 @@ const PortfolioDetailScreen = ({ route }) => {
           setModalVisible(!modalVisible);
         }}
       >
+        
         <View style={styles.centeredView}>
           <View style={styles.modalView} backdropOpacity={0.5}>
             <View style={styles.TextView}>
@@ -182,6 +198,7 @@ const PortfolioDetailScreen = ({ route }) => {
                 style={styles.qtyBtn}
                 onPress={addButtonClicked}
               >
+                
                 <FontAwesome name='plus-circle' size={30} color='white' />
               </TouchableOpacity>
               <Text style={styles.modalText}>{count}</Text>
@@ -205,8 +222,8 @@ const PortfolioDetailScreen = ({ route }) => {
                 style={[styles.closeBtn, styles.btn]}
                 onPress={() => {
                   setModalVisible(!modalVisible);
-                  setCount(0);
-                  setTotal(0);
+                  setCount(1);
+                  setTotal(price);
                 }}
               >
                 <FontAwesome name='close' size={40} color='white' />
@@ -239,6 +256,7 @@ const PortfolioDetailScreen = ({ route }) => {
           <FontAwesome name='arrow-up' size={40} color='white' />
         </TouchableOpacity>
       </View>
+    </SafeAreaView>
     </ScrollView>
   );
 };
