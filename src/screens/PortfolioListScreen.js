@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const PortfolioListScreen = ({ route }) => {
-  const userPL = route.params;
+  const userPortfolio = route.params;
 
   useEffect(() => {
-    console.log('userPL on portfolioList screen>>>>', userPL);
+    console.log('userPortfolio on portfolioList screen>>>>', userPortfolio);
   }, []);
 
   return (

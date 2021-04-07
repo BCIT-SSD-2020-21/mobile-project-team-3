@@ -7,12 +7,14 @@ import UserModal from '../components/UserModal';
 import firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getSymbolPrice } from '../api/finnhubNetwork';
-import { getUser } from '../../network';
+import { Foundation } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const HomeScreen = ({ route, navigation }) => {
-  const [user, setUser] = useState(route.params)
+  const [user, setUser] = useState(route.params);
   const [modalVisible, setModalVisible] = useState(false);
-  const [userPL, setUserPL] = useState([]);
+  const [userPortfolio, setUserPortfolio] = useState([]);
+  const [portfolioStats, setPortfolioStats] = useState(0);
 
   const handleLogOut = async () => {
     try {
@@ -33,12 +35,11 @@ const HomeScreen = ({ route, navigation }) => {
     }
   };
 
-  const getUserProfitLoss = async () => {
-    let userPortfolio = [];
+  const getUserPortfolio = async () => {
+    let portfolioPL = [];
     user.portfolio.forEach(async (item) => {
       //search API for item
       const quote = await getSymbolPrice(item.symbol);
-      console.log(`Quote for ${item.symbol} >>> ${quote.c}`);
       //calculate P/L using average price
       const profitOrLoss = quote.c - item.avgPrice;
 
@@ -51,17 +52,51 @@ const HomeScreen = ({ route, navigation }) => {
         PL: profitOrLoss,
       };
 
-      userPortfolio.push(portfolioItem);
+      portfolioPL.push(portfolioItem);
     });
-    return userPortfolio;
+    return portfolioPL;
+  };
+
+  const formatMoney = (amt) => {
+    const rounded = amt.toFixed(2);
+    return rounded.toLocaleString();
+  };
+
+  const getPortfolioStats = (portfolio) => {
+    let sumOfAllAvgPrice = 0;
+    let sumOfAllCurrentPrice = 0;
+
+    portfolio.forEach((item) => {
+      console.log(`adding PL from ${item.PL}`);
+      sumOfAllCurrentPrice += item.currentPrice;
+      sumOfAllAvgPrice += item.avgPrice;
+    });
+
+    console.log('sum of avg prices', sumOfAllAvgPrice);
+    console.log('sum of current prices', sumOfAllCurrentPrice);
+
+    const portfolioStats = {
+      marketValue: formatMoney(sumOfAllCurrentPrice),
+      totalPLpercent: (
+        (1 - sumOfAllCurrentPrice / sumOfAllAvgPrice) *
+        100
+      ).toFixed(2),
+      totalPLdollars: formatMoney(sumOfAllCurrentPrice - sumOfAllAvgPrice),
+    };
+
+    console.log('portfolioStats Obj>>>>>', portfolioStats);
+    return portfolioStats;
   };
 
   useEffect(() => {
     console.log('user received on homescreen>>>>', user);
     (async () => {
-      const userPortfolio = await getUserProfitLoss();
-      setUserPL(userPortfolio);
+      const portfolioPL = await getUserPortfolio();
+      setUserPortfolio(portfolioPL);
+      const stats = getPortfolioStats(userPortfolio);
+      setPortfolioStats(stats);
     })();
+    //console.log('user portfolio>>>>>>>>>>>', userPL);
   }, []);
 
   return (
@@ -92,13 +127,26 @@ const HomeScreen = ({ route, navigation }) => {
               <Text style={base.headingSm}>Summary</Text>
             </View>
           </View>
-          {/* ========== P&L / MARKET ========= */}
+          {/* ========== P&L  ========= */}
           <View style={styles.pmContainer}>
             <View style={styles.PL}>
-              <Text style={base.headingSm}>P&L Day</Text>
+              <Text style={{ color: 'white', marginBottom: '10%' }}>
+                <Foundation name='graph-trend' size={24} color='white' /> Profit
+                &amp; Loss
+              </Text>
+              <Text style={base.headingSm}>P &amp; L Day</Text>
+              <Text>${portfolioStats.totalPLdollars} CAD</Text>
+              <Text>{portfolioStats.totalPLpercent}%</Text>
             </View>
+            {/* ========== MARKET ========= */}
             <View style={styles.marketValue}>
-              <Text style={base.headingSm}>Market Value</Text>
+              <Text style={{ color: 'white', marginBottom: '10%' }}>
+                <FontAwesome5 name='money-check-alt' size={16} color='white' />{' '}
+                Market Value
+              </Text>
+              <Text style={styles.headingSm}>Market Value</Text>
+              <Text style={styles.headingSm}>Cash</Text>
+              <Text>${user?.cash?.toLocaleString()}</Text>
             </View>
           </View>
           {/* ========== See Portfolio ========= */}
@@ -106,16 +154,16 @@ const HomeScreen = ({ route, navigation }) => {
           <View style={styles.portfolioContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('PortfolioListScreen', userPL);
+                navigation.navigate('PortfolioListScreen', userPortfolio);
               }}
             >
               <Text style={base.headingSm}>See Portfolio Items</Text>
             </TouchableOpacity>
           </View>
           {/* ========== INVESTMENT HISTORY ========= */}
-          <View style={styles.summaryContainer}>
+          {/* <View style={styles.summaryContainer}>
             <Text style={base.headingSm}>Investment History</Text>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </>
@@ -130,6 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#22343C',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+    minHeight: '100%',
   },
   scrollView: {
     margin: 0,
@@ -177,6 +226,13 @@ const styles = StyleSheet.create({
     width: '45%',
     padding: 20,
     borderRadius: 15,
+  },
+  headingSm: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+    alignSelf: 'center',
+    margin: '5%',
   },
   portfolioContainer: {
     width: '100%',
