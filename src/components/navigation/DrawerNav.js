@@ -4,6 +4,7 @@ import MenuIcon from './MenuIcon';
 import WatchScreen from '../../screens/WatchScreen';
 import SearchNavigator from './SearchNavigator';
 import HomeNavigator from './HomeNavigator';
+import BuySellScreen from '../../screens/BuySellScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -20,9 +21,9 @@ export default function DrawerNav() {
         options={{ headerTitle: 'Home', headerRight: () => <MenuIcon /> }}
       />
       <Drawer.Screen
-        name="WatchList"
+        name="Watchlist"
         component={WatchScreen}
-        options={{ headerTitle: 'WatchList', headerRight: () => <MenuIcon /> }}
+        options={{ headerTitle: 'Watchlist', headerRight: () => <MenuIcon /> }}
       />
       <Drawer.Screen
         name="Search"

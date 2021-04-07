@@ -3,8 +3,11 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { addToWatchlist } from '../../network'
 
-export default function QuoteListItem({ quote, input, navigation, user }) {
+export default function QuoteListItem({ quote, input, navigation, user, setWatchlistUpdated, avatarTitle }) {
   async function addQuote(uid, symbol, price) {
+  console.log('QuoteListItem.js:', input)
+
+    setWatchlistUpdated(true)
     const response = await addToWatchlist({ uid, symbol, price });
     console.log('Response From QLI:', response)
   }
@@ -17,7 +20,7 @@ export default function QuoteListItem({ quote, input, navigation, user }) {
             <Avatar
               rounded
               size="medium"
-              title={input}
+              title={avatarTitle}
               titleStyle={{ fontSize: 15, fontWeight: 'bold' }}
               backgroundColor="#FF565E"
               activeOpacity={0.7}
