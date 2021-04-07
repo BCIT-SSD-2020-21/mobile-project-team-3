@@ -6,15 +6,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import firebase from 'firebase';
 import base from '../styles/styles';
-import { signUp } from '../../network';
+import { getUser, signUp } from '../../network';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function Register({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+
+  async function setAsyncItem(key, value) {
+    try {
+      await AsyncStorage.clear();
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+      console.log('AsyncStorage#setItem Error:', err.message);
+    }
+  }
 
   const onRegisterPressed = async () => {
     if (!password || !email) {
@@ -23,50 +33,35 @@ export default function Register({ navigation }) {
     }
 
     try {
-      const response = await firebase.auth().createUserWithEmailAndPassword(email, password)
+      const response = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
-      setUser(userInfo);
-      await signUp(userInfo.uid)
-      console.log('userInfo from Firebase>>', userInfo);
+
+      // Sets user uid in async storage.
+      await setAsyncItem('userId', userInfo.uid);
+
+      const userFromDb = await signUp(userInfo.uid); //add user to db
+
+      // setUser(userInfo);
+      console.log('userInfo from DB>>', userInfo);
       setEmail('');
       setPassword('');
-      console.log('user>>', user);
       // navigate
-      userInfo 
-        ? navigation.navigate('HomeScreen', userInfo)
+      userFromDb
+        ? navigation.navigate('HomeScreen', userFromDb)
         : console.log('error logging in');
     } catch (err) {
-      // const errorCode = err.code;
       const errorMessage = err.message;
       console.log('Error>>', errorMessage);
     }
-
-    // firebase
-    //   .auth()
-    //   .createUserWithEmailAndPassword(email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     console.log(userCredential.user);
-    //     const userInfo = userCredential.user;
-    //     setUser(userInfo);
-    //     setEmail('');
-    //     setPassword('');
-    //     console.log('user>>', user);
-    //     // Navigate
-    //     user
-    //       ? navigation.navigate('HomeScreen', user)
-    //       : console.log('error logging in');
-    //   })
-    //   .catch((error) => {
-    //     var errorCode = error.code;
-    //     var errorMessage = error.message;
-    //     console.log('Error>>', errorMessage);
-    //   });
   };
 
   return (
     <View style={base.container}>
-      <View style={styles.box}></View>
+      <View style={styles.box}>
+        <MaterialCommunityIcons name='robber' size={50} color='white' />
+      </View>
       <Text style={styles.header}>Sign Up</Text>
       <Text style={styles.subHeader}>to start working</Text>
       <View style={styles.inputView}>
@@ -78,7 +73,7 @@ export default function Register({ navigation }) {
           placeholder='Email'
           value={email}
           placeholderTextColor='#96A7AF'
-          onChangeText={(email) => setEmail(email)}
+          onChangeText={(email) => setEmail(email.toLowerCase())}
           autoCapitalize='none'
         />
       </View>
@@ -169,11 +164,15 @@ const styles = StyleSheet.create({
   textInput: {
     color: '#96A7AF',
     width: '90%',
+    backgroundColor: '#30444E',
+    height: '120%',
+    borderRadius: 8,
+    paddingLeft: 10,
   },
   userIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 197, 66, 0.3)',
     borderRadius: 8,
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
   lockIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 87, 95, 0.3)',
     borderRadius: 8,

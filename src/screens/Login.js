@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,12 +8,23 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+
+  async function setAsyncItem(key, value) {
+    try {
+      await AsyncStorage.clear();
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+      console.log('AsyncStorage#setItem Error:', err.message);
+    }
+  }
 
   const onLoginPressed = async () => {
     if (!password || !email) {
@@ -22,50 +33,50 @@ export default function Login({ navigation }) {
     }
 
     try {
-      const response = await firebase.auth().signInWithEmailAndPassword(email, password)
+      const response = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
-      setUser(userInfo);
-      await getUser(userInfo.uid)
-      console.log('userInfo from Firebase>>', userInfo);
+      const userFromDb = await getUser(userInfo.uid);
+      console.log('user from firebase', userInfo);
+      console.log('user from db', userFromDb);
+      // Sets user uid in async storage.
+      await setAsyncItem('userId', userInfo.uid);
+
       setEmail('');
       setPassword('');
-      console.log('user>>', user);
       // navigate
-      userInfo 
-        ? navigation.navigate('HomeScreen', userInfo)
+      userFromDb
+        ? navigation.navigate('HomeScreen', userFromDb)
         : console.log('error logging in');
     } catch (err) {
-      // const errorCode = err.code;
       const errorMessage = err.message;
       console.log('Error>>', errorMessage);
     }
-
-    // navigate
-      // .then((userCredential) => {
-      //   // Signed in
-      //   const userInfo = userCredential.user;
-      //   setUser(userInfo);
-      //   console.log('userInfo from Firebase>>', userInfo);
-      //   setEmail('');
-      //   setPassword('');
-      //   // navigate
-      //   console.log('user>>', user);
-      //   userInfo
-      //     ? navigation.navigate('HomeScreen', userInfo)
-      //     : console.log('error logging in');
-      // })
-      // .catch((error) => {
-      //   var errorCode = error.code;
-      //   var errorMessage = error.message;
-      //   console.log('Error>>', errorMessage);
-      // });
-      
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // await AsyncStorage.clear()
+        const keys = await AsyncStorage.getAllKeys();
+        if (keys.length > 0) {
+          const uid = await AsyncStorage.getItem(keys[0]);
+          const currentUser = await getUser(JSON.parse(uid));
+          navigation.navigate('HomeScreen', currentUser);
+        }
+      } catch (err) {
+        console.log('Error Getting Data', err);
+      }
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <View style={styles.box}></View>
-      <Text style={styles.header}>Welcome!</Text>
+      <View style={styles.box}>
+        <MaterialCommunityIcons name='robber' size={50} color='white' />
+      </View>
+      <Text style={styles.header}>RobDemGood</Text>
       <Text style={styles.subHeader}>Sign in to continue</Text>
       <View style={styles.inputView}>
         <View style={styles.userIconContainer}>
@@ -148,7 +159,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '90%',
     height: 60,
-    marginBottom: 60,
+    marginBottom: 40,
     backgroundColor: '#40DF9F',
   },
   registerBtn: {
@@ -163,11 +174,15 @@ const styles = StyleSheet.create({
   textInput: {
     color: '#96A7AF',
     width: '90%',
+    backgroundColor: '#30444E',
+    height: '120%',
+    borderRadius: 8,
+    paddingLeft: 10,
   },
   userIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 197, 66, 0.3)',
     borderRadius: 8,
@@ -176,7 +191,7 @@ const styles = StyleSheet.create({
   lockIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 87, 95, 0.3)',
     borderRadius: 8,

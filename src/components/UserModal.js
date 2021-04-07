@@ -3,7 +3,13 @@ import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import base from '../styles/styles';
 
-const UserModal = ({ setModalVisible, modalVisible, handleLogOut, user }) => {
+const UserModal = ({
+  setModalVisible,
+  modalVisible,
+  handleLogOut,
+  user,
+  navigation,
+}) => {
   return (
     <Modal
       animationType='slide'
@@ -17,10 +23,10 @@ const UserModal = ({ setModalVisible, modalVisible, handleLogOut, user }) => {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={base.headingMd}>User Info</Text>
-          <Text style={styles.modalText}>Email: {user.email}</Text>
+          <Text style={styles.modalText}>Email: {user.uid}</Text>
           <Pressable
             style={[styles.button, styles.buttonClose]}
-            onPress={handleLogOut}
+            onPress={() => handleLogOut(navigation)}
           >
             <Text style={styles.textStyle}>
               <MaterialIcons name='logout' size={16} color='white' />
