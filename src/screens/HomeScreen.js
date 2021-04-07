@@ -26,24 +26,24 @@ const HomeScreen = ({ route, navigation }) => {
 
   const data = [
     {
-      name: 'Seoul',
+      name: 'AAPL',
       population: 35,
-      color: 'rgba(131, 167, 234, 1)',
-      legendFontColor: '#7F7F7F',
+      color: '#3DD598',
+      legendFontColor: 'white',
       legendFontSize: 15,
     },
     {
-      name: 'Toronto',
+      name: 'TSLA',
       population: 40,
-      color: '#F00',
-      legendFontColor: '#7F7F7F',
+      color: '#FF575F',
+      legendFontColor: 'white',
       legendFontSize: 15,
     },
     {
-      name: 'Beijing',
+      name: 'IBM',
       population: 10,
-      color: 'blue',
-      legendFontColor: '#7F7F7F',
+      color: '#FFC542',
+      legendFontColor: 'white',
       legendFontSize: 15,
     },
   ];
@@ -144,7 +144,7 @@ const HomeScreen = ({ route, navigation }) => {
                 ${portfolioStats.marketValue} CAD
               </Text>
               <Text style={styles.headingSm}>Cash</Text>
-              <Text style={styles.whiteText}>${formatMoney(user.cash)}</Text>
+              <Text style={styles.whiteText}>${formatMoney(user?.cash)}</Text>
             </View>
           </View>
           {/* ========== See Portfolio ========= */}
@@ -244,13 +244,14 @@ const styles = StyleSheet.create({
   },
   portfolioContainer: {
     width: '100%',
-    padding: 10,
+    padding: 4,
     flexDirection: 'row',
     backgroundColor: '#96A7AF',
     borderRadius: 30,
-    height: '10%',
+    height: '8%',
     marginBottom: 15,
     justifyContent: 'center',
+    alignContent: 'center',
   },
   whiteText: {
     color: 'white',
