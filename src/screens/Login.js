@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ export default function Login({ navigation }) {
       await AsyncStorage.clear();
       await AsyncStorage.setItem(key, JSON.stringify(value));
     } catch (err) {
-      console.log('AsyncStorage#setItem Error:', err.message)
+      console.log('AsyncStorage#setItem Error:', err.message);
     }
   }
 
@@ -40,7 +41,7 @@ export default function Login({ navigation }) {
       console.log('user from firebase', userInfo);
       console.log('user from db', userFromDb);
       // Sets user uid in async storage.
-      await setAsyncItem('userId', userInfo.uid)
+      await setAsyncItem('userId', userInfo.uid);
 
       setEmail('');
       setPassword('');
@@ -60,8 +61,8 @@ export default function Login({ navigation }) {
         const keys = await AsyncStorage.getAllKeys();
         if (keys.length > 0) {
           const uid = await AsyncStorage.getItem(keys[0]);
-          const currentUser = await getUser(JSON.parse(uid))
-          navigation.navigate('HomeScreen', currentUser)
+          const currentUser = await getUser(JSON.parse(uid));
+          navigation.navigate('HomeScreen', currentUser);
         }
       } catch (err) {
         console.log('Error Getting Data', err);
@@ -71,8 +72,10 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.box}></View>
-      <Text style={styles.header}>Welcome!</Text>
+      <View style={styles.box}>
+        <MaterialCommunityIcons name='robber' size={50} color='white' />
+      </View>
+      <Text style={styles.header}>RobDemGood</Text>
       <Text style={styles.subHeader}>Sign in to continue</Text>
       <View style={styles.inputView}>
         <View style={styles.userIconContainer}>
@@ -170,11 +173,15 @@ const styles = StyleSheet.create({
   textInput: {
     color: '#96A7AF',
     width: '90%',
+    backgroundColor: '#30444E',
+    height: '120%',
+    borderRadius: 8,
+    paddingLeft: 10,
   },
   userIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 197, 66, 0.3)',
     borderRadius: 8,
@@ -183,7 +190,7 @@ const styles = StyleSheet.create({
   lockIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 87, 95, 0.3)',
     borderRadius: 8,

@@ -83,7 +83,7 @@ const HomeScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
           <View>
-            <Text style={base.headingLg}>Your Porfolio</Text>
+            <Text style={base.headingLg}>Your Portfolio</Text>
           </View>
           {/* ========== SUMMARY ========= */}
           <View style={styles.summaryContainer}>
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: '#30444E',
     borderRadius: 30,
-    height: '30%',
+    // height: '30%',
     marginBottom: 15,
   },
   summaryGraph: {
@@ -244,12 +244,13 @@ const styles = StyleSheet.create({
   },
   portfolioContainer: {
     width: '100%',
-    padding: 40,
+    padding: 10,
     flexDirection: 'row',
     backgroundColor: '#96A7AF',
     borderRadius: 30,
-    height: '20%',
+    height: '10%',
     marginBottom: 15,
+    justifyContent: 'center',
   },
   whiteText: {
     color: 'white',

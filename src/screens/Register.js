@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import firebase from 'firebase';
 import base from '../styles/styles';
 import { getUser, signUp } from '../../network';
@@ -22,7 +22,7 @@ export default function Register({ navigation }) {
       await AsyncStorage.clear();
       await AsyncStorage.setItem(key, JSON.stringify(value));
     } catch (err) {
-      console.log('AsyncStorage#setItem Error:', err.message)
+      console.log('AsyncStorage#setItem Error:', err.message);
     }
   }
 
@@ -35,11 +35,11 @@ export default function Register({ navigation }) {
     try {
       const response = await firebase
         .auth()
-        .createUserWithEmailAndPassword(email, password)
+        .createUserWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
 
       // Sets user uid in async storage.
-      await setAsyncItem('userId', userInfo.uid)
+      await setAsyncItem('userId', userInfo.uid);
 
       const userFromDb = await signUp(userInfo.uid); //add user to db
 
@@ -59,7 +59,9 @@ export default function Register({ navigation }) {
 
   return (
     <View style={base.container}>
-      <View style={styles.box}></View>
+      <View style={styles.box}>
+        <MaterialCommunityIcons name='robber' size={50} color='white' />
+      </View>
       <Text style={styles.header}>Sign Up</Text>
       <Text style={styles.subHeader}>to start working</Text>
       <View style={styles.inputView}>
@@ -162,11 +164,15 @@ const styles = StyleSheet.create({
   textInput: {
     color: '#96A7AF',
     width: '90%',
+    backgroundColor: '#30444E',
+    height: '120%',
+    borderRadius: 8,
+    paddingLeft: 10,
   },
   userIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 197, 66, 0.3)',
     borderRadius: 8,
@@ -175,7 +181,7 @@ const styles = StyleSheet.create({
   lockIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 30,
+    width: 40,
     height: 40,
     backgroundColor: 'rgba(255, 87, 95, 0.3)',
     borderRadius: 8,
