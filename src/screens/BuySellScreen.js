@@ -56,7 +56,8 @@ const BuySellScreen = ({ route }) => {
     if (type === 'Buy') {
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-      user.cash = (user.cash - total.toFixed(2)).toFixed(2)
+      // user.cash = (user.cash - total.toFixed(2)).toFixed(2)
+      user.cash = (user.cash - total)
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
@@ -65,7 +66,8 @@ const BuySellScreen = ({ route }) => {
      
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-      user.cash = (user.cash - -total.toFixed(2)).toFixed(2)
+      // user.cash = (user.cash - -total.toFixed(2)).toFixed(2)
+      user.cash = (user.cash - -total)
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
