@@ -77,6 +77,7 @@ const BuySellScreen = ({ route }) => {
           const uid = await AsyncStorage.getItem(keys[0]);
           const currentUser = await getUser(JSON.parse(uid))
           setUser(currentUser)
+          setMyCash(currentUser.cash)
         }
       } catch (err) {
         console.log('Error Getting Data', err);
@@ -90,7 +91,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(user.cash - total.toFixed(2)).toFixed(2)}
+            ${(myCash - total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
       );
@@ -100,7 +101,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(user.cash - -total.toFixed(2)).toFixed(2)}
+            ${(myCash - -total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
       );
