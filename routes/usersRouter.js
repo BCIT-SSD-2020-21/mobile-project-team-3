@@ -62,6 +62,32 @@ module.exports = function ({ database }) {
     }
   });
 
+  //========= ADD TO WATCHLIST ========== //
+  // /api/users/watchlist/:uid/add
+
+  router.put('/watchlist/:uid/add', async (req, res) => {
+    const { uid, symbol, price } = req.body;
+    try {
+      const updatedUser = await database.addToWatchlist({ uid, symbol, price });
+      res.send({ updatedUser });
+    } catch (err) {
+      console.log(err);
+    }
+  })
+
+    //========= REMOVE FROM WATCHLIST ========== //
+    // /api/users/watchlist/:uid/remove
+
+    router.put('/watchlist/:uid/remove', async (req, res) => {
+      const { uid, symbol, price } = req.body;
+      try {
+        const updatedUser = await database.removeFromWatchlist({ uid, symbol, price });
+        res.send({ updatedUser });
+      } catch (err) {
+        console.log(err);
+      }
+    })
+
   // DESTROY
 
   return router;
