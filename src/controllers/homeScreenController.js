@@ -22,24 +22,30 @@ export const handleLogOut = async (navigation) => {
 };
 
 export const getUserPortfolio = async (user) => {
+  console.log('getUserPortfolio pinged!');
   let portfolioPL = [];
-  user.portfolio.forEach(async (item) => {
-    //search API for item
-    const quote = await getSymbolPrice(item.symbol);
-    //calculate P/L using average price
-    const profitOrLoss = quote.c - item.avgPrice;
+  try {
+    user.portfolio.forEach(async (item) => {
+      //search API for item
+      const quote = await getSymbolPrice(item.symbol);
+      //calculate P/L using average price
+      const profitOrLoss = quote.c - item.avgPrice;
 
-    //create object and push to userPL array
-    const portfolioItem = {
-      symbol: item.symbol,
-      numShares: item.numShares,
-      avgPrice: item.avgPrice,
-      currentPrice: quote.c,
-      PL: profitOrLoss,
-    };
+      //create object and push to userPL array
+      const portfolioItem = {
+        symbol: item.symbol,
+        numShares: item.numShares,
+        avgPrice: item.avgPrice,
+        currentPrice: quote.c,
+        PL: profitOrLoss,
+      };
 
-    portfolioPL.push(portfolioItem);
-  });
+      portfolioPL.push(portfolioItem);
+    });
+  } catch (e) {
+    console.log('Error getting Portfolio:', e);
+  }
+
   return portfolioPL;
 };
 

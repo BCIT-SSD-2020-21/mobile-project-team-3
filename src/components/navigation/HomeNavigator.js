@@ -31,7 +31,7 @@ const HomeNavigator = () => {
           shadowOpacity: 0,
           elevation: 0,
         },
-        headerLeft: null,
+        //headerLeft: null,
       }}
     >
       <HomeStack.Screen

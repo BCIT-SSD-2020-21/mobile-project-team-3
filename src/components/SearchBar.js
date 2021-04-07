@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native';
 import {EvilIcons} from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
-const SearchBar = ({ input, onInputChange, onInputSubmit }) => {
+const SearchBar = ({ input, onInputSubmit, onInputChange }) => {
     return (
     <View style={styles.searchContainer}>
         <View style={styles.searchText}>
