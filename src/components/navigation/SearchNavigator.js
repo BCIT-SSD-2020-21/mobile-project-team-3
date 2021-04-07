@@ -20,7 +20,7 @@ const SearchNavigator = () => {
         shadowOpacity: 0,
         elevation: 0,
       },
-      // headerLeft: null,
+      headerLeft: null,
     }}
     >
       <SearchStack.Screen
@@ -58,7 +58,7 @@ const SearchNavigator = () => {
                 headerRight: () => <MenuIcon />,
               }
             : {
-                headerTItle: 'Register User',
+                headerTItle: 'Buy & Sell',
               }
         }
       />

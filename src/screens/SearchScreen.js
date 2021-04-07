@@ -55,7 +55,7 @@ const SearchScreen = ({ navigation }) => {
       />
       {Object.values(quote).length > 0 ?
       <>
-      <Text style={styles.resultHeader}>Search Results</Text>
+      <Text style={base.headingMd}>Search Result</Text>
       <QuoteListItem
         user={user}
         input={input}
@@ -68,7 +68,7 @@ const SearchScreen = ({ navigation }) => {
       :
       <>
       {user.watchlist &&
-        <Text style={styles.resultHeader}>{user.watchlist.length > 0 && 'Watchlist Items' }</Text>
+        <Text style={base.headingMd}>{user.watchlist.length > 0 && 'Watchlist Items' }</Text>
       }
       <WatchlistItem
         user={user}
@@ -82,11 +82,6 @@ const SearchScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  resultHeader: {
-    fontSize: 24,
-    color: 'white',
-    fontWeight: 'bold'
-  },
   container: {
     flex: 1,
     padding: 40,
