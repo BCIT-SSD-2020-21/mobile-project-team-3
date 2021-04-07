@@ -144,6 +144,9 @@ module.exports = async function () {
       if (existingShares.numShares < numShares) {
         throw Error('Insufficient shares for this transaction');
       }
+      //add to cash
+      const price = numShares * quotePrice;
+      user.cash += price;
 
       //add record to user's marketSells array
       const transaction = {
