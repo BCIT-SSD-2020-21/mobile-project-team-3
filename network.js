@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { IP_ADDRESS } from '@env';
-const url = `http://${IP_ADDRESS}:3000`;
+import { NETWORK_URL } from '@env';
+
+const url = NETWORK_URL;
 
 export async function signUp(uid) {
   try {

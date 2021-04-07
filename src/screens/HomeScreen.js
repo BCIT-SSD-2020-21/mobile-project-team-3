@@ -1,69 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import base from '../styles/styles';
-import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, Text, View } from 'react-native';
 import UserModal from '../components/UserModal';
-import firebase from 'firebase';
-import AsyncStorage from '@react-native-community/async-storage';
-import { getSymbolPrice } from '../api/finnhubNetwork';
-import { getUser } from '../../network';
-import { useIsFocused } from '@react-navigation/native'
+import {
+  Foundation,
+  FontAwesome5,
+  Feather,
+  FontAwesome,
+} from '@expo/vector-icons';
+import {
+  handleLogOut,
+  getUserPortfolio,
+  formatMoney,
+  getPortfolioStats,
+} from '../controllers/homeScreenController';
+import { PieChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
 
 const HomeScreen = ({ route, navigation }) => {
-  const [user, setUser] = useState(route.params)
+  const [user, setUser] = useState(route.params);
   const [modalVisible, setModalVisible] = useState(false);
-  const [userPL, setUserPL] = useState([]);
-  const isFocused = useIsFocused();
+  const [userPortfolio, setUserPortfolio] = useState([]);
+  const [portfolioStats, setPortfolioStats] = useState(0);
 
-  const handleLogOut = async () => {
-    try {
-      await firebase.auth().signOut();
-      try {
-        await AsyncStorage.clear();
-        alert('Storage successfully cleared!');
-      } catch (e) {
-        console.log(e);
-        alert('Failed to clear the async storage.');
-      }
-      console.log('Logout successful');
-      navigation.navigate('LoginScreen');
-    } catch (err) {
-      // var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log('Error>>', errorMessage);
-    }
-  };
-
-  const getUserProfitLoss = async () => {
-    let userPortfolio = [];
-    user.portfolio.forEach(async (item) => {
-      //search API for item
-      const quote = await getSymbolPrice(item.symbol);
-      console.log(`Quote for ${item.symbol} >>> ${quote.c}`);
-      //calculate P/L using average price
-      const profitOrLoss = quote.c - item.avgPrice;
-
-      //create object and push to userPL array
-      const portfolioItem = {
-        symbol: item.symbol,
-        numShares: item.numShares,
-        avgPrice: item.avgPrice,
-        currentPrice: quote.c,
-        PL: profitOrLoss,
-      };
-
-      userPortfolio.push(portfolioItem);
-    });
-    return userPortfolio;
-  };
+  const data = [
+    {
+      name: 'AAPL',
+      population: 35,
+      color: '#3DD598',
+      legendFontColor: 'white',
+      legendFontSize: 15,
+    },
+    {
+      name: 'TSLA',
+      population: 40,
+      color: '#FF575F',
+      legendFontColor: 'white',
+      legendFontSize: 15,
+    },
+    {
+      name: 'IBM',
+      population: 10,
+      color: '#FFC542',
+      legendFontColor: 'white',
+      legendFontSize: 15,
+    },
+  ];
 
   useEffect(() => {
     (async () => {
-      const userPortfolio = await getUserProfitLoss();
-      setUserPL(userPortfolio);
+      const portfolioPL = await getUserPortfolio(user);
+      setUserPortfolio(portfolioPL);
+      const stats = getPortfolioStats(userPortfolio);
+      setPortfolioStats(stats);
     })();
   }, [isFocused]);
+
+  // useEffect(() => {
+  //   const stats = getPortfolioStats(userPortfolio);
+  //   setPortfolioStats(stats);
+  // }, [userPortfolio]);
 
   return (
     <>
@@ -72,6 +69,7 @@ const HomeScreen = ({ route, navigation }) => {
         modalVisible={modalVisible}
         handleLogOut={handleLogOut}
         user={user}
+        navigation={navigation}
       />
       <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
@@ -84,22 +82,68 @@ const HomeScreen = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
           <View>
-            <Text style={base.headingLg}>Your Porfolio</Text>
+            <Text style={base.headingLg}>Your Portfolio</Text>
           </View>
           {/* ========== SUMMARY ========= */}
           <View style={styles.summaryContainer}>
-            <View style={styles.summaryGraph}></View>
+            {/* <View style={styles.summaryGraph}></View> */}
             <View>
               <Text style={base.headingSm}>Summary</Text>
             </View>
+            <PieChart
+              data={data}
+              width={Dimensions.get('window').width * 0.8}
+              height={150}
+              chartConfig={{
+                decimalPlaces: 2, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              }}
+              accessor={'population'}
+              backgroundColor={'transparent'}
+              paddingLeft={'15'}
+              center={[0, 0]}
+              absolute
+            />
           </View>
-          {/* ========== P&L / MARKET ========= */}
+          {/* ========== P&L  ========= */}
           <View style={styles.pmContainer}>
             <View style={styles.PL}>
-              <Text style={base.headingSm}>P&L Day</Text>
+              <Text style={{ color: 'white', marginBottom: '10%' }}>
+                <Foundation name='graph-trend' size={24} color='white' /> Profit
+                &amp; Loss
+              </Text>
+              <Text style={styles.headingSm}>P &amp; L Day</Text>
+              <Text style={styles.whiteText}>
+                ${portfolioStats.totalPLdollars} CAD
+              </Text>
+              <View style={styles.percentContainer}>
+                <Text style={styles.percentText}>
+                  {portfolioStats.totalPLpercent > 1 ? (
+                    <Feather name='arrow-up-circle' size={24} color='white' />
+                  ) : (
+                    <Feather
+                      name='arrow-down-circle'
+                      size={24}
+                      color='#FF575F'
+                    />
+                  )}{' '}
+                  {portfolioStats.totalPLpercent}%
+                </Text>
+              </View>
             </View>
+            {/* ========== MARKET ========= */}
             <View style={styles.marketValue}>
-              <Text style={base.headingSm}>Market Value</Text>
+              <Text style={{ color: 'white', marginBottom: '10%' }}>
+                <FontAwesome5 name='money-check-alt' size={16} color='white' />{' '}
+                Total Equity
+              </Text>
+              <Text style={styles.headingSm}>Market Value</Text>
+              <Text style={styles.whiteText}>
+                ${portfolioStats.marketValue} CAD
+              </Text>
+              <Text style={styles.headingSm}>Cash</Text>
+              <Text style={styles.whiteText}>${formatMoney(user?.cash)}</Text>
             </View>
           </View>
           {/* ========== See Portfolio ========= */}
@@ -107,16 +151,16 @@ const HomeScreen = ({ route, navigation }) => {
           <View style={styles.portfolioContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('PortfolioListScreen', userPL);
+                navigation.navigate('PortfolioListScreen', userPortfolio);
               }}
             >
               <Text style={base.headingSm}>See Portfolio Items</Text>
             </TouchableOpacity>
           </View>
           {/* ========== INVESTMENT HISTORY ========= */}
-          <View style={styles.summaryContainer}>
+          {/* <View style={styles.summaryContainer}>
             <Text style={base.headingSm}>Investment History</Text>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </>
@@ -131,6 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#22343C',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+    minHeight: '100%',
   },
   scrollView: {
     margin: 0,
@@ -144,11 +189,10 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     width: '100%',
-    padding: 40,
-    flexDirection: 'row',
+    padding: 5,
     backgroundColor: '#30444E',
     borderRadius: 30,
-    height: '25%',
+    // height: '30%',
     marginBottom: 15,
   },
   summaryGraph: {
@@ -172,6 +216,17 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
   },
+  percentContainer: {
+    height: '35%',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  percentText: {
+    color: 'white',
+    alignSelf: 'center',
+    fontWeight: '900',
+    fontSize: 18,
+  },
   marketValue: {
     backgroundColor: '#FFC542',
     height: '100%',
@@ -179,14 +234,29 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
   },
+  headingSm: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+    alignSelf: 'center',
+    margin: '5%',
+  },
   portfolioContainer: {
     width: '100%',
-    padding: 40,
+    padding: 4,
     flexDirection: 'row',
     backgroundColor: '#96A7AF',
     borderRadius: 30,
-    height: '20%',
+    height: '8%',
     marginBottom: 15,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  whiteText: {
+    color: 'white',
+    alignSelf: 'center',
+    marginBottom: 15,
+    fontSize: 16,
   },
 });
 

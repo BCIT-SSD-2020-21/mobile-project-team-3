@@ -4,8 +4,9 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
+  ScrollView,
   Dimensions,
+  SafeAreaView,
   TouchableOpacity,
   Modal,
 } from 'react-native';
@@ -13,48 +14,55 @@ import { LineChart } from 'react-native-chart-kit';
 import { makeMarketBuy, makeMarketSell } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
+import { getSymbolPrice } from '../api/finnhubNetwork';
+import { useIsFocused } from "@react-navigation/native";
 
-const BuySellScreen = ({ route }) => {
- 
+const PortfolioDetailScreen = ({ route }) => {
+  const isFocused = useIsFocused();
+  const [price, setPrice]= useState('');
   const [user, setUser] = useState('');
-  const { symbol, price } = route.params;
+  const { symbol, numShares, avgPrice } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
-  const [total, setTotal] = useState(price);
-  // const [myCash, setMyCash] = useState(user.cash);
+  const [total, setTotal] = useState('');
+  const[PL, setPL] = useState('')
+ // const [myCash, setMyCash] = useState('')
+  const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
+
+ 
   const line = {
     datasets: [
       {
-        data: [2, 4, 6, 7, 9, 4],
+        data: graphData,
+        color: (opacity = 1) => `rgba(255, 86, 94, ${opacity})`,
       },
     ],
   };
 
-  const onBuyOrSellButtonClicked = async () => {
-    const uid = user.uid;
-  
-    if (type === 'Buy') {
-      const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
-      console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-      user.cash = (user.cash - total.toFixed(2)).toFixed(2)
-      setModalVisible(!modalVisible);
-      setCount(1);
-      setTotal(price);
-     
-    } else if (type === 'Sell') {
-     
-      const updatedUser = await makeMarketSell({ symbol, price, count, uid });
-      console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-      user.cash = (user.cash - -total.toFixed(2)).toFixed(2)
-      setModalVisible(!modalVisible);
-      setCount(1);
-      setTotal(price);
-     
 
+      const onBuyOrSellButtonClicked = async () => {
+        const uid = user.uid;
       
-    }
-  };
+        if (type === 'Buy') {
+          const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
+          console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
+          user.cash = (user.cash - total).toFixed(2)
+          setModalVisible(!modalVisible);
+          setCount(1);
+          setTotal(price);
+
+} else if (type === 'Sell') {
+     
+  const updatedUser = await makeMarketSell({ symbol, price, count, uid });
+  console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
+  user.cash = (user.cash - -total).toFixed(2)
+  setModalVisible(!modalVisible);
+  setCount(1);
+  setTotal(price);
+}
+};
+
 
   const addButtonClicked = () => {
     const newCount = count + 1;
@@ -69,6 +77,7 @@ const BuySellScreen = ({ route }) => {
     setTotal(newTotal);
   };
 
+
   useEffect(() => {
     (async () => {
       try {
@@ -77,13 +86,19 @@ const BuySellScreen = ({ route }) => {
           const uid = await AsyncStorage.getItem(keys[0]);
           const currentUser = await getUser(JSON.parse(uid))
           setUser(currentUser)
-          setMyCash(currentUser.cash)
         }
       } catch (err) {
         console.log('Error Getting Data', err);
       }
     })();
-  }, []);
+    (async () => {
+        const result = await getSymbolPrice(symbol);
+        setPrice((result.c).toFixed(2));
+        setTotal((result.c).toFixed(2));
+        const newpl = ((result.c/avgPrice)*100)-100
+        setPL(newpl.toFixed(2))
+      })();
+  }, [isFocused]);
 
   const DisplayUserCash = () => {
     if (type == 'Buy') {
@@ -91,7 +106,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - total.toFixed(2)).toFixed(2)}
+          ${(user.cash - total).toFixed(2)}
           </Text>
         </View>
       );
@@ -101,7 +116,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - -total.toFixed(2)).toFixed(2)}
+          ${(user.cash - -total).toFixed(2)}
           </Text>
         </View>
       );
@@ -109,21 +124,28 @@ const BuySellScreen = ({ route }) => {
   };
 
   return (
+    <ScrollView>
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.text}>{symbol}</Text>
-        <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
+        <View>
+        <Text style={styles.priceHeader}> ${price} </Text>
+        <Text style={styles.plHeader}> ({PL}%)</Text>
+        </View>
       </View>
       <View>
+
         <LineChart
           data={line}
           width={Dimensions.get('window').width - 80}
           height={220}
           yAxisSuffix='k'
           chartConfig={{
-            backgroundColor: '#30444E',
-            backgroundGradientFrom: '#30444E',
-            backgroundGradientTo: '#30444E',
+            backgroundColor: 'rgba(255, 86, 94, .2)',
+            backgroundGradientFrom: 'rgba(255, 86, 94, 1)',
+            backgroundGradientTo: 'rgba(255, 86, 94, 1)',
+            backgroundGradientFromOpacity: .2,
+            backgroundGradientToOpacity: .2,
             decimalPlaces: 2,
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           }}
@@ -132,6 +154,25 @@ const BuySellScreen = ({ route }) => {
             borderRadius: 16,
           }}
         />
+      </View>
+      <View style={styles.portfolioContainer}>
+          <View style={styles.portfolioTextContainer}>
+        <Text style={styles.portfolioItem}>Shares:</Text>
+        <Text style={styles.portfoliotext}> {numShares}</Text>
+        </View>
+        <View style={styles.portfolioTextContainer}>
+        <Text style={styles.portfolioItem}>Average Price:</Text>
+        <Text style={styles.portfoliotext}>{avgPrice}</Text>
+        </View>
+        <View style={styles.portfolioTextContainer}>
+        <Text style={styles.portfolioItem}>Total Value: </Text>
+        <Text style={styles.portfoliotext}>{(numShares*price).toFixed(2)}</Text>
+        </View>
+      </View>
+      <View style={styles.cashContainer}>
+        <Text style={styles.Cashtext}>My Cash</Text>
+        <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
+       
       </View>
 
       <Modal
@@ -144,11 +185,12 @@ const BuySellScreen = ({ route }) => {
           setModalVisible(!modalVisible);
         }}
       >
+        
         <View style={styles.centeredView}>
           <View style={styles.modalView} backdropOpacity={0.5}>
             <View style={styles.TextView}>
               <Text style={styles.modalText}>{type}</Text>
-              <Text style={styles.modalText}>{total.toFixed(2)} USD</Text>
+              <Text style={styles.modalText}>{total}</Text>
             </View>
             <View style={styles.TextView}>
               <Text style={styles.modalText}>Qty</Text>
@@ -156,6 +198,7 @@ const BuySellScreen = ({ route }) => {
                 style={styles.qtyBtn}
                 onPress={addButtonClicked}
               >
+                
                 <FontAwesome name='plus-circle' size={30} color='white' />
               </TouchableOpacity>
               <Text style={styles.modalText}>{count}</Text>
@@ -166,7 +209,6 @@ const BuySellScreen = ({ route }) => {
                 <FontAwesome name='minus-circle' size={30} color='white' />
               </TouchableOpacity>
             </View>
-
             {DisplayUserCash()}
 
             <View style={styles.sellBuyBtnContainer}>
@@ -214,13 +256,8 @@ const BuySellScreen = ({ route }) => {
           <FontAwesome name='arrow-up' size={40} color='white' />
         </TouchableOpacity>
       </View>
-
-      <View style={styles.btnContainer}>
-        <Text style={styles.Cashtext}>My Cash</Text>
-        <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
-       
-      </View>
     </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -237,7 +274,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
   },
   Cashtext: {
-    color: 'white',
+    color: 'rgba(255, 197, 66, 1)',
     fontWeight: 'bold',
     fontSize: 25,
     marginTop: 10,
@@ -245,6 +282,10 @@ const styles = StyleSheet.create({
   priceHeader: {
     color: '#3DD598',
     fontSize: 35,
+  },
+  plHeader:{
+    color: '#FFC542',
+    fontSize: 25,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -255,8 +296,38 @@ const styles = StyleSheet.create({
     backgroundColor: '#30444E',
     borderRadius: 16,
     justifyContent: 'space-between',
-    padding: 20,
-    marginVertical: 10,
+    padding: '7%',
+    marginVertical: '4%',
+  },
+  portfolioContainer:{
+    backgroundColor: 'rgba(61, 213, 152, .2)',
+    borderRadius: 16,
+    padding: '7%',
+    marginVertical: '4%',
+    // alignItems:'center'
+  },
+  portfolioTextContainer:{
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+  },
+
+  cashContainer:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: '4%',
+    borderRadius: 16,
+    padding: '7%',
+    backgroundColor:'rgba(255, 197, 66, .2)'
+  },
+
+  portfolioItem:{
+    fontSize: 25,
+    color: 'rgba(61, 213, 152, 1)',
+  },
+  portfoliotext:{
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: 'rgba(61, 213, 152, 1)',
   },
   btn: {
     borderRadius: 10,
@@ -289,7 +360,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: '80%',
-    height: '50%',
+    height: '60%',
     backgroundColor: '#30444E',
     borderRadius: 20,
     padding: '10%',
@@ -324,4 +395,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export default BuySellScreen;
+export default PortfolioDetailScreen;
