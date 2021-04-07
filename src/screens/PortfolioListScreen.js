@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const PortfolioListScreen = () => {
+const PortfolioListScreen = ({ route }) => {
+  const userPL = route.params;
+
+  useEffect(() => {
+    console.log('userPL on portfolioList screen>>>>', userPL);
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text>Portfolio List Screen</Text>

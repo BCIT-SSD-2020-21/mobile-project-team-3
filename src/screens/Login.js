@@ -14,7 +14,16 @@ import { getUser } from '../../network';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
+
+  async function setAsyncItem(key, value) {
+    try {
+      await AsyncStorage.clear();
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+      console.log('AsyncStorage#setItem Error:', err.message)
+    }
+  }
 
   const onLoginPressed = async () => {
     if (!password || !email) {
@@ -31,12 +40,8 @@ export default function Login({ navigation }) {
       console.log('user from firebase', userInfo);
       console.log('user from db', userFromDb);
       // Sets user uid in async storage.
-      try {
-        await AsyncStorage.setItem(userInfo.uid, userInfo.uid);
-      } catch (err) {
-        console.log('Error Setting Data:', err);
-      }
-      setUser(userFromDb);
+      await setAsyncItem('userId', userInfo.uid)
+
       setEmail('');
       setPassword('');
       // navigate
@@ -54,10 +59,9 @@ export default function Login({ navigation }) {
       try {
         const keys = await AsyncStorage.getAllKeys();
         if (keys.length > 0) {
-          let currentUser = await AsyncStorage.getItem(keys[0]);
-          currentUser = JSON.parse(currentUser);
-          setUser(currentUser.providerData[0]);
-          navigation.navigate('HomeScreen', currentUser.providerData[0]);
+          const uid = await AsyncStorage.getItem(keys[0]);
+          const currentUser = await getUser(JSON.parse(uid))
+          navigation.navigate('HomeScreen', currentUser)
         }
       } catch (err) {
         console.log('Error Getting Data', err);

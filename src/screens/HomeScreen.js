@@ -10,7 +10,7 @@ import { getSymbolPrice } from '../api/finnhubNetwork';
 import { getUser } from '../../network';
 
 const HomeScreen = ({ route, navigation }) => {
-  const user = route.params;
+  const [user, setUser] = useState(route.params)
   const [modalVisible, setModalVisible] = useState(false);
   const [userPL, setUserPL] = useState([]);
 
@@ -61,7 +61,6 @@ const HomeScreen = ({ route, navigation }) => {
     (async () => {
       const userPortfolio = await getUserProfitLoss();
       setUserPL(userPortfolio);
-      console.log('USER PORTFOLIO>>>', userPortfolio);
     })();
   }, []);
 
@@ -107,7 +106,7 @@ const HomeScreen = ({ route, navigation }) => {
           <View style={styles.portfolioContainer}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('PortfolioListScreen');
+                navigation.navigate('PortfolioListScreen', userPL);
               }}
             >
               <Text style={base.headingSm}>See Portfolio Items</Text>
