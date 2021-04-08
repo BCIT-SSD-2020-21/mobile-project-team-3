@@ -1,12 +1,12 @@
 # RobDemGood - a React Native mock trading App
 
-### Nick Charvat, Sabrina Kuah, Kulveer Brar, Juhwan Moon, Mandeep Dhillon
+### Nick Charvat (FS), Sabrina Kuah (FS), Kulveer Brar (FE), Juhwan Moon (FE), Mandeep Dhillon (FE)
 
 ## Overview
 
-RobDemGood is a mock trading app written in React Native using Expo. It uses Firebase for authentication, FinnHub.io for trading data, Express and MongoDB.
+RobDemGood is a mock trading app written in React Native using Expo. It uses Firebase for authentication, FinnHub.io for trading data, Express and MongoDB.  The app utilizes RESTful API routes to connect to the server.
 
-#### Features: 
+####Features: 
 Users are able to: 
 - login/register 
 - search for a stock symbol
@@ -27,8 +27,12 @@ We used Figma and a TradeStation template for UI inspiration.
 
 Clone this repo and run `npm install`.  
 Replace API keys within the .envSAMPLE. You will need to register for Firebase and Finnhub.io accounts.
+Run the server.js file `node server.js`
 Ensure you have Expo installed then run `npm start` in the command line
 
 <img src="/screenshots/robdemgood-1.gif" alt="screenshot of robdemgood" width="200" align="left">
 <img src="/screenshots/robdemgood-2.gif" alt="screenshot of robdemgood" width="200" align="left">
 <img src="/screenshots/robdemgood-3.gif" alt="screenshot of robdemgood" width="200" align="left">
+[figure 1.] User is able to see their portfolio statistics and view the items in their portfolio <br/>
+[figure 2.] User is able to search for a stock symbol and add it to their watchlist <br/>
+[figure 3.] User is able to login/logout
