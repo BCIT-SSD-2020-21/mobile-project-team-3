@@ -14,6 +14,13 @@ import { makeMarketBuy, makeMarketSell } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
 
+
+
+import axios from 'axios';
+import { FINNHUB_API } from '@env';
+
+
+
 const BuySellScreen = ({ route }) => {
  
   const [user, setUser] = useState('');
@@ -26,27 +33,29 @@ const BuySellScreen = ({ route }) => {
   
   // const [myCash, setMyCash] = useState(user.cash);
   
-  // const graphAPI = async () => {
+  const graphAPI = async () => {
    
-  //   try {
-  //     const response = await axios.get(
-  //       `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
-  //     );
-  //     console.log('API RESPONSE:', response.data);
-  //     setGraph(response.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+    try {
+      const response = await axios.get(
+        `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
+      );
+      console.log('API RESPONSE:', response.data);
+      setGraph(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   
-  // graphAPI()
+  graphAPI()
+
 
   const line = {
-
+       
     datasets: [
       {
-        data: [2, 4, 6, 7, 9, 4],
-        // data: graph.o.slice(0,50)
+        // data: [2, 4, 6, 7, 9, 4],
+        data: graph.o.slice(0,50)
+        // data: graph != null ? graph.o.splice(0,10) : [2, 4, 6, 7, 9, 4],
       },
     ],
   };
