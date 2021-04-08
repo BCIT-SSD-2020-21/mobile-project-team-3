@@ -6,7 +6,7 @@
 
 RobDemGood is a mock trading app written in React Native using Expo. It uses Firebase for authentication, FinnHub.io for trading data, Express and MongoDB.  The app utilizes RESTful API routes to connect to the server.
 
-####Features: 
+#### Features: 
 Users are able to: 
 - login/register 
 - search for a stock symbol
