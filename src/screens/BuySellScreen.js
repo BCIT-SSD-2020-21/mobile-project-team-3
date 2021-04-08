@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
+  ScrollView,
   Dimensions,
   TouchableOpacity,
   Modal,
@@ -13,24 +13,22 @@ import { LineChart } from 'react-native-chart-kit';
 import { makeMarketBuy, makeMarketSell } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
-
-
-
+import { useIsFocused } from "@react-navigation/native";
 import axios from 'axios';
 import { FINNHUB_API } from '@env';
 
 
 
 const BuySellScreen = ({ route }) => {
- 
+  const isFocused = useIsFocused();
   const [user, setUser] = useState('');
   const { symbol, price } = route.params;
-  const [graph, setGraph] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
-  
+  const [minusBtn, setMinusBtn] = useState(false)
+  const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
   // const [myCash, setMyCash] = useState(user.cash);
   
   const graphAPI = async () => {
@@ -39,22 +37,20 @@ const BuySellScreen = ({ route }) => {
       const response = await axios.get(
         `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
       );
-      console.log('API RESPONSE:', response.data);
-      setGraph(response.data);
+      console.log('API RESPONSE:', response.data.c);
+      setGraphData(response.data.c);
     } catch (err) {
       console.log(err);
     }
   }
-  
-  graphAPI()
 
 
   const line = {
        
     datasets: [
       {
-        // data: [2, 4, 6, 7, 9, 4],
-        data: graph.o.slice(0,50)
+        data: graphData,
+        // data: graph.o.slice(0,50)
         // data: graph != null ? graph.o.splice(0,10) : [2, 4, 6, 7, 9, 4],
       },
     ],
@@ -88,17 +84,23 @@ const BuySellScreen = ({ route }) => {
   };
 
   const addButtonClicked = () => {
+    setMinusBtn(false)
     const newCount = count + 1;
     const newTotal = total + price;
     setCount(newCount);
     setTotal(newTotal);
   };
   const minusButtonClicked = () => {
+    if (count>=2){
     const newCount = count - 1;
     const newTotal = total - price;
     setCount(newCount);
     setTotal(newTotal);
-  };
+  }
+  else{
+    setMinusBtn(true)
+  }
+};
 
   useEffect(() => {
     (async () => {
@@ -108,13 +110,15 @@ const BuySellScreen = ({ route }) => {
           const uid = await AsyncStorage.getItem(keys[0]);
           const currentUser = await getUser(JSON.parse(uid))
           setUser(currentUser)
-          setMyCash(currentUser.cash)
         }
       } catch (err) {
         console.log('Error Getting Data', err);
       }
     })();
-  }, []);
+    (async () => {
+      await graphAPI()
+     })();
+  }, [isFocused]);
 
   const DisplayUserCash = () => {
     if (type == 'Buy') {
@@ -161,18 +165,12 @@ const BuySellScreen = ({ route }) => {
         <Text style={styles.textStyle}>{type}</Text>
       </TouchableOpacity>
        )
-
-
-      //  }
-
-
     }
-
-    
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView>
+    <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.text}>{symbol}</Text>
         <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
@@ -195,7 +193,7 @@ const BuySellScreen = ({ route }) => {
           data={line}
           width={Dimensions.get('window').width - 80}
           height={220}
-          yAxisSuffix='k'
+          yAxisLabel='$'
           chartConfig={{
             backgroundColor: '#30444E',
             backgroundGradientFrom: '#30444E',
@@ -237,6 +235,7 @@ const BuySellScreen = ({ route }) => {
               <Text style={styles.modalText}>{count}</Text>
               <TouchableOpacity
                 style={styles.qtyBtn}
+                disabled={minusBtn}
                 onPress={minusButtonClicked}
               >
                 <FontAwesome name='minus-circle' size={30} color='white' />
@@ -297,7 +296,8 @@ const BuySellScreen = ({ route }) => {
         <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
        
       </View>
-    </SafeAreaView>
+    </View>
+    </ScrollView>
   );
 };
 
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: '80%',
-    height: '50%',
+    height: '60%',
     backgroundColor: '#30444E',
     borderRadius: 20,
     padding: '10%',
