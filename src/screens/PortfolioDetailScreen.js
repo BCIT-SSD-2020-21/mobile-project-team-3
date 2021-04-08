@@ -16,8 +16,8 @@ import { getUser } from '../../network';
 import { getSymbolPrice } from '../api/finnhubNetwork';
 import { useIsFocused } from "@react-navigation/native";
 
-// import axios from 'axios';
-// import { FINNHUB_API } from '@env';
+import axios from 'axios';
+import { FINNHUB_API } from '@env';
 
 
 const PortfolioDetailScreen = ({ route }) => {
@@ -25,6 +25,7 @@ const PortfolioDetailScreen = ({ route }) => {
   const [price, setPrice]= useState('');
   const [user, setUser] = useState('');
   const { symbol, numShares, avgPrice } = route.params;
+  const [shares, setShares]= useState(numShares)
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
@@ -33,25 +34,21 @@ const PortfolioDetailScreen = ({ route }) => {
   const [minusBtn, setMinusBtn] = useState(false)
   const [myCash, setMyCash] = useState('')
   const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
-  
-  // const [graph, setGraph] = useState({});
 
-
-
-  // const graphAPI = async () => {
+  const graphAPI = async () => {
    
-  //   try {
-  //     const response = await axios.get(
-  //       `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
-  //     );
-  //     console.log('API RESPONSE:', response.data);
-  //     setGraph(response.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+    try {
+      const response = await axios.get(
+        `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
+      );
+      console.log('API RESPONSE:', response.data.c);
+      setGraphData(response.data.c);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   
-  // graphAPI()
+  
   
  
   const line = {
@@ -70,13 +67,16 @@ const PortfolioDetailScreen = ({ route }) => {
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
       setMyCash((myCash - total).toFixed(2))
+      setShares(shares+count)
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
+      
     } else if (type === 'Sell') {
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
       setMyCash((myCash - -total).toFixed(2))
+      setShares(shares-count)
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
@@ -123,6 +123,9 @@ const PortfolioDetailScreen = ({ route }) => {
       const newpl = ((result.c/avgPrice)*100)-100
       setPL(newpl.toFixed(2))
     })();
+    (async () => {
+     await graphAPI()
+    })();
   }, [isFocused]);
   
   const DisplayUserCash = () => {
@@ -163,7 +166,7 @@ const PortfolioDetailScreen = ({ route }) => {
                     data={line}
                     width={Dimensions.get('window').width - 80}
                     height={220}
-                    yAxisSuffix='k'
+                    yAxisLabel='$'
                     chartConfig={{
                       backgroundColor: 'rgba(255, 86, 94, .2)',
                       backgroundGradientFrom: 'rgba(255, 86, 94, 1)',
@@ -182,7 +185,7 @@ const PortfolioDetailScreen = ({ route }) => {
                     <View style={styles.portfolioContainer}>
                       <View style={styles.portfolioTextContainer}>
                         <Text style={styles.portfolioItem}>Shares:</Text>
-                        <Text style={styles.portfoliotext}> {numShares}</Text>
+                        <Text style={styles.portfoliotext}> {shares}</Text>
                         </View>
                         <View style={styles.portfolioTextContainer}>
                           <Text style={styles.portfolioItem}>Average Price:</Text>

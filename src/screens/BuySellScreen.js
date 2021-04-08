@@ -14,8 +14,8 @@ import { makeMarketBuy, makeMarketSell } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
 import { useIsFocused } from "@react-navigation/native";
-// import axios from 'axios';
-// import { FINNHUB_API } from '@env';
+import axios from 'axios';
+import { FINNHUB_API } from '@env';
 
 
 
@@ -23,36 +23,33 @@ const BuySellScreen = ({ route }) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState('');
   const { symbol, price } = route.params;
-  // const [graph, setGraph] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
   const [minusBtn, setMinusBtn] = useState(false)
-  
+  const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
   // const [myCash, setMyCash] = useState(user.cash);
   
-  // const graphAPI = async () => {
+  const graphAPI = async () => {
    
-  //   try {
-  //     const response = await axios.get(
-  //       `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
-  //     );
-  //     console.log('API RESPONSE:', response.data);
-  //     setGraph(response.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-  
-  // graphAPI()
+    try {
+      const response = await axios.get(
+        `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
+      );
+      console.log('API RESPONSE:', response.data.c);
+      setGraphData(response.data.c);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
 
   const line = {
        
     datasets: [
       {
-        data: [2, 4, 6, 7, 9, 4],
+        data: graphData,
         // data: graph.o.slice(0,50)
         // data: graph != null ? graph.o.splice(0,10) : [2, 4, 6, 7, 9, 4],
       },
@@ -118,6 +115,9 @@ const BuySellScreen = ({ route }) => {
         console.log('Error Getting Data', err);
       }
     })();
+    (async () => {
+      await graphAPI()
+     })();
   }, [isFocused]);
 
   const DisplayUserCash = () => {
@@ -165,14 +165,7 @@ const BuySellScreen = ({ route }) => {
         <Text style={styles.textStyle}>{type}</Text>
       </TouchableOpacity>
        )
-
-
-      //  }
-
-
     }
-
-    
   }
 
   return (
@@ -200,7 +193,7 @@ const BuySellScreen = ({ route }) => {
           data={line}
           width={Dimensions.get('window').width - 80}
           height={220}
-          yAxisSuffix='k'
+          yAxisLabel='$'
           chartConfig={{
             backgroundColor: '#30444E',
             backgroundGradientFrom: '#30444E',
