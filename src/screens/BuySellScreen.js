@@ -15,7 +15,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
 
 const BuySellScreen = ({ route }) => {
- 
   const [user, setUser] = useState('');
   const { symbol, price } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
@@ -33,26 +32,21 @@ const BuySellScreen = ({ route }) => {
 
   const onBuyOrSellButtonClicked = async () => {
     const uid = user.uid;
-  
+
     if (type === 'Buy') {
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-      user.cash = (user.cash - total.toFixed(2)).toFixed(2)
+      user.cash = (user.cash - total.toFixed(2)).toFixed(2);
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
-     
     } else if (type === 'Sell') {
-     
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-      user.cash = (user.cash - -total.toFixed(2)).toFixed(2)
+      user.cash = (user.cash - -total.toFixed(2)).toFixed(2);
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
-     
-
-      
     }
   };
 
@@ -75,9 +69,9 @@ const BuySellScreen = ({ route }) => {
         const keys = await AsyncStorage.getAllKeys();
         if (keys.length > 0) {
           const uid = await AsyncStorage.getItem(keys[0]);
-          const currentUser = await getUser(JSON.parse(uid))
-          setUser(currentUser)
-          setMyCash(currentUser.cash)
+          const currentUser = await getUser(JSON.parse(uid));
+          setUser(currentUser);
+          setMyCash(currentUser.cash);
         }
       } catch (err) {
         console.log('Error Getting Data', err);
@@ -91,7 +85,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - total.toFixed(2)).toFixed(2)}
+            ${(user.cash - total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
       );
@@ -101,7 +95,7 @@ const BuySellScreen = ({ route }) => {
         <View style={styles.TextView}>
           <Text style={styles.modalText}>Cash </Text>
           <Text style={styles.modalText}>
-            ${(myCash - -total.toFixed(2)).toFixed(2)}
+            ${(user.cash - -total.toFixed(2)).toFixed(2)}
           </Text>
         </View>
       );
@@ -218,7 +212,6 @@ const BuySellScreen = ({ route }) => {
       <View style={styles.btnContainer}>
         <Text style={styles.Cashtext}>My Cash</Text>
         <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
-       
       </View>
     </SafeAreaView>
   );

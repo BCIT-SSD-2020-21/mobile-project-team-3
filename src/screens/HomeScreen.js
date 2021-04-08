@@ -22,7 +22,7 @@ const HomeScreen = ({ route, navigation }) => {
   const [user, setUser] = useState(route.params);
   const [modalVisible, setModalVisible] = useState(false);
   const [userPortfolio, setUserPortfolio] = useState([]);
-  const [portfolioStats, setPortfolioStats] = useState(0);
+  const [portfolioStats, setPortfolioStats] = useState({});
 
   const data = [
     {
@@ -52,15 +52,15 @@ const HomeScreen = ({ route, navigation }) => {
     (async () => {
       const portfolioPL = await getUserPortfolio(user);
       setUserPortfolio(portfolioPL);
-      const stats = getPortfolioStats(userPortfolio);
-      setPortfolioStats(stats);
+      // const stats = getPortfolioStats(userPortfolio);
+      // setPortfolioStats(stats);
     })();
-  }, [isFocused]);
+  }, []);
 
-  // useEffect(() => {
-  //   const stats = getPortfolioStats(userPortfolio);
-  //   setPortfolioStats(stats);
-  // }, [userPortfolio]);
+  useEffect(() => {
+    const stats = getPortfolioStats(userPortfolio);
+    setPortfolioStats(stats);
+  }, []);
 
   return (
     <>

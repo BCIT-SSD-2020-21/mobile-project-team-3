@@ -22,31 +22,33 @@ export const handleLogOut = async (navigation) => {
 };
 
 export const getUserPortfolio = async (user) => {
-  console.log('getUserPortfolio pinged!');
+  console.log('🟠 getUserPortfolio pinged!');
   let portfolioPL = [];
   try {
-    user.portfolio.forEach(async (item) => {
-      //search API for item
-      const quote = await getSymbolPrice(item.symbol);
-      //calculate P/L using average price
-      const profitOrLoss = quote.c - item.avgPrice;
+    (async () => {
+      await user.portfolio.forEach(async (item) => {
+        //search API for item
+        const quote = await getSymbolPrice(item.symbol);
+        //calculate P/L using average price
+        const profitOrLoss = quote.c - item.avgPrice;
 
-      //create object and push to userPL array
-      const portfolioItem = {
-        symbol: item.symbol,
-        numShares: item.numShares,
-        avgPrice: item.avgPrice,
-        currentPrice: quote.c,
-        PL: profitOrLoss,
-      };
+        //create object and push to userPL array
+        const portfolioItem = {
+          symbol: item.symbol,
+          numShares: item.numShares,
+          avgPrice: item.avgPrice,
+          currentPrice: quote.c,
+          PL: profitOrLoss,
+        };
+        portfolioPL.push(portfolioItem);
+      });
+    })();
 
-      portfolioPL.push(portfolioItem);
-    });
+    console.log('Portfolio generated:', portfolioPL);
+    return portfolioPL;
   } catch (e) {
     console.log('Error getting Portfolio:', e);
   }
-
-  return portfolioPL;
 };
 
 export const formatMoney = (amt) => {
@@ -56,6 +58,7 @@ export const formatMoney = (amt) => {
 };
 
 export const getPortfolioStats = (portfolio) => {
+  console.log('🔵 getPorfolioStats pinged!');
   let sumOfAllAvgPrice = 0;
   let sumOfAllCurrentPrice = 0;
 
@@ -67,12 +70,14 @@ export const getPortfolioStats = (portfolio) => {
   console.log('sum of avg prices', sumOfAllAvgPrice);
   console.log('sum of current prices', sumOfAllCurrentPrice);
 
+  const PLpercent = (
+    (1 - sumOfAllAvgPrice / sumOfAllCurrentPrice) *
+    100
+  ).toFixed(2);
+
   const portfolioStats = {
     marketValue: formatMoney(sumOfAllCurrentPrice),
-    totalPLpercent: (
-      (1 - sumOfAllAvgPrice / sumOfAllCurrentPrice) *
-      100
-    ).toFixed(2),
+    totalPLpercent: PLpercent,
     totalPLdollars: formatMoney(sumOfAllCurrentPrice - sumOfAllAvgPrice),
   };
 
