@@ -41,7 +41,7 @@ export default function Register({ navigation }) {
       // Sets user uid in async storage.
       await setAsyncItem('userId', userInfo.uid);
 
-      const userFromDb = await signUp(userInfo.uid); //add user to db
+      const userFromDb = await signUp(userInfo.uid);
 
       // setUser(userInfo);
       console.log('userInfo from DB>>', userInfo);
@@ -92,19 +92,6 @@ export default function Register({ navigation }) {
           enablesReturnKeyAutomatically={true}
         />
       </View>
-      {/* <View style={styles.inputView}>
-        <View style={styles.lockIconContainer}>
-          <FontAwesome name='lock' color='#FF575F' size={20} />
-        </View>
-        <TextInput
-          style={styles.textInput}
-          placeholder='Confirm Password'
-          placeholderTextColor='#96A7AF'
-          secureTextEntry={true}
-          onChangeText={(password) => setConfirmPassword(password)}
-          autoCapitalize='none'
-        />
-      </View> */}
       <View style={styles.btnContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate('LoginScreen')}

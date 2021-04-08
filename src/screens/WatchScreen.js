@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import WatchlistItem from '../components/WatchlistItem';
 import { Text } from 'react-native';
-import styles from '../styles/styles';
 
 export default function WatchScreen({ navigation }) {
   const [user, setUser] = useState({});
@@ -32,9 +31,7 @@ export default function WatchScreen({ navigation }) {
   return (
     <SafeAreaView style={base.container}>
       {user.watchlist && user.watchlist.length > 0 && (
-        <Text style={base.headingMd}>
-          Stock Watchlist
-        </Text>
+        <Text style={base.headingMd}>Stock Watchlist</Text>
       )}
       <WatchlistItem
         user={user}

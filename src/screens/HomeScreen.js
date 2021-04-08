@@ -17,14 +17,14 @@ import {
 } from '../controllers/homeScreenController';
 import { PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from '@react-navigation/native';
 
 const HomeScreen = ({ route, navigation }) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState(route.params);
   const [modalVisible, setModalVisible] = useState(false);
   const [userPortfolio, setUserPortfolio] = useState([]);
-  const [portfolioStats, setPortfolioStats] = useState(0);
+  const [portfolioStats, setPortfolioStats] = useState({});
 
   const data = [
     {
@@ -54,15 +54,15 @@ const HomeScreen = ({ route, navigation }) => {
     (async () => {
       const portfolioPL = await getUserPortfolio(user);
       setUserPortfolio(portfolioPL);
-      const stats = getPortfolioStats(userPortfolio);
-      setPortfolioStats(stats);
+      // const stats = getPortfolioStats(userPortfolio);
+      // setPortfolioStats(stats);
     })();
-  }, [isFocused]);
+  }, []);
 
-  // useEffect(() => {
-  //   const stats = getPortfolioStats(userPortfolio);
-  //   setPortfolioStats(stats);
-  // }, [userPortfolio]);
+  useEffect(() => {
+    const stats = getPortfolioStats(userPortfolio);
+    setPortfolioStats(stats);
+  }, []);
 
   return (
     <>
@@ -159,10 +159,6 @@ const HomeScreen = ({ route, navigation }) => {
               <Text style={base.headingSm}>See Portfolio Items</Text>
             </TouchableOpacity>
           </View>
-          {/* ========== INVESTMENT HISTORY ========= */}
-          {/* <View style={styles.summaryContainer}>
-            <Text style={base.headingSm}>Investment History</Text>
-          </View> */}
         </View>
       </ScrollView>
     </>

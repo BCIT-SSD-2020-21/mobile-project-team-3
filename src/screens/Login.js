@@ -38,8 +38,8 @@ export default function Login({ navigation }) {
         .signInWithEmailAndPassword(email, password);
       const userInfo = response.user.providerData[0];
       const userFromDb = await getUser(userInfo.uid);
-      console.log('user from firebase', userInfo);
-      console.log('user from db', userFromDb);
+      //console.log('user from firebase', userInfo);
+      //console.log('user from db', userFromDb);
       // Sets user uid in async storage.
       await setAsyncItem('userId', userInfo.uid);
 

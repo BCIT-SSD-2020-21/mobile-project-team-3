@@ -18,7 +18,6 @@ export async function signUp(uid) {
 export async function getUser(uid) {
   try {
     const res = await axios.get(`${url}/api/users/${uid}`);
-    //console.log('Get User Response:', res.data.user);
     return res.data.user;
   } catch (err) {
     console.log(err);
@@ -54,10 +53,10 @@ export async function makeMarketSell({ symbol, price, count, uid }) {
 export async function addToWatchlist({ uid, symbol, price }) {
   try {
     const response = await axios.put(`${url}/api/users/watchlist/${uid}/add`, {
-        uid,
-        symbol,
-        price
-      });
+      uid,
+      symbol,
+      price,
+    });
     return response.data;
   } catch (err) {
     console.log(err);
@@ -65,11 +64,14 @@ export async function addToWatchlist({ uid, symbol, price }) {
 }
 export async function removeFromWatchlist({ uid, symbol, price }) {
   try {
-    const response = await axios.put(`${url}/api/users/watchlist/${uid}/remove`, {
+    const response = await axios.put(
+      `${url}/api/users/watchlist/${uid}/remove`,
+      {
         uid,
         symbol,
-        price
-      });
+        price,
+      }
+    );
     return response.data;
   } catch (err) {
     console.log(err);
