@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
+  ScrollView,
   Dimensions,
   TouchableOpacity,
   Modal,
@@ -13,19 +13,20 @@ import { LineChart } from 'react-native-chart-kit';
 import { makeMarketBuy, makeMarketSell } from '../../network';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getUser } from '../../network';
-
+import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
 import { FINNHUB_API } from '@env';
 
 const BuySellScreen = ({ route }) => {
+  const isFocused = useIsFocused();
   const [user, setUser] = useState('');
   const { symbol, price } = route.params;
-  const [graph, setGraph] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
-
+  const [minusBtn, setMinusBtn] = useState(false);
+  const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4]);
   // const [myCash, setMyCash] = useState(user.cash);
 
   const graphAPI = async () => {
@@ -33,8 +34,8 @@ const BuySellScreen = ({ route }) => {
       const response = await axios.get(
         `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
       );
-      console.log('API RESPONSE:', response.data);
-      setGraph(response.data);
+      //console.log('API RESPONSE:', response.data.c);
+      setGraphData(response.data.c);
     } catch (err) {
       console.log(err);
     }
@@ -45,9 +46,7 @@ const BuySellScreen = ({ route }) => {
   const line = {
     datasets: [
       {
-        data: [2, 4, 6, 7, 9, 4],
-        //data: graph.o.slice(0, 50),
-        //data: graph != null ? graph.o.splice(0, 10) : [2, 4, 6, 7, 9, 4],
+        data: graphData,
       },
     ],
   };
@@ -75,16 +74,21 @@ const BuySellScreen = ({ route }) => {
   };
 
   const addButtonClicked = () => {
+    setMinusBtn(false);
     const newCount = count + 1;
     const newTotal = total + price;
     setCount(newCount);
     setTotal(newTotal);
   };
   const minusButtonClicked = () => {
-    const newCount = count - 1;
-    const newTotal = total - price;
-    setCount(newCount);
-    setTotal(newTotal);
+    if (count >= 2) {
+      const newCount = count - 1;
+      const newTotal = total - price;
+      setCount(newCount);
+      setTotal(newTotal);
+    } else {
+      setMinusBtn(true);
+    }
   };
 
   useEffect(() => {
@@ -95,13 +99,15 @@ const BuySellScreen = ({ route }) => {
           const uid = await AsyncStorage.getItem(keys[0]);
           const currentUser = await getUser(JSON.parse(uid));
           setUser(currentUser);
-          setMyCash(currentUser.cash);
         }
       } catch (err) {
         console.log('Error Getting Data', err);
       }
     })();
-  }, []);
+    (async () => {
+      await graphAPI();
+    })();
+  }, [isFocused]);
 
   const DisplayUserCash = () => {
     if (type == 'Buy') {
@@ -128,15 +134,6 @@ const BuySellScreen = ({ route }) => {
 
   const ActivateButton = () => {
     if (count > 0) {
-      // if (type === 'Sell' && !user.portfolio.includes(user.portfolio.find(i => i.symbol == symbol)) ){
-      //      console.log(" In sell")
-      //      console.log(!user.portfolio.includes(user.portfolio.find(i => i.symbol == symbol)))
-      //      console.log(user.portfolio.find(i => i.symbol == symbol))
-      //      return (console.log("test"))
-      //    }
-
-      //  else{
-
       return (
         <TouchableOpacity
           style={[styles.buyBtn, styles.btn]}
@@ -145,132 +142,120 @@ const BuySellScreen = ({ route }) => {
           <Text style={styles.textStyle}>{type}</Text>
         </TouchableOpacity>
       );
-
-      //  }
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.text}>{symbol}</Text>
-        <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
-      </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.text}>{symbol}</Text>
+          <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
+        </View>
+        <View>
+          <LineChart
+            data={line}
+            width={Dimensions.get('window').width - 80}
+            height={220}
+            yAxisLabel='$'
+            chartConfig={{
+              backgroundColor: '#30444E',
+              backgroundGradientFrom: '#30444E',
+              backgroundGradientTo: '#30444E',
+              decimalPlaces: 2,
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            }}
+            style={{
+              marginVertical: '5%',
+              borderRadius: 16,
+            }}
+          />
+        </View>
 
-      {/* <View>
-      <TouchableOpacity
-            style={styles.viewBtn}
-            onPress={() => graphAPI()}
-          >
-            <Text 
-            style={styles.viewBtnText}
-            
-            >View Graph</Text>
-          </TouchableOpacity>
-      </View> */}
-
-      <View>
-        <LineChart
-          data={line}
-          width={Dimensions.get('window').width - 80}
-          height={220}
-          yAxisSuffix='k'
-          chartConfig={{
-            backgroundColor: '#30444E',
-            backgroundGradientFrom: '#30444E',
-            backgroundGradientTo: '#30444E',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+        <Modal
+          animationType='slide'
+          transparent={false}
+          opacity={0.5}
+          visible={modalVisible}
+          backdropOpacity={0.5}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
           }}
-          style={{
-            marginVertical: '5%',
-            borderRadius: 16,
-          }}
-        />
-      </View>
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView} backdropOpacity={0.5}>
+              <View style={styles.TextView}>
+                <Text style={styles.modalText}>{type}</Text>
+                <Text style={styles.modalText}>{total.toFixed(2)} USD</Text>
+              </View>
+              <View style={styles.TextView}>
+                <Text style={styles.modalText}>Qty</Text>
+                <TouchableOpacity
+                  style={styles.qtyBtn}
+                  onPress={addButtonClicked}
+                >
+                  <FontAwesome name='plus-circle' size={30} color='white' />
+                </TouchableOpacity>
+                <Text style={styles.modalText}>{count}</Text>
+                <TouchableOpacity
+                  style={styles.qtyBtn}
+                  disabled={minusBtn}
+                  onPress={minusButtonClicked}
+                >
+                  <FontAwesome name='minus-circle' size={30} color='white' />
+                </TouchableOpacity>
+              </View>
 
-      <Modal
-        animationType='slide'
-        transparent={false}
-        opacity={0.5}
-        visible={modalVisible}
-        backdropOpacity={0.5}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView} backdropOpacity={0.5}>
-            <View style={styles.TextView}>
-              <Text style={styles.modalText}>{type}</Text>
-              <Text style={styles.modalText}>{total.toFixed(2)} USD</Text>
-            </View>
-            <View style={styles.TextView}>
-              <Text style={styles.modalText}>Qty</Text>
-              <TouchableOpacity
-                style={styles.qtyBtn}
-                onPress={addButtonClicked}
-              >
-                <FontAwesome name='plus-circle' size={30} color='white' />
-              </TouchableOpacity>
-              <Text style={styles.modalText}>{count}</Text>
-              <TouchableOpacity
-                style={styles.qtyBtn}
-                onPress={minusButtonClicked}
-              >
-                <FontAwesome name='minus-circle' size={30} color='white' />
-              </TouchableOpacity>
-            </View>
+              {DisplayUserCash()}
 
-            {DisplayUserCash()}
+              <View style={styles.sellBuyBtnContainer}>
+                {ActivateButton()}
 
-            <View style={styles.sellBuyBtnContainer}>
-              {ActivateButton()}
-
-              <TouchableOpacity
-                style={[styles.closeBtn, styles.btn]}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                  setCount(1);
-                  setTotal(price);
-                }}
-              >
-                <FontAwesome name='close' size={40} color='white' />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.closeBtn, styles.btn]}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    setCount(1);
+                    setTotal(price);
+                  }}
+                >
+                  <FontAwesome name='close' size={40} color='white' />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
+        </Modal>
+        <View style={styles.btnContainer}>
+          <Text style={styles.text}>Buy</Text>
+          <TouchableOpacity
+            style={[styles.buyBtn, styles.btn]}
+            onPress={() => {
+              setModalVisible(true);
+              setType('Buy');
+            }}
+          >
+            <FontAwesome name='arrow-down' size={40} color='white' />
+          </TouchableOpacity>
         </View>
-      </Modal>
-      <View style={styles.btnContainer}>
-        <Text style={styles.text}>Buy</Text>
-        <TouchableOpacity
-          style={[styles.buyBtn, styles.btn]}
-          onPress={() => {
-            setModalVisible(true);
-            setType('Buy');
-          }}
-        >
-          <FontAwesome name='arrow-down' size={40} color='white' />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.btnContainer}>
-        <Text style={styles.text}>Sell</Text>
-        <TouchableOpacity
-          style={[styles.sellBtn, styles.btn]}
-          onPress={() => {
-            setModalVisible(true);
-            setType('Sell');
-          }}
-        >
-          <FontAwesome name='arrow-up' size={40} color='white' />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.btnContainer}>
+          <Text style={styles.text}>Sell</Text>
+          <TouchableOpacity
+            style={[styles.sellBtn, styles.btn]}
+            onPress={() => {
+              setModalVisible(true);
+              setType('Sell');
+            }}
+          >
+            <FontAwesome name='arrow-up' size={40} color='white' />
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.btnContainer}>
-        <Text style={styles.Cashtext}>My Cash</Text>
-        <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
+        <View style={styles.btnContainer}>
+          <Text style={styles.Cashtext}>My Cash</Text>
+          <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
+        </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -339,7 +324,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: '80%',
-    height: '50%',
+    height: '60%',
     backgroundColor: '#30444E',
     borderRadius: 20,
     padding: '10%',

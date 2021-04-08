@@ -159,10 +159,6 @@ const HomeScreen = ({ route, navigation }) => {
               <Text style={base.headingSm}>See Portfolio Items</Text>
             </TouchableOpacity>
           </View>
-          {/* ========== INVESTMENT HISTORY ========= */}
-          {/* <View style={styles.summaryContainer}>
-            <Text style={base.headingSm}>Investment History</Text>
-          </View> */}
         </View>
       </ScrollView>
     </>

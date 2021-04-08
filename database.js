@@ -20,7 +20,6 @@ module.exports = async function () {
     if (user) {
       throw Error('User already exists. Please try again.');
     }
-
     const newUser = await Users.insertOne({
       uid: uid,
       dateJoined: Date.now(),
@@ -43,30 +42,28 @@ module.exports = async function () {
     if (!foundUser) {
       throw Error('No user found!');
     }
-
     return foundUser;
   }
 
   //========= WATCHLIST ========== //
-  async function addToWatchlist({uid, symbol, price}) {
+  async function addToWatchlist({ uid, symbol, price }) {
     const foundUser = await Users.findOne({ uid });
     const userWatchlist = foundUser.watchlist;
 
-    if (!userWatchlist.some(stock => stock.symbol === symbol)) {
+    if (!userWatchlist.some((stock) => stock.symbol === symbol)) {
       try {
         Users.updateOne({ uid }, { $push: { watchlist: { symbol, price } } });
       } catch (err) {
         console.log(err);
       }
     } else {
-      console.log('Stock is already being watched!')
+      console.log('Stock is already being watched!');
     }
-
   }
 
   async function removeFromWatchlist({ uid, symbol, price }) {
     try {
-      Users.updateOne({ uid }, { $pull: { watchlist: { symbol, price } }})
+      Users.updateOne({ uid }, { $pull: { watchlist: { symbol, price } } });
     } catch (err) {
       console.log(err);
     }
@@ -219,6 +216,6 @@ module.exports = async function () {
     makeMarketBuy,
     makeMarketSell,
     addToWatchlist,
-    removeFromWatchlist
+    removeFromWatchlist,
   };
 };

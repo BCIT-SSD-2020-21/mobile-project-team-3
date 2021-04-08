@@ -18,7 +18,11 @@ We used Figma and a TradeStation template for UI inspiration.
 ## Installation Instructions
 
 Clone this repo and run `npm install`.  
-Replace API keys within the .envSAMPLE
-Run `npm start` in the command line
+Replace API keys within the .envSAMPLE. You will need to register for Firebase and Finnhub.io accounts.
+Ensure you have Expo installed then run `npm start` in the command line
 
 ## ScreenShots
+
+<img src="/screenshots/robdemgood-1.gif" alt="screenshot of robdemgood" width="200">
+<img src="/screenshots/robdemgood-2.gif" alt="screenshot of robdemgood" width="200">
+<img src="/screenshots/robdemgood-3.gif" alt="screenshot of robdemgood" width="200">

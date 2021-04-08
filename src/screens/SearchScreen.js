@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import SearchBar from '../components/SearchBar';
 import base from '../styles/styles';
 import QuoteListItem from '../components/QuoteListItem';
@@ -47,7 +47,7 @@ const SearchScreen = ({ navigation }) => {
   }, [watchlistUpdated, isFocused]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <SearchBar
         input={input}
         onInputChange={(newInput) => setInput(newInput.toUpperCase())}
@@ -79,7 +79,7 @@ const SearchScreen = ({ navigation }) => {
           />
         </>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
