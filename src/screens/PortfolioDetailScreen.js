@@ -6,7 +6,6 @@ import {
   View,
   ScrollView,
   Dimensions,
-  SafeAreaView,
   TouchableOpacity,
   Modal,
 } from 'react-native';
@@ -28,10 +27,9 @@ const PortfolioDetailScreen = ({ route }) => {
   const [total, setTotal] = useState('');
   const[PL, setPL] = useState('')
   const [minusBtn, setMinusBtn] = useState(false)
- // const [myCash, setMyCash] = useState('')
+  const [myCash, setMyCash] = useState('')
   const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
-
- 
+  
   const line = {
     datasets: [
       {
@@ -40,31 +38,26 @@ const PortfolioDetailScreen = ({ route }) => {
       },
     ],
   };
-
-
-      const onBuyOrSellButtonClicked = async () => {
-        const uid = user.uid;
-      
-        if (type === 'Buy') {
-          const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
-          console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-          user.cash = (user.cash - total).toFixed(2)
-          setModalVisible(!modalVisible);
-          setCount(1);
-          setTotal(price);
-
-} else if (type === 'Sell') {
-     
-  const updatedUser = await makeMarketSell({ symbol, price, count, uid });
-  console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-  user.cash = (user.cash - -total).toFixed(2)
-  setModalVisible(!modalVisible);
-  setCount(1);
-  setTotal(price);
-}
-};
-
-
+  
+  const onBuyOrSellButtonClicked = async () => {
+    const uid = user.uid;
+    if (type === 'Buy') {
+      const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
+      console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
+      setMyCash((myCash - total).toFixed(2))
+      setModalVisible(!modalVisible);
+      setCount(1);
+      setTotal(price);
+    } else if (type === 'Sell') {
+      const updatedUser = await makeMarketSell({ symbol, price, count, uid });
+      console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
+      setMyCash((myCash - -total).toFixed(2))
+      setModalVisible(!modalVisible);
+      setCount(1);
+      setTotal(price);
+    }
+  };
+  
   const addButtonClicked = () => {
     setMinusBtn(false)
     const newCount = count + 1;
@@ -74,17 +67,16 @@ const PortfolioDetailScreen = ({ route }) => {
   };
   const minusButtonClicked = () => {
     if (count>=2){
-    const newCount = count - 1;
-    const newTotal = total - price;
-    setCount(newCount);
-    setTotal(newTotal);
+      const newCount = count - 1;
+      const newTotal = total - price;
+      setCount(newCount);
+      setTotal(newTotal);
     }
     else{
       setMinusBtn(true)
     }
   };
-
-
+  
   useEffect(() => {
     (async () => {
       try {
@@ -93,181 +85,176 @@ const PortfolioDetailScreen = ({ route }) => {
           const uid = await AsyncStorage.getItem(keys[0]);
           const currentUser = await getUser(JSON.parse(uid))
           setUser(currentUser)
+          setMyCash(currentUser.cash)
         }
       } catch (err) {
         console.log('Error Getting Data', err);
       }
     })();
     (async () => {
-        const result = await getSymbolPrice(symbol);
-        setPrice(result.c);
-        setTotal(result.c);
-        const newpl = ((result.c/avgPrice)*100)-100
-        setPL(newpl.toFixed(2))
-      })();
+      const result = await getSymbolPrice(symbol);
+      setPrice(result.c);
+      setTotal(result.c);
+      const newpl = ((result.c/avgPrice)*100)-100
+      setPL(newpl.toFixed(2))
+    })();
   }, [isFocused]);
-
+  
   const DisplayUserCash = () => {
     if (type == 'Buy') {
       return (
-        <View style={styles.TextView}>
-          <Text style={styles.modalText}>Cash </Text>
-          <Text style={styles.modalText}>
-          ${(user.cash - total).toFixed(2)}
+      <View style={styles.TextView}>
+        <Text style={styles.modalText}>Cash </Text>
+        <Text style={styles.modalText}>
+          ${(myCash - total).toFixed(2)}
           </Text>
-        </View>
-      );
-    }
-    if (type == 'Sell') {
-      return (
-        <View style={styles.TextView}>
-          <Text style={styles.modalText}>Cash </Text>
-          <Text style={styles.modalText}>
-          ${(user.cash - -total).toFixed(2)}
-          </Text>
-        </View>
-      );
-    }
-  };
-
-  return (
-    <ScrollView>
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.text}>{symbol}</Text>
-        <View>
-        <Text style={styles.priceHeader}> ${Number(price).toFixed(2)} </Text>
-        <Text style={styles.plHeader}> ({PL}%)</Text>
-        </View>
-      </View>
-      <View>
-
-        <LineChart
-          data={line}
-          width={Dimensions.get('window').width - 80}
-          height={220}
-          yAxisSuffix='k'
-          chartConfig={{
-            backgroundColor: 'rgba(255, 86, 94, .2)',
-            backgroundGradientFrom: 'rgba(255, 86, 94, 1)',
-            backgroundGradientTo: 'rgba(255, 86, 94, 1)',
-            backgroundGradientFromOpacity: .2,
-            backgroundGradientToOpacity: .2,
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          }}
-          style={{
-            marginVertical: '5%',
-            borderRadius: 16,
-          }}
-        />
-      </View>
-      <View style={styles.portfolioContainer}>
-          <View style={styles.portfolioTextContainer}>
-        <Text style={styles.portfolioItem}>Shares:</Text>
-        <Text style={styles.portfoliotext}> {numShares}</Text>
-        </View>
-        <View style={styles.portfolioTextContainer}>
-        <Text style={styles.portfolioItem}>Average Price:</Text>
-        <Text style={styles.portfoliotext}>{avgPrice}</Text>
-        </View>
-        <View style={styles.portfolioTextContainer}>
-        <Text style={styles.portfolioItem}>Total Value: </Text>
-        <Text style={styles.portfoliotext}>{(numShares*price).toFixed(2)}</Text>
-        </View>
-      </View>
-      <View style={styles.cashContainer}>
-        <Text style={styles.Cashtext}>My Cash</Text>
-        <Text style={styles.Cashtext}>${Number(user.cash).toFixed(2)}</Text>
-       
-      </View>
-
-      <Modal
-        animationType='slide'
-        transparent={false}
-        opacity={0.5}
-        visible={modalVisible}
-        backdropOpacity={0.5}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        
-        <View style={styles.centeredView}>
-          <View style={styles.modalView} backdropOpacity={0.5}>
-            <View style={styles.TextView}>
-              <Text style={styles.modalText}>{type}</Text>
-              <Text style={styles.modalText}>{Number(total).toFixed(2)}</Text>
-            </View>
-            <View style={styles.TextView}>
-              <Text style={styles.modalText}>Qty</Text>
-              <TouchableOpacity
-                style={styles.qtyBtn}
-                onPress={addButtonClicked}
-              >
-                
-                <FontAwesome name='plus-circle' size={30} color='white' />
-              </TouchableOpacity>
-              <Text style={styles.modalText}>{count}</Text>
-              <TouchableOpacity
-                style={styles.qtyBtn}
-                disabled={minusBtn}
-                onPress={minusButtonClicked}
-              >
-                <FontAwesome name='minus-circle' size={30} color='white' />
-              </TouchableOpacity>
-            </View>
-            {DisplayUserCash()}
-
-            <View style={styles.sellBuyBtnContainer}>
-              <TouchableOpacity
-                style={[styles.buyBtn, styles.btn]}
-                onPress={onBuyOrSellButtonClicked}
-              >
-                <Text style={styles.textStyle}>{type}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.closeBtn, styles.btn]}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                  setCount(1);
-                  setTotal(price);
-                }}
-              >
-                <FontAwesome name='close' size={40} color='white' />
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </Modal>
-      <View style={styles.btnContainer}>
-        <Text style={styles.text}>Buy</Text>
-        <TouchableOpacity
-          style={[styles.buyBtn, styles.btn]}
-          onPress={() => {
-            setModalVisible(true);
-            setType('Buy');
-          }}
-        >
-          <FontAwesome name='arrow-down' size={40} color='white' />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.btnContainer}>
-        <Text style={styles.text}>Sell</Text>
-        <TouchableOpacity
-          style={[styles.sellBtn, styles.btn]}
-          onPress={() => {
-            setModalVisible(true);
-            setType('Sell');
-          }}
-        >
-          <FontAwesome name='arrow-up' size={40} color='white' />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-    </ScrollView>
-  );
-};
+          );
+        }
+        if (type == 'Sell') {
+          return (
+          <View style={styles.TextView}>
+            <Text style={styles.modalText}>Cash </Text>
+            <Text style={styles.modalText}>
+              ${(myCash - -total).toFixed(2)}
+              </Text>
+              </View>
+              );
+            }
+          };
+          
+          return (
+          <ScrollView>
+            <View style={styles.container}>
+              <View style={styles.headerContainer}>
+                <Text style={styles.text}>{symbol}</Text>
+                <View>
+                  <Text style={styles.priceHeader}> ${Number(price).toFixed(2)} </Text>
+                  <Text style={styles.plHeader}> ({PL}%)</Text>
+                  </View>
+                  </View>
+                  <View>
+                    <LineChart
+                    data={line}
+                    width={Dimensions.get('window').width - 80}
+                    height={220}
+                    yAxisSuffix='k'
+                    chartConfig={{
+                      backgroundColor: 'rgba(255, 86, 94, .2)',
+                      backgroundGradientFrom: 'rgba(255, 86, 94, 1)',
+                      backgroundGradientTo: 'rgba(255, 86, 94, 1)',
+                      backgroundGradientFromOpacity: .2,
+                      backgroundGradientToOpacity: .2,
+                      decimalPlaces: 2,
+                      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    }}
+                    style={{
+                      marginVertical: '5%',
+                      borderRadius: 16,
+                    }}
+                    />
+                    </View>
+                    <View style={styles.portfolioContainer}>
+                      <View style={styles.portfolioTextContainer}>
+                        <Text style={styles.portfolioItem}>Shares:</Text>
+                        <Text style={styles.portfoliotext}> {numShares}</Text>
+                        </View>
+                        <View style={styles.portfolioTextContainer}>
+                          <Text style={styles.portfolioItem}>Average Price:</Text>
+                          <Text style={styles.portfoliotext}>{Number(avgPrice).toFixed(2)}</Text>
+                          </View>
+                          <View style={styles.portfolioTextContainer}>
+                            <Text style={styles.portfolioItem}>Total Value: </Text>
+                            <Text style={styles.portfoliotext}>{(numShares*price).toFixed(2)}</Text>
+                            </View>
+                            </View>
+                            <View style={styles.cashContainer}>
+                              <Text style={styles.Cashtext}>My Cash</Text>
+                              <Text style={styles.Cashtext}>${Number(myCash).toFixed(2)}</Text>
+                              </View>
+                              <Modal
+                              animationType='slide'
+                               transparent={false}
+                               opacity={0.5}
+                               visible={modalVisible}
+                               backdropOpacity={0.5}
+                               onRequestClose={() => {
+                                 setModalVisible(!modalVisible);
+                                }}
+                                >
+                                  <View style={styles.centeredView}>
+                                    <View style={styles.modalView} backdropOpacity={0.5}>
+                                      <View style={styles.TextView}>
+                                        <Text style={styles.modalText}>{type}</Text>
+                                        <Text style={styles.modalText}>{Number(total).toFixed(2)}</Text>
+                                        </View>
+                                        <View style={styles.TextView}>
+                                          <Text style={styles.modalText}>Qty</Text>
+                                          <TouchableOpacity
+                                          style={styles.qtyBtn}
+                                          onPress={addButtonClicked}
+                                          >
+                                            <FontAwesome name='plus-circle' size={30} color='white' />
+                                            </TouchableOpacity>
+                                            <Text style={styles.modalText}>{count}</Text>
+                                            <TouchableOpacity
+                                            style={styles.qtyBtn}
+                                            disabled={minusBtn}
+                                            onPress={minusButtonClicked}
+                                            >
+                                              <FontAwesome name='minus-circle' size={30} color='white' />
+                                              </TouchableOpacity>
+                                              </View>
+                                              {DisplayUserCash()}
+                                              <View style={styles.sellBuyBtnContainer}>
+                                                <TouchableOpacity
+                                                style={[styles.buyBtn, styles.btn]}
+                                                onPress={onBuyOrSellButtonClicked}
+                                                >
+                                                  <Text style={styles.textStyle}>{type}</Text>
+                                                  </TouchableOpacity>
+                                                  <TouchableOpacity
+                                                  style={[styles.closeBtn, styles.btn]}
+                                                  onPress={() => {
+                                                    setModalVisible(!modalVisible);
+                                                    setCount(1);
+                                                    setTotal(price);
+                                                  }}
+                                                  >
+                                                    <FontAwesome name='close' size={40} color='white' />
+                                                    </TouchableOpacity>
+                                                    </View>
+                                                    </View>
+                                                    </View>
+                                                    </Modal>
+                                                    <View style={styles.btnContainer}>
+                                                      <Text style={styles.text}>Buy</Text>
+                                                      <TouchableOpacity
+                                                      style={[styles.buyBtn, styles.btn]}
+                                                      onPress={() => {
+                                                        setModalVisible(true);
+                                                        setType('Buy');
+                                                      }}
+                                                      >
+                                                        <FontAwesome name='arrow-down' size={40} color='white' />
+                                                        </TouchableOpacity>
+                                                        </View>
+                                                        <View style={styles.btnContainer}>
+                                                          <Text style={styles.text}>Sell</Text>
+                                                          <TouchableOpacity
+                                                          style={[styles.sellBtn, styles.btn]}
+                                                          onPress={() => {
+                                                            setModalVisible(true);
+                                                            setType('Sell');
+                                                          }}
+                                                          >
+                                                            <FontAwesome name='arrow-up' size={40} color='white' />
+                                                            </TouchableOpacity>
+                                                            </View>
+                                                            </View>
+                                                            </ScrollView>
+                                                            );
+                                                          };
 
 const styles = StyleSheet.create({
   container: {
