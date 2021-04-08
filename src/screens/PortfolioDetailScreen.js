@@ -16,6 +16,12 @@ import { getUser } from '../../network';
 import { getSymbolPrice } from '../api/finnhubNetwork';
 import { useIsFocused } from "@react-navigation/native";
 
+
+
+import axios from 'axios';
+import { FINNHUB_API } from '@env';
+
+
 const PortfolioDetailScreen = ({ route }) => {
   const isFocused = useIsFocused();
   const [price, setPrice]= useState('');
@@ -28,12 +34,33 @@ const PortfolioDetailScreen = ({ route }) => {
   const[PL, setPL] = useState('')
   const [minusBtn, setMinusBtn] = useState(false)
   const [myCash, setMyCash] = useState('')
-  const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
+  //const [graphData, setGraphData] = useState([2, 4, 6, 7, 9, 4])
   
+  const [graph, setGraph] = useState({});
+
+
+
+  const graphAPI = async () => {
+   
+    try {
+      const response = await axios.get(
+        `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
+      );
+      console.log('API RESPONSE:', response.data);
+      setGraph(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
+  graphAPI()
+  
+ 
   const line = {
     datasets: [
       {
-        data: graphData,
+        data: graph != null ? graph.o.slice(0,30) : [2, 4, 6, 7, 9, 4],
+        // data: graphData,
         color: (opacity = 1) => `rgba(255, 86, 94, ${opacity})`,
       },
     ],
