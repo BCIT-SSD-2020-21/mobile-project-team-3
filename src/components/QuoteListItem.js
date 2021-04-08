@@ -37,7 +37,7 @@ export default function QuoteListItem({ quote, input, navigation, user, setWatch
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.viewBtn}
-            onPress={() => navigation.navigate('BuySellScreen', {input: input, price: quote.c})}
+            onPress={() => navigation.navigate('BuySellScreen', {symbol: input, price: quote.c})}
           >
             <Text 
             style={styles.viewBtnText}
