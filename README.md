@@ -2,6 +2,10 @@
 
 ### Nick Charvat, Sabrina Kuah, Kulveer Brar, Juhwan Moon, Mandeep Dhillon
 
+<img src="/screenshots/robdemgood-1.gif" alt="screenshot of robdemgood" width="200" align="left">
+<img src="/screenshots/robdemgood-2.gif" alt="screenshot of robdemgood" width="200" align="left">
+<img src="/screenshots/robdemgood-3.gif" alt="screenshot of robdemgood" width="200" align="left">
+
 ## Overview
 
 RobDemGood is a mock trading app written in React Native using Expo. It uses Firebase for authentication, FinnHub.io for trading data, Express and MongoDB.
@@ -29,8 +33,5 @@ Clone this repo and run `npm install`.
 Replace API keys within the .envSAMPLE. You will need to register for Firebase and Finnhub.io accounts.
 Ensure you have Expo installed then run `npm start` in the command line
 
-## ScreenShots
 
-<img src="/screenshots/robdemgood-1.gif" alt="screenshot of robdemgood" width="200" align="left">
-<img src="/screenshots/robdemgood-2.gif" alt="screenshot of robdemgood" width="200" align="left">
-<img src="/screenshots/robdemgood-3.gif" alt="screenshot of robdemgood" width="200" align="left">
+
