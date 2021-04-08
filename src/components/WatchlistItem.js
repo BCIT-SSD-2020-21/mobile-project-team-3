@@ -4,7 +4,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { Avatar } from 'react-native-elements';
 import { removeFromWatchlist } from '../../network';
 import { SafeAreaView } from 'react-native';
-import base from '../styles/styles'
+import base from '../styles/styles';
 
 export default function WatchlistItem({
   navigation,
@@ -28,10 +28,10 @@ export default function WatchlistItem({
                 <View style={styles.avatarTextContainer}>
                   <Avatar
                     rounded
-                    size="medium"
+                    size='medium'
                     title={item.symbol}
                     titleStyle={{ fontSize: 15, fontWeight: 'bold' }}
-                    backgroundColor="#FF565E"
+                    backgroundColor='#FF565E'
                     activeOpacity={0.7}
                   />
                   <View style={styles.textContainer}>

@@ -17,7 +17,7 @@ import {
 } from '../controllers/homeScreenController';
 import { PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from '@react-navigation/native';
 
 const HomeScreen = ({ route, navigation }) => {
   const isFocused = useIsFocused();
