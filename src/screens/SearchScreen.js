@@ -50,7 +50,7 @@ const SearchScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <SearchBar
         input={input}
-        onInputChange={(newInput) => setInput(newInput)}
+        onInputChange={(newInput) => setInput(newInput.toUpperCase())}
         onInputSubmit={() => searchAPI()}
       />
       {Object.values(quote).length > 0 ?

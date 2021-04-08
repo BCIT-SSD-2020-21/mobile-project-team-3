@@ -39,7 +39,10 @@ export default function QuoteListItem({ quote, input, navigation, user, setWatch
             style={styles.viewBtn}
             onPress={() => navigation.navigate('BuySellScreen', {symbol: input, price: quote.c})}
           >
-            <Text style={styles.viewBtnText}>View</Text>
+            <Text 
+            style={styles.viewBtnText}
+            
+            >View</Text>
           </TouchableOpacity>
         </>
       )}
