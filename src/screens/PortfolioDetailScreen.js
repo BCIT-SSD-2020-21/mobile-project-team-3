@@ -93,8 +93,8 @@ const PortfolioDetailScreen = ({ route }) => {
     })();
     (async () => {
         const result = await getSymbolPrice(symbol);
-        setPrice((result.c).toFixed(2));
-        setTotal((result.c).toFixed(2));
+        setPrice(result.c);
+        setTotal(result.c);
         const newpl = ((result.c/avgPrice)*100)-100
         setPL(newpl.toFixed(2))
       })();
@@ -129,7 +129,7 @@ const PortfolioDetailScreen = ({ route }) => {
       <View style={styles.headerContainer}>
         <Text style={styles.text}>{symbol}</Text>
         <View>
-        <Text style={styles.priceHeader}> ${price} </Text>
+        <Text style={styles.priceHeader}> ${Number(price).toFixed(2)} </Text>
         <Text style={styles.plHeader}> ({PL}%)</Text>
         </View>
       </View>
@@ -190,7 +190,7 @@ const PortfolioDetailScreen = ({ route }) => {
           <View style={styles.modalView} backdropOpacity={0.5}>
             <View style={styles.TextView}>
               <Text style={styles.modalText}>{type}</Text>
-              <Text style={styles.modalText}>{total}</Text>
+              <Text style={styles.modalText}>{Number(total).toFixed(2)}</Text>
             </View>
             <View style={styles.TextView}>
               <Text style={styles.modalText}>Qty</Text>

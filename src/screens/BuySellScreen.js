@@ -17,15 +17,34 @@ import { getUser } from '../../network';
 const BuySellScreen = ({ route }) => {
   const [user, setUser] = useState('');
   const { symbol, price } = route.params;
+  const [graph, setGraph] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [type, setType] = useState('');
   const [count, setCount] = useState(1);
   const [total, setTotal] = useState(price);
+
   // const [myCash, setMyCash] = useState(user.cash);
+
+  // const graphAPI = async () => {
+
+  //   try {
+  //     const response = await axios.get(
+  //       `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=1615298999&to=1615302599&token=${FINNHUB_API}`
+  //     );
+  //     console.log('API RESPONSE:', response.data);
+  //     setGraph(response.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
+  // graphAPI()
+
   const line = {
     datasets: [
       {
         data: [2, 4, 6, 7, 9, 4],
+        // data: graph.o.slice(0,50)
       },
     ],
   };
@@ -36,14 +55,16 @@ const BuySellScreen = ({ route }) => {
     if (type === 'Buy') {
       const updatedUser = await makeMarketBuy({ symbol, price, count, uid }); //send to db
       console.log('UPDATED USER FROM BUY SCREEN >>>', updatedUser);
-      user.cash = (user.cash - total.toFixed(2)).toFixed(2);
+      // user.cash = (user.cash - total.toFixed(2)).toFixed(2)
+      user.cash = user.cash - total;
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
     } else if (type === 'Sell') {
       const updatedUser = await makeMarketSell({ symbol, price, count, uid });
       console.log('UPDATED USER FROM SELL SCREEN >>>', updatedUser);
-      user.cash = (user.cash - -total.toFixed(2)).toFixed(2);
+      // user.cash = (user.cash - -total.toFixed(2)).toFixed(2)
+      user.cash = user.cash - -total;
       setModalVisible(!modalVisible);
       setCount(1);
       setTotal(price);
@@ -102,12 +123,49 @@ const BuySellScreen = ({ route }) => {
     }
   };
 
+  const ActivateButton = () => {
+    if (count > 0) {
+      // if (type === 'Sell' && !user.portfolio.includes(user.portfolio.find(i => i.symbol == symbol)) ){
+      //      console.log(" In sell")
+      //      console.log(!user.portfolio.includes(user.portfolio.find(i => i.symbol == symbol)))
+      //      console.log(user.portfolio.find(i => i.symbol == symbol))
+      //      return (console.log("test"))
+      //    }
+
+      //  else{
+
+      return (
+        <TouchableOpacity
+          style={[styles.buyBtn, styles.btn]}
+          onPress={onBuyOrSellButtonClicked}
+        >
+          <Text style={styles.textStyle}>{type}</Text>
+        </TouchableOpacity>
+      );
+
+      //  }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.text}>{symbol}</Text>
         <Text style={styles.priceHeader}>{price.toFixed(2)} USD</Text>
       </View>
+
+      {/* <View>
+      <TouchableOpacity
+            style={styles.viewBtn}
+            onPress={() => graphAPI()}
+          >
+            <Text 
+            style={styles.viewBtnText}
+            
+            >View Graph</Text>
+          </TouchableOpacity>
+      </View> */}
+
       <View>
         <LineChart
           data={line}
@@ -164,12 +222,8 @@ const BuySellScreen = ({ route }) => {
             {DisplayUserCash()}
 
             <View style={styles.sellBuyBtnContainer}>
-              <TouchableOpacity
-                style={[styles.buyBtn, styles.btn]}
-                onPress={onBuyOrSellButtonClicked}
-              >
-                <Text style={styles.textStyle}>{type}</Text>
-              </TouchableOpacity>
+              {ActivateButton()}
+
               <TouchableOpacity
                 style={[styles.closeBtn, styles.btn]}
                 onPress={() => {
